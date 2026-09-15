@@ -1,12 +1,17 @@
-use sputiffy;
-go
+USE sputiffy;
+GO
 
 /*
-PO1R01_BD_CAFL
-AUTOR: CESAR ANDREI FLORES LEÓN
-FECHA: 26/08/2026
+P12R01_SPUTIFY
+AUTORES: 
+Adrian Manuel Meneses López
+Adrian Heleuterio Hernandez Martinez
+FECHA: 15/09/2026
 */
 
+/*==========================================
+	CONTINGENCIA DE VISTAS
+  ==========================================*/
 
 SELECT name FROM sys.views ORDER BY name;
 

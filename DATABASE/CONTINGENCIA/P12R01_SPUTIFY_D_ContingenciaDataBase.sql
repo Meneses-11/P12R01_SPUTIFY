@@ -1,3 +1,19 @@
+USE master;
+GO
+
+/*
+P12R01_SPUTIFY
+AUTORES: 
+Adrian Manuel Meneses López
+Adrian Heleuterio Hernandez Martinez
+FECHA: 15/09/2026
+*/
+
+
+/*==========================================
+	CONTINGENCIA DE BASE DE DATOS
+  ==========================================*/
+
 BEGIN TRY
 	IF EXISTS (SELECT 1 FROM sys.databases WHERE name = 'sputiffy')
 		BEGIN

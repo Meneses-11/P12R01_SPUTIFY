@@ -1,6 +1,18 @@
 USE sputiffy;
 GO
 
+/*
+P12R01_SPUTIFY
+AUTORES: 
+Adrian Manuel Meneses López
+Adrian Heleuterio Hernandez Martinez
+FECHA: 15/09/2026
+*/
+
+/*==========================================
+	CONTINGENCIA DE CARGA INICIAL
+  ==========================================*/
+
 SELECT name FROM sys.tables ORDER BY name;
 --------------------------------Albumes
 BEGIN TRANSACTION
