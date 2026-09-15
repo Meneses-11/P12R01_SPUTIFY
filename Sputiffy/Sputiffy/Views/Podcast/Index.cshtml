@@ -1,0 +1,629 @@
+﻿@using Sputiffy.Models
+@{
+    ViewBag.Title = "Podcast";
+    Layout = null;
+
+    var usuario = ViewBag.Usuario as Usuarios;
+    var playlists = ViewBag.Playlists as List<Playlists>;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Podcast | Sputiffy</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --orange: #F7941D;
+            --pink: #E91E8C;
+            --blue: #29ABE2;
+            --purple: #7B2FBE;
+            --dark: #080818;
+            --s1: #0E0E22;
+            --s2: #141428;
+            --s3: #1A1A32;
+            --border: rgba(255,255,255,0.07);
+            --muted: rgba(255,255,255,0.45);
+            --text: #ffffff;
+            --grad: linear-gradient(90deg, var(--orange), var(--pink), var(--blue));
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        .sp-shell {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sp-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sp-sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: var(--s1);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+            .sidebar-logo svg {
+                flex-shrink: 0;
+            }
+
+        .sidebar-logo-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .sidebar-logo-sub {
+            font-size: 9px;
+            color: var(--muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            -webkit-text-fill-color: var(--muted);
+        }
+
+        .sidebar-nav {
+            padding: 4px 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: background .2s, color .2s;
+            cursor: pointer;
+        }
+
+            .nav-item:hover, .nav-item.active {
+                background: rgba(255,255,255,0.06);
+                color: white;
+            }
+
+            .nav-item .ni {
+                font-size: 18px;
+                width: 22px;
+                text-align: center;
+            }
+
+        .sidebar-library {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 10px 16px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.1) transparent;
+        }
+
+        .lib-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 12px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .playlist-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background .2s;
+            text-decoration: none;
+        }
+
+            .playlist-row:hover {
+                background: rgba(255,255,255,0.05);
+            }
+
+        .playlist-thumb {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--orange), var(--purple));
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .playlist-info {
+            overflow: hidden;
+        }
+
+            .playlist-info .pname {
+                font-size: 13px;
+                font-weight: 600;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: white;
+            }
+
+            .playlist-info .pmeta {
+                font-size: 11px;
+                color: var(--muted);
+            }
+
+        .sp-topbar {
+            background: rgba(8,8,24,0.85);
+            backdrop-filter: blur(20px);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            flex-shrink: 0;
+        }
+
+        .nav-arrows {
+            display: flex;
+            gap: 6px;
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: var(--muted);
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .2s, color .2s;
+        }
+
+            .nav-btn:hover {
+                background: rgba(255,255,255,0.14);
+                color: white;
+            }
+
+        .user-pill {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 6px 14px 6px 8px;
+            cursor: pointer;
+            transition: background .2s;
+        }
+
+            .user-pill:hover {
+                background: rgba(255,255,255,0.11);
+            }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange), var(--pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .sp-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+            .sp-btn.ghost {
+                background: rgba(255,255,255,.08);
+                color: white;
+                border: 1px solid rgba(255,255,255,.08);
+                text-decoration: none;
+                display: inline-flex;
+                align-items: center;
+            }
+
+        .sp-main {
+            flex: 1;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255,255,255,0.1) transparent;
+        }
+
+        @@media (max-width: 860px) {
+            .sp-sidebar {
+                display: none;
+            }
+
+            .sp-topbar {
+                padding: 12px 16px;
+            }
+        }
+
+        /* ---- Contenido propio del Podcast (tema brutalista negro/verde) ---- */
+        .podcast-content {
+            background-color: #0d0d0d;
+            min-height: 100%;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: #20FD6C;
+            text-transform: uppercase;
+        }
+
+        .brutal-hero {
+            background-color: #20FD6C;
+            padding: 20px 0;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .podcast-title {
+            color: #000;
+            font-family: 'Syne', 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: clamp(3rem, 10vw, 7rem);
+            letter-spacing: -0.04em;
+            margin: 0;
+            line-height: 0.9;
+        }
+
+        .podcast-buscador {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            padding: 0 20px;
+        }
+
+        .podcast-buscador input {
+            flex: 1;
+            padding: 18px 20px;
+            border: 3px solid #20FD6C;
+            background: #000;
+            color: #20FD6C;
+            font-weight: 700;
+            font-size: 16px;
+            outline: none;
+            border-radius: 0;
+        }
+
+        .podcast-buscador input::placeholder {
+            color: rgba(32, 253, 108, 0.5);
+        }
+
+        .podcast-buscador button {
+            padding: 18px 30px;
+            border: 3px solid #20FD6C;
+            border-left: none;
+            background: #20FD6C;
+            color: #000;
+            font-weight: 900;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.1s ease, color 0.1s ease;
+            border-radius: 0;
+        }
+
+        .podcast-buscador button:hover {
+            background: #000;
+            color: #20FD6C;
+        }
+
+        .podcast-player-wrap {
+            max-width: 800px;
+            margin: 0 auto 40px auto;
+            border: 3px solid #20FD6C;
+            background: #000;
+        }
+
+        .podcast-resultados {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px 60px 20px;
+        }
+
+        .podcast-card {
+            background: #000;
+            border: 3px solid #20FD6C;
+            cursor: pointer;
+            transition: transform 0.15s ease, background-color 0.15s ease;
+            text-align: left;
+        }
+
+        .podcast-card:hover {
+            background: #20FD6C;
+            color: #000;
+            transform: translate(-4px, -4px);
+            box-shadow: 6px 6px 0px #fff;
+        }
+
+        .podcast-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            display: block;
+            filter: grayscale(100%) contrast(120%);
+            border-bottom: 3px solid #20FD6C;
+            transition: filter 0.15s ease;
+        }
+
+        .podcast-card:hover img {
+            filter: none;
+            border-bottom-color: #000;
+        }
+
+        .podcast-card .pc-info {
+            padding: 16px;
+        }
+
+        .podcast-card .pc-titulo {
+            font-size: 16px;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .podcast-card:hover .pc-autor {
+            color: #000;
+        }
+
+        .podcast-card .pc-autor {
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(32, 253, 108, 0.7);
+        }
+
+        .podcast-mensaje {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #20FD6C;
+            font-size: 20px;
+            font-weight: 900;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sp-shell">
+        <div class="sp-body">
+
+            <aside class="sp-sidebar">
+                <a class="sidebar-logo" href="@Url.Action("Index", "Home")">
+                    <svg width="36" height="36" viewBox="0 0 46 46" fill="none">
+                        <defs>
+                            <linearGradient id="slg" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#F7941D" />
+                                <stop offset="50%" stop-color="#E91E8C" />
+                                <stop offset="100%" stop-color="#29ABE2" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="46" height="46" rx="12" fill="url(#slg)" opacity="0.18" />
+                        <path d="M15 13C15 10.8 17.4 9.5 19.2 10.7L35 21.7C36.7 22.8 36.7 25.2 35 26.3L19.2 37.3C17.4 38.5 15 37.2 15 35V13Z" fill="url(#slg)" />
+                        <polyline points="19,23 22,18 25,27 28,14 31,30 34,20 37,23"
+                                  stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.75" />
+                    </svg>
+                    <div>
+                        <div class="sidebar-logo-text">Sputiffy</div>
+                        <div class="sidebar-logo-sub">Tu música</div>
+                    </div>
+                </a>
+
+                <nav class="sidebar-nav">
+                    <a class="nav-item" href="@Url.Action("Index", "Home")">
+                        <span class="ni">🏠</span> Inicio
+                    </a>
+                    <a class="nav-item" href="#" onclick="document.getElementById('podcastSearchInput').focus(); return false;">
+                        <span class="ni">🔍</span> Explorar
+                    </a>
+                    <a class="nav-item" href="@Url.Action("Index", "Radio")">
+                        <span class="ni">📻</span> Radio
+                    </a>
+                    <!--CRISTO MAGNO-->
+                    <!--Reproductor OffLine-->
+                    <a class="nav-item" href="@Url.Action("Index", "Offline")">
+                        <span class="ni">💀</span>Modo Offline
+                    </a>
+                    <a class="nav-item active" href="@Url.Action("Index", "Podcast")">
+                        <span class="ni">🎙️</span>Podcast
+                    </a>
+                    <a class="nav-item" href="@Url.Action("Index", "Favoritos")">
+                        <span class="ni">❤</span>Favoritos
+                    </a>
+                </nav>
+
+                <div class="sidebar-library">
+                    <div class="lib-header">
+                        Tu biblioteca
+                    </div>
+
+                    @if (playlists != null && playlists.Any())
+                    {
+                        foreach (var pl in playlists)
+                        {
+                            <a class="playlist-row" href="@Url.Action("Details","Playlists", new { id = pl.IdPlaylist })">
+                                <div class="playlist-thumb">🎵</div>
+                                <div class="playlist-info">
+                                    <div class="pname">@pl.NombrePlaylist</div>
+                                    <div class="pmeta">Playlist • tú</div>
+                                </div>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <div style="padding:12px;font-size:12px;color:var(--muted);">
+                            Crea tu primera playlist
+                        </div>
+                    }
+                </div>
+            </aside>
+
+            <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+                <header class="sp-topbar">
+                    <div class="nav-arrows">
+                        <button class="nav-btn" onclick="history.back()">‹</button>
+                        <button class="nav-btn" onclick="history.forward()">›</button>
+                    </div>
+
+                    <div class="user-pill" style="margin-left:auto;">
+                        <div class="user-avatar">
+                            @(usuario != null && !string.IsNullOrEmpty(usuario.Nombre)
+                                ? usuario.Nombre.Substring(0,1).ToUpper() : "U")
+                        </div>
+                        <span class="user-name">@(usuario != null ? usuario.Nombre : "Usuario")</span>
+                    </div>
+
+                    <a href="@Url.Action("Logout","Usuarios")" class="sp-btn ghost" style="margin-left:10px;">
+                        🚪 Cerrar sesión
+                    </a>
+                </header>
+
+                <div class="sp-main">
+                    <div class="podcast-content">
+                        <div class="brutal-hero">
+                            <h1 class="podcast-title">PODCAST</h1>
+                        </div>
+
+                        <div class="podcast-buscador">
+                            <input type="text" id="podcastSearchInput" placeholder="BUSCAR UN PODCAST O EPISODIO..." autocomplete="off" />
+                            <button id="podcastSearchBtn">BUSCAR</button>
+                        </div>
+
+                        <div id="podcastPlayerWrap" class="podcast-player-wrap" style="display:none;">
+                            <iframe id="podcastPlayer" width="100%" height="280" frameborder="0"
+                                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
+                        </div>
+
+                        <div id="podcastResultados" class="podcast-resultados"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const input = document.getElementById('podcastSearchInput');
+        const btn = document.getElementById('podcastSearchBtn');
+        const resultadosDiv = document.getElementById('podcastResultados');
+        const playerWrap = document.getElementById('podcastPlayerWrap');
+        const player = document.getElementById('podcastPlayer');
+
+        function buscarPodcasts() {
+            const term = input.value.trim();
+            if (!term) return;
+
+            resultadosDiv.innerHTML = '<div class="podcast-mensaje">BUSCANDO...</div>';
+
+            fetch('@Url.Action("Buscar", "Podcast")?term=' + encodeURIComponent(term))
+                .then(r => r.json())
+                .then(data => {
+                    if (data.error) {
+                        resultadosDiv.innerHTML = '<div class="podcast-mensaje">' + (data.mensaje || 'OCURRIÓ UN ERROR.').toUpperCase() + '</div>';
+                        return;
+                    }
+
+                    if (!data.length) {
+                        resultadosDiv.innerHTML = '<div class="podcast-mensaje">SIN RESULTADOS.</div>';
+                        return;
+                    }
+
+                    resultadosDiv.innerHTML = '';
+                    data.forEach(ep => {
+                        const card = document.createElement('div');
+                        card.className = 'podcast-card';
+                        card.innerHTML = `
+                            <img src="${ep.portada}" alt="${ep.titulo}" />
+                            <div class="pc-info">
+                                <div class="pc-titulo">${ep.titulo}</div>
+                                <div class="pc-autor">${ep.autor}</div>
+                            </div>
+                        `;
+                        card.addEventListener('click', () => reproducir(ep.id));
+                        resultadosDiv.appendChild(card);
+                    });
+                })
+                .catch(() => {
+                    resultadosDiv.innerHTML = '<div class="podcast-mensaje">NO SE PUDO CONECTAR CON EL BUSCADOR.</div>';
+                });
+        }
+
+        function reproducir(videoId) {
+            player.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+            playerWrap.style.display = 'block';
+            playerWrap.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        btn.addEventListener('click', buscarPodcasts);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') buscarPodcasts();
+        });
+    </script>
+</body>
+</html>

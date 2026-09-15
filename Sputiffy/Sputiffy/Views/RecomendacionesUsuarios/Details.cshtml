@@ -1,0 +1,66 @@
+﻿@model Sputiffy.Models.RecomendacionesUsuario
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>RecomendacionesUsuario</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Motivo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Motivo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Puntaje)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Puntaje)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaGenerada)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaGenerada)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mostrada)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mostrada)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Canciones.Titulo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Canciones.Titulo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuarios.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuarios.Nombre)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdRecomendacion }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

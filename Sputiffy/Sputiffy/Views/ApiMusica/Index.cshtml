@@ -1,0 +1,168 @@
+﻿@{
+    ViewBag.Title = "API Música";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .api-wrap {
+        padding: 30px;
+        color: white;
+    }
+
+    .api-hero {
+        background: linear-gradient(135deg, #1db954, #121212);
+        border-radius: 26px;
+        padding: 30px;
+        margin-bottom: 25px;
+        box-shadow: 0 18px 40px rgba(0,0,0,.25);
+    }
+
+        .api-hero h1 {
+            margin: 0 0 10px 0;
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .api-hero p {
+            margin: 0;
+            color: #e9e9e9;
+            font-size: 15px;
+        }
+
+    .api-box {
+        background: #181818;
+        border-radius: 24px;
+        padding: 24px;
+        box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    }
+
+        .api-box h2 {
+            margin-top: 0;
+            color: #1db954;
+        }
+
+    .search-form {
+        display: grid;
+        grid-template-columns: 1fr 180px;
+        gap: 14px;
+        margin-top: 18px;
+    }
+
+        .search-form input {
+            border: none;
+            outline: none;
+            border-radius: 14px;
+            padding: 15px 18px;
+            background: #2b2b2b;
+            color: white;
+            font-size: 15px;
+        }
+
+        .search-form button {
+            border: none;
+            border-radius: 14px;
+            padding: 15px 18px;
+            background: #1db954;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+            .search-form button:hover {
+                background: #179847;
+                transform: translateY(-1px);
+            }
+
+    .msg-box {
+        margin-top: 18px;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 14px;
+    }
+
+    .msg-error {
+        background: #7a1f1f;
+        color: white;
+    }
+
+    .msg-ok {
+        background: #14532d;
+        color: white;
+    }
+
+    .tips-box {
+        margin-top: 24px;
+        background: #202020;
+        border-radius: 18px;
+        padding: 18px;
+    }
+
+        .tips-box h3 {
+            margin-top: 0;
+            color: #1db954;
+        }
+
+        .tips-box ul {
+            margin: 0;
+            padding-left: 18px;
+            color: #d2d2d2;
+        }
+
+        .tips-box li {
+            margin-bottom: 8px;
+        }
+
+    @@media(max-width: 768px) {
+        .api-wrap {
+            padding: 18px;
+        }
+
+        .search-form {
+            grid-template-columns: 1fr;
+        }
+
+        .api-hero h1 {
+            font-size: 28px;
+        }
+    }
+</style>
+
+<div class="api-wrap">
+    <div class="api-hero">
+        <h1>Buscar música con Deezer</h1>
+        <p>Consulta canciones, artistas y álbumes desde la API y guárdalos en tu base de datos de Sputiffy.</p>
+    </div>
+
+    <div class="api-box">
+        <h2>Búsqueda</h2>
+
+        @using (Html.BeginForm("Buscar", "ApiMusica", FormMethod.Post))
+        {
+            <div class="search-form">
+                <input type="text" name="termino" placeholder="Ejemplo: Eminem, Queen, Michael Jackson..." required />
+                <button type="submit">Buscar</button>
+            </div>
+        }
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="msg-box msg-error">@ViewBag.Error</div>
+        }
+
+        @if (TempData["Ok"] != null)
+        {
+            <div class="msg-box msg-ok">@TempData["Ok"]</div>
+        }
+
+        <div class="tips-box">
+            <h3>Sugerencias</h3>
+            <ul>
+                <li>Prueba buscando por artista, por ejemplo: <strong>Coldplay</strong>.</li>
+                <li>También puedes buscar por canción, por ejemplo: <strong>Thriller</strong>.</li>
+                <li>Después podrás guardar los resultados en tu BD y usarlos en recomendaciones.</li>
+            </ul>
+        </div>
+    </div>
+</div>

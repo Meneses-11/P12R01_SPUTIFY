@@ -1,0 +1,180 @@
+﻿@{
+    ViewBag.Title = "Radio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<h2 class="radio-title">SputiRadio</h2>
+
+<div class="radio-carousel">
+    <button class="nav-btn" id="prevBtn">⟨</button>
+
+    <div class="station-card active">
+        <h3>Universal Stereo 88.1 FM</h3>
+        <audio controls>
+            <source src="https://29223.live.streamtheworld.com/XHRED_FMAAC.aac" type="audio/aac" />
+        </audio>
+    </div>
+
+    <div class="station-card">
+        <h3>Beat 100.9 FM</h3>
+        <audio controls>
+            <source src="https://14223.live.streamtheworld.com/XHSONFM_SC" type="audio/mpeg" />
+        </audio>
+    </div>
+
+    <div class="station-card">
+        <h3>Alfa 91.3 FM</h3>
+        <audio controls>
+            <source src="https://15123.live.streamtheworld.com/XHFAJ_FMAAC.aac" type="audio/aac" />
+        </audio>
+    </div>
+
+    <div class="station-card">
+        <h3>Radio Disney México</h3>
+        <audio controls>
+            <source src="https://26443.live.streamtheworld.com/XHFOFMAAC/HLS/playlist.m3u8" type="application/vnd.apple.mpegurl" />
+        </audio>
+    </div>
+
+    <div class="station-card">
+        <h3>Exa FM 104.9</h3>
+        <audio controls>
+            <source src="https://playerservices.streamtheworld.com/api/livestream-redirect/XHEXA.mp3" type="audio/mpeg" />
+        </audio>
+    </div>
+
+    <div class="station-card">
+        <h3>La Z 103.5 FM</h3>
+        <audio controls>
+            <source src="https://26413.live.streamtheworld.com/XEQR_FMAAC_SC" type="audio/aac" />
+        </audio>
+    </div>
+
+    <button class="nav-btn" id="nextBtn">⟩</button>
+</div>
+
+<style>
+    body {
+        background: linear-gradient(135deg, #121212, #1a0f14);
+        min-height: 100vh;
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        color: #fff;
+    }
+
+    .radio-title {
+        text-align: center;
+        margin: 25px 0;
+        font-weight: 800;
+        font-size: 28px;
+        letter-spacing: 1px;
+        color: #fff;
+    }
+
+    /* CONTENEDOR */
+    .radio-carousel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    /* CARD */
+    .station-card {
+        display: none;
+        background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(233,30,140,0.15);
+        backdrop-filter: blur(14px);
+        border-radius: 16px;
+        padding: 30px;
+        text-align: center;
+        width: 420px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        transition: all 0.3s ease;
+    }
+
+        .station-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 40px rgba(233,30,140,0.15);
+            border-color: rgba(233,30,140,0.35);
+        }
+
+        .station-card.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in-out;
+            border: 1px solid rgba(233,30,140,0.6);
+            box-shadow: 0 0 20px rgba(233,30,140,0.25), 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .station-card h3 {
+            margin-bottom: 18px;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+    audio {
+        width: 100%;
+        border-radius: 8px;
+        outline: none;
+    }
+
+    /* BOTONES */
+    .nav-btn {
+        background: rgba(233,30,140,0.15);
+        border: 1px solid rgba(233,30,140,0.25);
+        font-size: 2rem;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 50%;
+        padding: 10px 16px;
+        transition: all 0.25s ease;
+        backdrop-filter: blur(10px);
+    }
+
+        .nav-btn:hover {
+            background: rgba(233,30,140,0.5);
+            transform: scale(1.15);
+            box-shadow: 0 0 15px rgba(233,30,140,0.4);
+        }
+
+    /* ANIMACIONES */
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+</style>
+
+<script>
+    const cards = document.querySelectorAll('.station-card');
+    let current = 0;
+
+    function stopAllAudio() {
+        document.querySelectorAll('audio').forEach(player => {
+            player.pause();
+            player.currentTime = 0; // reinicia al inicio
+        });
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+        stopAllAudio();
+        cards[current].classList.remove('active');
+        current = (current - 1 + cards.length) % cards.length;
+        cards[current].classList.add('active');
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+        stopAllAudio();
+        cards[current].classList.remove('active');
+        current = (current + 1) % cards.length;
+        cards[current].classList.add('active');
+    });
+</script>

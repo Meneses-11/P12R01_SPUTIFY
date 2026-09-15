@@ -1,0 +1,99 @@
+﻿@model Sputiffy.Models.Usuarios
+
+@{
+    ViewBag.Title = "Mi Perfil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .perfil-wrap {
+        padding: 30px;
+        color: white;
+    }
+
+    .perfil-card {
+        max-width: 700px;
+        background: #181818;
+        border-radius: 24px;
+        padding: 28px;
+        box-shadow: 0 15px 35px rgba(0,0,0,.20);
+    }
+
+        .perfil-card h2 {
+            margin-top: 0;
+            color: #1db954;
+        }
+
+    .perfil-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 20px;
+    }
+
+    .perfil-item {
+        background: #222;
+        border-radius: 16px;
+        padding: 16px;
+    }
+
+        .perfil-item strong {
+            display: block;
+            color: #1db954;
+            margin-bottom: 6px;
+        }
+
+    @@media(max-width:768px) {
+        .perfil-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="perfil-wrap">
+    <div class="perfil-card">
+        <h2>Mi perfil</h2>
+
+        <div class="perfil-grid">
+            <div class="perfil-item">
+                <strong>Nombre</strong>
+                @Model.Nombre
+            </div>
+
+            <div class="perfil-item">
+                <strong>Usuario</strong>
+                @Model.NombreUsuario
+            </div>
+
+            <div class="perfil-item">
+                <strong>Correo</strong>
+                @Model.Correo
+            </div>
+
+            <div class="perfil-item">
+                <strong>País</strong>
+                @Model.Pais
+            </div>
+
+            <div class="perfil-item">
+                <strong>Fecha de nacimiento</strong>
+                @Model.FechaNacimiento.ToString("dd/MM/yyyy")
+            </div>
+
+            <div class="perfil-item">
+                <strong>Año de nacimiento</strong>
+                @ViewBag.AnioNacimiento
+            </div>
+
+            <div class="perfil-item">
+                <strong>Año base</strong>
+                @ViewBag.AnioBase
+            </div>
+
+            <div class="perfil-item">
+                <strong>Década sugerida</strong>
+                @ViewBag.DecadaBase s
+            </div>
+        </div>
+    </div>
+</div>

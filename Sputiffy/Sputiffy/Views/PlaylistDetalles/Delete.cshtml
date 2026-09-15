@@ -1,0 +1,56 @@
+﻿@model Sputiffy.Models.PlaylistDetalle
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>PlaylistDetalle</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaAgregado)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaAgregado)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrdenCancion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrdenCancion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Canciones.Titulo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Canciones.Titulo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Playlists.NombrePlaylist)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Playlists.NombrePlaylist)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

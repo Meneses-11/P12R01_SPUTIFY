@@ -1,0 +1,96 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Sputiffy</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        /* HEADER */
+        .sp-header {
+            background: #121212;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .sp-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .sp-logo-text {
+            color: white;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .sp-logo-sub {
+            color: #aaa;
+            font-size: 12px;
+            margin-top: -2px;
+        }
+
+        .sp-logo-texts {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* BODY */
+        .body-content {
+            padding-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER PERSONALIZADO -->
+    <header class="sp-header">
+        <a class="sp-logo" href="@Url.Action("Index","Home")">
+
+            <svg width="36" height="36" viewBox="0 0 46 46" fill="none">
+                <defs>
+                    <linearGradient id="slg" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#F7941D" />
+                        <stop offset="50%" stop-color="#E91E8C" />
+                        <stop offset="100%" stop-color="#29ABE2" />
+                    </linearGradient>
+                </defs>
+
+                <rect width="46" height="46" rx="12" fill="url(#slg)" opacity="0.18" />
+                <path d="M15 13C15 10.8 17.4 9.5 19.2 10.7L35 21.7C36.7 22.8 36.7 25.2 35 26.3L19.2 37.3C17.4 38.5 15 37.2 15 35V13Z"
+                      fill="url(#slg)" />
+                <polyline points="19,23 22,18 25,27 28,14 31,30 34,20 37,23"
+                          stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.75" />
+            </svg>
+
+            <div class="sp-logo-texts">
+                <div class="sp-logo-text">Sputiffy</div>
+                <div class="sp-logo-sub">Tu música</div>
+            </div>
+        </a>
+    </header>
+
+    <!-- CONTENIDO -->
+    <div class="container body-content text-center">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - All Rights Reserved | Sputify</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

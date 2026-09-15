@@ -1,0 +1,64 @@
+﻿@model Sputiffy.Models.HistorialReproduccion
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>HistorialReproduccion</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaReproduccion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaReproduccion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SegundosEscuchados)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SegundosEscuchados)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Completa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Completa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Canciones.Titulo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Canciones.Titulo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuarios.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuarios.Nombre)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

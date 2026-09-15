@@ -1,0 +1,111 @@
+﻿@model IEnumerable<Sputiffy.Models.Canciones>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Titulo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DuracionSegundos)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AnioLanzamiento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PreviewUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AudioUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ImagenUrl)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FuenteApi)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IdExternoApi)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Reproducciones)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EsExplIcita)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Activo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Albumes.Titulo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Artistas.NombreArtistico)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Generos.NombreGenero)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Titulo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DuracionSegundos)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AnioLanzamiento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PreviewUrl)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AudioUrl)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ImagenUrl)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FuenteApi)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IdExternoApi)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Reproducciones)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EsExplIcita)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Activo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Albumes.Titulo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Artistas.NombreArtistico)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Generos.NombreGenero)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdCancion }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdCancion }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdCancion })
+        </td>
+    </tr>
+}
+
+</table>

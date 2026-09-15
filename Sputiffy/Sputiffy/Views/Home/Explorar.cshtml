@@ -1,0 +1,134 @@
+﻿@model List<Sputiffy.Models.Canciones>
+
+@{
+    ViewBag.Title = "Explorar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .explorar-wrap {
+        padding: 30px;
+        color: white;
+    }
+
+    .explorar-box {
+        background: #181818;
+        border-radius: 24px;
+        padding: 24px;
+        margin-bottom: 24px;
+    }
+
+        .explorar-box h2 {
+            margin-top: 0;
+            color: #1db954;
+        }
+
+    .search-row {
+        display: grid;
+        grid-template-columns: 1fr 180px 180px;
+        gap: 12px;
+    }
+
+        .search-row input, .search-row button {
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .search-row input {
+            background: #2a2a2a;
+            color: white;
+        }
+
+        .search-row button {
+            background: #1db954;
+            color: white;
+            font-weight: 700;
+        }
+
+    .song-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #181818;
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+        .song-table th, .song-table td {
+            padding: 14px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            text-align: left;
+        }
+
+        .song-table th {
+            background: #202020;
+            color: #1db954;
+        }
+
+    @@media(max-width:768px) {
+        .search-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="explorar-wrap">
+    <div class="explorar-box">
+        <h2>Explorar música</h2>
+
+        @using (Html.BeginForm("Explorar", "Home", FormMethod.Get))
+        {
+            <div class="search-row">
+                <input type="text" name="q" value="@ViewBag.Busqueda" placeholder="Buscar canción, artista, álbum o género" />
+                <input type="number" name="anio" value="@ViewBag.Anio" placeholder="Año" />
+                <button type="submit">Buscar</button>
+            </div>
+        }
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <table class="song-table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Artista</th>
+                    <th>Álbum</th>
+                    <th>Género</th>
+                    <th>Año</th>
+                    <th>Preview</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Titulo</td>
+                        <td>@(item.Artistas != null ? item.Artistas.NombreArtistico : "Sin artista")</td>
+                        <td>@(item.Albumes != null ? item.Albumes.Titulo : "Sin álbum")</td>
+                        <td>@(item.Generos != null ? item.Generos.NombreGenero : "Sin género")</td>
+                        <td>@item.AnioLanzamiento</td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(item.PreviewUrl))
+                            {
+                                <audio controls style="width:220px;">
+                                    <source src="@item.PreviewUrl" type="audio/mpeg" />
+                                </audio>
+                            }
+                            else
+                            {
+                                <span>Sin preview</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="explorar-box">
+            No se encontraron canciones.
+        </div>
+    }
+</div>

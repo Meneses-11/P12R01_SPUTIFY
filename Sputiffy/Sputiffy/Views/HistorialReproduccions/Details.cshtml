@@ -1,0 +1,58 @@
+﻿@model Sputiffy.Models.HistorialReproduccion
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>HistorialReproduccion</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaReproduccion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaReproduccion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SegundosEscuchados)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SegundosEscuchados)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Completa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Completa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Canciones.Titulo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Canciones.Titulo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuarios.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuarios.Nombre)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdHistorial }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,50 @@
+﻿@model Sputiffy.Models.PreferenciasUsuario
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>PreferenciasUsuario</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DecadaPreferida)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DecadaPreferida)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModoRecomendacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModoRecomendacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Generos.NombreGenero)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Generos.NombreGenero)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Usuarios.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Usuarios.Nombre)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdPreferencia }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

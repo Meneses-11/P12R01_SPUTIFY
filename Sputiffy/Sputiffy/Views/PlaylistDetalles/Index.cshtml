@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Sputiffy.Models.PlaylistDetalle>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FechaAgregado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.OrdenCancion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Canciones.Titulo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Playlists.NombrePlaylist)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.FechaAgregado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.OrdenCancion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Canciones.Titulo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Playlists.NombrePlaylist)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.IdPlaylistDetalle }) |
+            @Html.ActionLink("Details", "Details", new { id=item.IdPlaylistDetalle }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.IdPlaylistDetalle })
+        </td>
+    </tr>
+}
+
+</table>

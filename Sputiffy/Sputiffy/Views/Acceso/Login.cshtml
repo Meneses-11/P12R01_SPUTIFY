@@ -1,0 +1,818 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Login";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sputiffy — Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CustomEase.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+    <style>
+        :root {
+            --orange: #F7941D;
+            --pink: #E91E8C;
+            --blue: #29ABE2;
+            --purple: #7B2FBE;
+            --dark: #06061A;
+            --card: rgba(10,10,35,0.88);
+            --border: rgba(255,255,255,0.07);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        #loader {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 32px;
+            background: var(--dark);
+        }
+
+        #loader-logo {
+            position: relative;
+            width: 140px;
+            height: 140px;
+        }
+
+        .ring-svg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ring-path {
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-dasharray: 376;
+            stroke-dashoffset: 376;
+        }
+
+        .ring-outer {
+            stroke: url(#ringGrad);
+        }
+
+        .ring-inner {
+            stroke: rgba(255,255,255,0.08);
+            stroke-dashoffset: 0;
+        }
+
+        .play-wrap {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-svg {
+            width: 82px;
+            height: 82px;
+            opacity: 0;
+            filter: drop-shadow(0 0 18px #E91E8C88);
+        }
+
+        .play-body {
+            fill: url(#playGrad);
+        }
+
+        .wave-path {
+            fill: none;
+            stroke: white;
+            stroke-width: 2.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 120;
+            stroke-dashoffset: 120;
+            opacity: 0.9;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        #loader-wordmark {
+            font-family: 'Syne', sans-serif;
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            opacity: 0;
+            background: linear-gradient(90deg, var(--orange), var(--pink), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        #loader-sub {
+            font-size: 13px;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0;
+            margin-top: -18px;
+        }
+
+        #progress-track {
+            width: 180px;
+            height: 2px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 4px;
+            overflow: hidden;
+            opacity: 0;
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--orange), var(--pink), var(--blue), var(--purple));
+            border-radius: 4px;
+        }
+
+        #login-wrap {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 440px;
+            padding: 20px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            padding: 44px 40px;
+            backdrop-filter: blur(40px);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.04) inset, 0 40px 80px rgba(0,0,0,0.6), 0 0 120px rgba(233,30,140,0.08);
+            overflow: hidden;
+            position: relative;
+        }
+
+            .card::before {
+                content: '';
+                position: absolute;
+                top: -60px;
+                right: -60px;
+                width: 200px;
+                height: 200px;
+                background: radial-gradient(circle, rgba(233,30,140,0.15) 0%, transparent 70%);
+                pointer-events: none;
+            }
+
+            .card::after {
+                content: '';
+                position: absolute;
+                bottom: -60px;
+                left: -40px;
+                width: 160px;
+                height: 160px;
+                background: radial-gradient(circle, rgba(41,171,226,0.12) 0%, transparent 70%);
+                pointer-events: none;
+            }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 32px;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            flex-shrink: 0;
+        }
+
+        .brand-text h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, var(--orange), var(--pink), var(--blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .brand-text span {
+            font-size: 12px;
+            color: rgba(255,255,255,0.35);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .field {
+            margin-bottom: 18px;
+            opacity: 0;
+            transform: translateX(-16px);
+        }
+
+            .field label {
+                display: block;
+                font-size: 11.5px;
+                font-weight: 500;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                color: rgba(255,255,255,0.45);
+                margin-bottom: 8px;
+            }
+
+        .field-inner {
+            position: relative;
+        }
+
+        .field-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.25);
+            font-size: 16px;
+            transition: color 0.3s;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 14px 16px 14px 46px;
+            background: rgba(255,255,255,0.05);
+            border: 1.5px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+        }
+
+            .field input::placeholder {
+                color: rgba(255,255,255,0.2);
+            }
+
+            .field input:focus {
+                border-color: var(--pink);
+                background: rgba(233,30,140,0.06);
+                box-shadow: 0 0 0 4px rgba(233,30,140,0.1);
+            }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(90deg, var(--orange), var(--pink), var(--blue));
+            background-size: 200% 100%;
+            background-position: 0% 0%;
+            color: white;
+            font-family: 'Syne', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.3s, background-position 0.5s;
+            box-shadow: 0 8px 30px rgba(233,30,140,0.35);
+            opacity: 0;
+        }
+
+            .btn-submit:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 14px 40px rgba(233,30,140,0.5);
+                background-position: 100% 0%;
+            }
+
+            .btn-submit:active {
+                transform: translateY(0);
+            }
+
+            .btn-submit .ripple {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255,255,255,0.25);
+                transform: scale(0);
+                pointer-events: none;
+                animation: rippleAnim 0.7s linear;
+            }
+
+        @@keyframes rippleAnim {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 22px 0;
+            opacity: 0;
+        }
+
+            .divider span {
+                font-size: 12px;
+                color: rgba(255,255,255,0.2);
+                white-space: nowrap;
+            }
+
+            .divider::before, .divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: rgba(255,255,255,0.07);
+            }
+
+        .socials {
+            display: flex;
+            gap: 12px;
+            opacity: 0;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1.5px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.2s;
+        }
+
+            .social-btn:hover {
+                background: rgba(255,255,255,0.09);
+                border-color: rgba(255,255,255,0.2);
+                color: white;
+                transform: translateY(-1px);
+            }
+
+        .card-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.3);
+            opacity: 0;
+        }
+
+            .card-footer a {
+                color: var(--pink);
+                text-decoration: none;
+                font-weight: 500;
+                transition: color 0.2s;
+            }
+
+                .card-footer a:hover {
+                    color: var(--orange);
+                }
+
+        .note {
+            position: fixed;
+            font-size: 22px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 5;
+            filter: blur(0.5px);
+        }
+
+        .msg-error {
+            margin-bottom: 16px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: rgba(255, 71, 87, 0.15);
+            border: 1px solid rgba(255, 71, 87, 0.35);
+            color: #ffd9dd;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="note" id="n1">♪</div>
+    <div class="note" id="n2">♫</div>
+    <div class="note" id="n3">♩</div>
+    <div class="note" id="n4">♬</div>
+    <div class="note" id="n5">♭</div>
+
+    <div id="loader">
+        <div id="loader-logo">
+            <svg width="0" height="0" style="position:absolute">
+                <defs>
+                    <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#F7941D" />
+                        <stop offset="35%" stop-color="#E91E8C" />
+                        <stop offset="70%" stop-color="#29ABE2" />
+                        <stop offset="100%" stop-color="#7B2FBE" />
+                    </linearGradient>
+                    <linearGradient id="playGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#F7941D" />
+                        <stop offset="40%" stop-color="#E91E8C" />
+                        <stop offset="100%" stop-color="#29ABE2" />
+                    </linearGradient>
+                </defs>
+            </svg>
+
+            <svg class="ring-svg" viewBox="0 0 140 140">
+                <circle class="ring-path ring-inner" cx="70" cy="70" r="62" />
+                <circle class="ring-path ring-outer" cx="70" cy="70" r="62" />
+            </svg>
+
+            <div class="play-wrap">
+                <svg class="play-svg" viewBox="0 0 82 82" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="play-body" d="M16 14.5C16 11.5 19.2 9.7 21.7 11.3L67 38.8C69.4 40.3 69.4 43.7 67 45.2L21.7 72.7C19.2 74.3 16 72.5 16 69.5V14.5Z" rx="4" />
+                    <polyline class="wave-path" points="26,41 33,29 38,47 44,24 50,52 56,33 62,41" />
+                </svg>
+            </div>
+        </div>
+
+        <div id="loader-wordmark">Sputiffy</div>
+        <div id="loader-sub">Tu música según tu época</div>
+
+        <div id="progress-track">
+            <div id="progress-bar"></div>
+        </div>
+    </div>
+
+    <div id="login-wrap">
+        <div class="card">
+            <div class="brand">
+                <svg class="brand-icon" viewBox="0 0 46 46" fill="none">
+                    <defs>
+                        <linearGradient id="bpg" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#F7941D" />
+                            <stop offset="50%" stop-color="#E91E8C" />
+                            <stop offset="100%" stop-color="#29ABE2" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="46" height="46" rx="12" fill="url(#bpg)" opacity="0.15" />
+                    <path d="M15 13C15 10.8 17.4 9.5 19.2 10.7L35 21.7C36.7 22.8 36.7 25.2 35 26.3L19.2 37.3C17.4 38.5 15 37.2 15 35V13Z" fill="url(#bpg)" />
+                    <polyline points="19,23 22,18 25,27 28,14 31,30 34,20 37,23" stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7" />
+                </svg>
+                <div class="brand-text">
+                    <h1>Sputiffy</h1>
+                    <span>Tu música según tu época</span>
+                </div>
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="msg-error">@ViewBag.Error</div>
+            }
+
+            @using (Html.BeginForm("Login", "Acceso", FormMethod.Post, new { id = "loginForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="field" id="f1">
+                    <label>Correo electrónico</label>
+                    <div class="field-inner">
+                        <span class="field-icon">✉</span>
+                        <input type="email" name="correo" placeholder="tu@correo.com" required />
+                    </div>
+                </div>
+
+                <div class="field" id="f2">
+                    <label>Contraseña</label>
+                    <div class="field-inner">
+                        <span class="field-icon">🔒</span>
+                        <input type="password" name="contrasena" placeholder="••••••••" required />
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit" id="btn-login">
+                    Iniciar sesión
+                </button>
+            }
+
+            <div class="divider"><span>o continuar con</span></div>
+
+            <div class="socials" id="socials-row">
+                <button type="button" class="social-btn">Google</button>
+                <button type="button" class="social-btn">Apple</button>
+            </div>
+
+            <div class="card-footer" id="card-footer">
+                ¿No tienes cuenta? @Html.ActionLink("Regístrate gratis", "Registro", "Acceso")
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let W, H;
+
+        function resize() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        const COLORS = ['#F7941D', '#E91E8C', '#29ABE2', '#7B2FBE'];
+        const blobs = Array.from({ length: 6 }, (_, i) => ({
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: 200 + Math.random() * 200,
+            vx: (Math.random() - .5) * 0.4,
+            vy: (Math.random() - .5) * 0.4,
+            color: COLORS[i % COLORS.length],
+            phase: Math.random() * Math.PI * 2
+        }));
+
+        function drawBg() {
+            ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = '#06061A';
+            ctx.fillRect(0, 0, W, H);
+
+            blobs.forEach(b => {
+                b.phase += 0.004;
+                b.x += b.vx + Math.sin(b.phase) * 0.3;
+                b.y += b.vy + Math.cos(b.phase * 0.7) * 0.3;
+
+                if (b.x < -b.r) b.x = W + b.r;
+                if (b.x > W + b.r) b.x = -b.r;
+                if (b.y < -b.r) b.y = H + b.r;
+                if (b.y > H + b.r) b.y = -b.r;
+
+                const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+                g.addColorStop(0, b.color + '18');
+                g.addColorStop(1, 'transparent');
+                ctx.fillStyle = g;
+                ctx.beginPath();
+                ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            ctx.globalAlpha = 0.012;
+            for (let i = 0; i < 80; i++) {
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(Math.random() * W, Math.random() * H, 1, 1);
+            }
+            ctx.globalAlpha = 1;
+
+            requestAnimationFrame(drawBg);
+        }
+        drawBg();
+
+        const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+
+        tl.to('.ring-path.ring-outer', {
+            strokeDashoffset: 0,
+            duration: 1.4,
+            ease: 'power2.inOut'
+        }, 0.3)
+            .to('.play-svg', {
+                opacity: 1, scale: 1,
+                duration: 0.6,
+                ease: 'back.out(2)',
+                transformOrigin: 'center'
+            }, 1.2)
+            .to('.wave-path', {
+                strokeDashoffset: 0,
+                opacity: 0.9,
+                duration: 0.9,
+                ease: 'power2.out'
+            }, 1.5)
+            .to('#loader-wordmark', {
+                opacity: 1, y: 0,
+                duration: 0.7
+            }, 1.7)
+            .to('#loader-sub', {
+                opacity: 1,
+                duration: 0.5
+            }, 2.1)
+            .to('#progress-track', { opacity: 1, duration: 0.3 }, 2.3)
+            .to('#progress-bar', {
+                width: '100%',
+                duration: 1.6,
+                ease: 'power1.inOut'
+            }, 2.4)
+            .to('#loader-logo', {
+                scale: 1.08,
+                duration: 0.35
+            }, 3.8)
+            .to('#loader-logo', {
+                scale: 1,
+                duration: 0.35
+            }, 4.15);
+
+        const particles = [];
+        const PART_COLORS = ['#F7941D', '#E91E8C', '#29ABE2', '#7B2FBE', '#fff'];
+
+        for (let i = 0; i < 22; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const sz = 4 + Math.random() * 7;
+            p.style.cssText = `
+        width:${sz}px; height:${sz}px;
+        background:${PART_COLORS[i % PART_COLORS.length]};
+        left:${70 - sz / 2}px; top:${70 - sz / 2}px;
+      `;
+            document.getElementById('loader').appendChild(p);
+            particles.push(p);
+        }
+
+        tl.add(() => {
+            particles.forEach((p, i) => {
+                const angle = (i / particles.length) * Math.PI * 2;
+                const dist = 60 + Math.random() * 70;
+                gsap.to(p, {
+                    opacity: 1,
+                    x: Math.cos(angle) * dist,
+                    y: Math.sin(angle) * dist,
+                    duration: 0.6,
+                    ease: 'power2.out'
+                });
+                gsap.to(p, {
+                    opacity: 0,
+                    duration: 0.5,
+                    delay: 0.4,
+                    ease: 'power2.in'
+                });
+            });
+        }, 3.8);
+
+        tl.add(() => {
+            anime({
+                targets: '.wave-path',
+                strokeDashoffset: [0, -30, 0],
+                duration: 800,
+                easing: 'easeInOutSine',
+                loop: 2
+            });
+        }, 4.2);
+
+        tl.to('#loader', {
+            opacity: 0,
+            duration: 0.7,
+            ease: 'power2.inOut',
+            pointerEvents: 'none'
+        }, 5.2)
+            .set('#loader', { display: 'none' })
+            .to('#login-wrap', {
+                opacity: 1, y: 0,
+                duration: 0.9
+            }, 5.4)
+            .to(['#f1', '#f2'], {
+                opacity: 1, x: 0,
+                stagger: 0.13,
+                duration: 0.6
+            }, 5.7)
+            .to('#btn-login', {
+                opacity: 1,
+                duration: 0.5
+            }, 6.05)
+            .to(['.divider', '#socials-row', '#card-footer'], {
+                opacity: 1,
+                stagger: 0.1,
+                duration: 0.4
+            }, 6.25);
+
+        const noteEls = ['#n1', '#n2', '#n3', '#n4', '#n5'];
+        const noteColors = ['#F7941D', '#E91E8C', '#29ABE2', '#7B2FBE', '#fff'];
+
+        noteEls.forEach((sel, i) => {
+            const el = document.querySelector(sel);
+            const side = Math.random() > 0.5 ? 1 : -1;
+            el.style.color = noteColors[i];
+            el.style.left = (10 + Math.random() * 80) + 'vw';
+            el.style.top = (10 + Math.random() * 80) + 'vh';
+            el.style.fontSize = (16 + Math.random() * 20) + 'px';
+
+            function floatNote() {
+                anime({
+                    targets: el,
+                    opacity: [0, 0.18 + Math.random() * 0.18, 0],
+                    translateX: [(side * 10) + 'px', (side * (20 + Math.random() * 30)) + 'px'],
+                    translateY: [0, -(40 + Math.random() * 60) + 'px'],
+                    rotate: [0, side * (10 + Math.random() * 20)],
+                    duration: 3000 + Math.random() * 2000,
+                    delay: i * 600 + 4000,
+                    easing: 'easeOutCubic',
+                    complete: () => {
+                        el.style.left = (10 + Math.random() * 80) + 'vw';
+                        el.style.top = (40 + Math.random() * 50) + 'vh';
+                        setTimeout(floatNote, Math.random() * 2000);
+                    }
+                });
+            }
+
+            setTimeout(floatNote, i * 600 + 4200);
+        });
+
+        document.querySelectorAll('.field input').forEach(input => {
+            input.addEventListener('focus', () => {
+                anime({
+                    targets: input,
+                    scale: [1, 1.015, 1],
+                    duration: 350,
+                    easing: 'easeOutElastic(1,.7)'
+                });
+            });
+        });
+
+        document.getElementById('btn-login').addEventListener('click', function (e) {
+            rippleEffect(e, this);
+        });
+
+        function rippleEffect(e, btn) {
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            ripple.style.cssText = `
+        width:${Math.max(rect.width, rect.height) * 2}px;
+        height:${Math.max(rect.width, rect.height) * 2}px;
+        left:${x - Math.max(rect.width, rect.height)}px;
+        top:${y - Math.max(rect.width, rect.height)}px;
+      `;
+            btn.appendChild(ripple);
+            ripple.addEventListener('animationend', () => ripple.remove());
+
+            anime({
+                targets: btn,
+                scale: [1, 0.96, 1],
+                duration: 300,
+                easing: 'easeOutBounce'
+            });
+        }
+
+        gsap.delayedCall(6.5, () => {
+            gsap.to('.ring-svg', {
+                rotation: 360,
+                duration: 18,
+                ease: 'none',
+                repeat: -1,
+                transformOrigin: '50% 50%'
+            });
+        });
+
+        const card = document.querySelector('.card');
+        card.addEventListener('mousemove', e => {
+            const r = card.getBoundingClientRect();
+            const xFrac = (e.clientX - r.left) / r.width - 0.5;
+            const yFrac = (e.clientY - r.top) / r.height - 0.5;
+            gsap.to(card, {
+                rotateY: xFrac * 4,
+                rotateX: -yFrac * 4,
+                duration: 0.6,
+                ease: 'power2.out',
+                transformPerspective: 800
+            });
+        });
+        card.addEventListener('mouseleave', () => {
+            gsap.to(card, {
+                rotateY: 0,
+                rotateX: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+            });
+        });
+    </script>
+</body>
+</html>

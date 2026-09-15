@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Sputiffy.Models.Cancion>
+
+@{
+    ViewBag.Title = "Sputiffy - Reproductor";
+}
+
+<link rel="stylesheet" href="~/Content/css/offline.css" />
+
+<div class="sputiffy-container">
+    <header class="sputiffy-header">
+        <h1>Sputiffy</h1>
+        <p>Tu música, guardada en tu computadora.</p>
+    </header>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="sputiffy-mensaje">@TempData["Mensaje"]</div>
+    }
+
+    <div class="sputiffy-toolbar">
+        @using (Html.BeginForm("Index", "Offline", FormMethod.Get))
+        {
+            <input type="text" name="busqueda" value="@ViewBag.Busqueda"
+                   placeholder="Buscar por título, artista o álbum..." class="input-busqueda" />
+            <button type="submit" class="btn-icon btn-play" title="Buscar">🔍</button>
+        }
+        <a href="@Url.Action("Agregar", "Offline")" class="btn-icon btn-agregar" title="Agregar canciones">+</a>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="sputiffy-empty">
+            <p>No hay canciones registradas todavía.</p>
+        </div>
+    }
+    else
+    {
+        <div class="sputiffy-lista">
+            @foreach (var cancion in Model)
+            {
+                <div class="sputiffy-item" id="item-@cancion.Id">
+                    <div class="sputiffy-info">
+                        <span class="sputiffy-titulo">@cancion.Titulo</span>
+                        <span class="sputiffy-artista">@cancion.Artista</span>
+                        <span class="sputiffy-album">@cancion.Album</span>
+                    </div>
+                    <div class="sputiffy-controles">
+                        <button class="btn-icon btn-play" onclick="reproducirCancion(@cancion.Id)" title="Reproducir">▶</button>
+                        <button class="btn-icon btn-pause" onclick="pausarCancion()" title="Pausa">⏸</button>
+                        <a href="@Url.Action("Editar", "Offline", new { id = cancion.Id })" class="btn-icon btn-editar" title="Editar">✎</a>
+                        @using (Html.BeginForm("Eliminar", "Offline", new { id = cancion.Id },
+                                                FormMethod.Post, new { style = "display:inline;" }))
+                        {
+                            <button type="submit" class="btn-icon btn-eliminar" title="Eliminar"
+                                    onclick="return confirm('¿Eliminar esta canción de la base de datos? El archivo NO se borrará del disco.');">
+                                🗑
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="sputiffy-player-bar">
+            <audio id="audioPlayer" controls></audio>
+        </div>
+    }
+</div>
+
+<script>
+    var audio = document.getElementById('audioPlayer');
+
+    function reproducirCancion(id) {
+        if (!audio) return;
+        audio.src = '@Url.Action("Reproducir", "Offline")/' + id;
+        audio.play();
+    }
+
+    function pausarCancion() {
+        if (!audio) return;
+        audio.pause();
+    }
+</script>

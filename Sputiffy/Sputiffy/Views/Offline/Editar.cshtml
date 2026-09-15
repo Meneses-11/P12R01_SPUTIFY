@@ -1,0 +1,37 @@
+﻿@model Sputiffy.Models.Cancion
+
+@{
+    ViewBag.Title = "Editar canción";
+}
+
+<link rel="stylesheet" href="~/Content/css/offline.css" />
+
+<div class="sputiffy-container">
+    <h1>Editar canción</h1>
+
+    @using (Html.BeginForm("Editar", "Offline", FormMethod.Post))
+    {
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.RutaArchivo)
+
+        <div class="form-grupo">
+            <label>Título</label>
+            @Html.TextBoxFor(m => m.Titulo, new { @class = "input-editar" })
+        </div>
+
+        <div class="form-grupo">
+            <label>Artista</label>
+            @Html.TextBoxFor(m => m.Artista, new { @class = "input-editar" })
+        </div>
+
+        <div class="form-grupo">
+            <label>Álbum</label>
+            @Html.TextBoxFor(m => m.Album, new { @class = "input-editar" })
+        </div>
+
+        <p class="sputiffy-album">Archivo: @Model.RutaArchivo</p>
+
+        <button type="submit" class="btn-play">Guardar cambios</button>
+        <a href="@Url.Action("Index", "Offline")" class="btn-pause sputiffy-link-btn">Cancelar</a>
+    }
+</div>

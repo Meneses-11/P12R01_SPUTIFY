@@ -1,0 +1,563 @@
+﻿@model Sputiffy.Models.Usuarios
+@{
+    ViewBag.Title = "Registro";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Registro | Sputiffy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+    <style>
+    :root {
+      --orange:  #F7941D;
+      --pink:    #E91E8C;
+      --blue:    #29ABE2;
+      --purple:  #7B2FBE;
+      --dark:    #06061A;
+      --card:    rgba(10,10,35,0.88);
+      --border:  rgba(255,255,255,0.07);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--dark);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 50px 20px;
+      overflow-x: hidden;
+    }
+
+    #bg-canvas {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+    }
+
+    .note {
+      position: fixed;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    #register-wrap {
+      position: relative; z-index: 10;
+      width: 100%; max-width: 520px;
+      opacity: 0;
+      transform: translateY(36px);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 44px 42px 40px;
+      backdrop-filter: blur(40px);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04) inset,
+        0 40px 80px rgba(0,0,0,0.6),
+        0 0 120px rgba(41,171,226,0.07);
+      overflow: hidden;
+      position: relative;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: -70px; left: -50px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(247,148,29,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .card::after {
+      content: '';
+      position: absolute; bottom: -60px; right: -50px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(41,171,226,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* Brand */
+    .brand {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 6px;
+    }
+    .brand-icon { width: 44px; height: 44px; flex-shrink: 0; }
+    .brand-text h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 24px; font-weight: 800; letter-spacing: -.5px;
+      background: linear-gradient(90deg, var(--orange), var(--pink), var(--blue));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      line-height: 1;
+    }
+    .brand-text span {
+      font-size: 11px; color: rgba(255,255,255,0.3);
+      letter-spacing: 2px; text-transform: uppercase;
+    }
+
+    /* Section title */
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px; font-weight: 700;
+      color: white; margin: 22px 0 20px;
+      position: relative; padding-bottom: 12px;
+    }
+    .section-title::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0;
+      width: 36px; height: 2px;
+      background: linear-gradient(90deg, var(--orange), var(--pink));
+      border-radius: 2px;
+    }
+
+    /* Step indicator */
+    .steps {
+      display: flex; align-items: center;
+      margin-bottom: 28px;
+      opacity: 0;
+    }
+    .step {
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      flex: 1;
+    }
+    .step-dot {
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+      background: rgba(255,255,255,0.06);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.3);
+      transition: all 0.4s;
+      position: relative; z-index: 1;
+    }
+    .step.active .step-dot {
+      background: linear-gradient(135deg, var(--orange), var(--pink));
+      border-color: transparent; color: white;
+      box-shadow: 0 0 16px rgba(233,30,140,0.5);
+    }
+    .step.done .step-dot {
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      border-color: transparent; color: white;
+    }
+    .step-label {
+      font-size: 10px; letter-spacing: 1px;
+      text-transform: uppercase; color: rgba(255,255,255,0.2);
+      transition: color 0.4s;
+    }
+    .step.active .step-label, .step.done .step-label { color: rgba(255,255,255,0.55); }
+    .step-line {
+      flex: 1; height: 1.5px; margin-bottom: 18px;
+      background: rgba(255,255,255,0.08); transition: background 0.4s;
+    }
+    .step-line.done { background: linear-gradient(90deg, var(--blue), var(--purple)); }
+
+    /* Grid */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+
+    /* Fields */
+    .field {
+      margin-bottom: 16px;
+      opacity: 0;
+      transform: translateX(-14px);
+    }
+    .field.full { grid-column: 1 / -1; }
+    .field label {
+      display: block;
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: rgba(255,255,255,0.4); margin-bottom: 7px;
+    }
+    .field-inner { position: relative; }
+    .field-icon {
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px; color: rgba(255,255,255,0.2);
+      pointer-events: none; transition: color 0.3s;
+    }
+    .field input, .field select {
+      width: 100%;
+      padding: 13px 14px 13px 42px;
+      background: rgba(255,255,255,0.05);
+      border: 1.5px solid rgba(255,255,255,0.08);
+      border-radius: 13px; color: white;
+      font-family: 'DM Sans', sans-serif; font-size: 13.5px;
+      outline: none;
+      transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+      -webkit-appearance: none;
+    }
+    .field input::placeholder { color: rgba(255,255,255,0.2); }
+    .field input:focus {
+      border-color: var(--pink);
+      background: rgba(233,30,140,0.05);
+      box-shadow: 0 0 0 4px rgba(233,30,140,0.09);
+    }
+    .field input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.5);
+      cursor: pointer;
+    }
+
+    /* Password strength */
+    #pwd-strength {
+      margin-top: -8px; margin-bottom: 16px;
+      opacity: 0; transition: opacity 0.3s;
+    }
+    #pwd-strength-track {
+      height: 3px; background: rgba(255,255,255,0.07);
+      border-radius: 4px; overflow: hidden;
+    }
+    #pwd-strength-bar { height: 100%; width: 0%; border-radius: 4px; }
+    #pwd-strength-label {
+      font-size: 10.5px; color: rgba(255,255,255,0.3);
+      margin-top: 5px; letter-spacing: .5px;
+    }
+
+    /* Error */
+    .msg-error {
+      background: rgba(166,29,36,0.25);
+      border: 1px solid rgba(166,29,36,0.5);
+      color: #ff6b72;
+      padding: 11px 15px; border-radius: 12px;
+      margin-bottom: 18px; font-size: 13px;
+    }
+
+    /* Separator */
+    .sep-label {
+      font-size: 10.5px; letter-spacing: 2px; text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      display: flex; align-items: center; gap: 10px;
+      margin: 20px 0 16px; opacity: 0;
+    }
+    .sep-label::before, .sep-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    /* Button */
+    .btn-submit {
+      width: 100%; padding: 15px;
+      border: none; border-radius: 14px;
+      background: linear-gradient(90deg, var(--orange), var(--pink), var(--blue));
+      background-size: 200%; background-position: 0%;
+      color: white;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px; font-weight: 700; letter-spacing: .4px;
+      cursor: pointer; margin-top: 8px;
+      position: relative; overflow: hidden;
+      transition: transform .2s, box-shadow .3s, background-position .5s;
+      box-shadow: 0 8px 30px rgba(233,30,140,0.3);
+      opacity: 0;
+    }
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 40px rgba(233,30,140,0.5);
+      background-position: 100%;
+    }
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit .ripple {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      transform: scale(0); pointer-events: none;
+      animation: rippleAnim 0.7s linear;
+    }
+    @@keyframes rippleAnim { to { transform: scale(4); opacity: 0; } }
+
+    /* Footer */
+    .card-footer {
+      text-align: center; margin-top: 22px;
+      font-size: 13px; color: rgba(255,255,255,0.3);
+      opacity: 0;
+    }
+    .card-footer a {
+      color: var(--pink); text-decoration: none; font-weight: 500;
+    }
+    .card-footer a:hover { color: var(--orange); }
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+    <div class="note" id="n1">♪</div>
+    <div class="note" id="n2">♫</div>
+    <div class="note" id="n3">♩</div>
+    <div class="note" id="n4">♬</div>
+
+    <div id="register-wrap">
+        <div class="card">
+
+            <div class="brand">
+                <svg class="brand-icon" viewBox="0 0 46 46" fill="none">
+                    <defs>
+                        <linearGradient id="bpg" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#F7941D" />
+                            <stop offset="50%" stop-color="#E91E8C" />
+                            <stop offset="100%" stop-color="#29ABE2" />
+                        </linearGradient>
+                    </defs>
+                    <rect width="46" height="46" rx="12" fill="url(#bpg)" opacity="0.15" />
+                    <path d="M15 13C15 10.8 17.4 9.5 19.2 10.7L35 21.7C36.7 22.8 36.7 25.2 35 26.3L19.2 37.3C17.4 38.5 15 37.2 15 35V13Z" fill="url(#bpg)" />
+                    <polyline points="19,23 22,18 25,27 28,14 31,30 34,20 37,23"
+                              stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.7" />
+                </svg>
+                <div class="brand-text">
+                    <h1>Sputiffy</h1>
+                    <span>Tu música según tu época</span>
+                </div>
+            </div>
+
+            <div class="section-title">Crear cuenta</div>
+
+            <div class="steps" id="steps-row">
+                <div class="step active" id="step1">
+                    <div class="step-dot">1</div>
+                    <div class="step-label">Datos</div>
+                </div>
+                <div class="step-line" id="line1"></div>
+                <div class="step" id="step2">
+                    <div class="step-dot">2</div>
+                    <div class="step-label">Acceso</div>
+                </div>
+                <div class="step-line" id="line2"></div>
+                <div class="step" id="step3">
+                    <div class="step-dot">3</div>
+                    <div class="step-label">Perfil</div>
+                </div>
+            </div>
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="msg-error">@ViewBag.Error</div>
+            }
+
+            @using (Html.BeginForm("Registro", "Acceso", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="grid-2">
+                    <div class="field" id="f1">
+                        <label>Nombre</label>
+                        <div class="field-inner">
+                            <span class="field-icon">👤</span>
+                            @Html.TextBoxFor(m => m.Nombre, new { placeholder = "Tu nombre" })
+                        </div>
+                    </div>
+                    <div class="field" id="f2">
+                        <label>Ap. Materno</label>
+                        <div class="field-inner">
+                            <span class="field-icon">👤</span>
+                            @Html.TextBoxFor(m => m.ApellidoMaterno, new { placeholder = "Ap. materno" })
+                        </div>
+                    </div>
+                    <div class="field full" id="f3">
+                        <label>Apellido Paterno</label>
+                        <div class="field-inner">
+                            <span class="field-icon">👤</span>
+                            @Html.TextBoxFor(m => m.ApellidoPaterno, new { placeholder = "Ap. paterno" })
+                        </div>
+                    </div>
+                    <div class="field full" id="f4">
+                        <label>Nombre de usuario</label>
+                        <div class="field-inner">
+                            <span class="field-icon">✦</span>
+                            @Html.TextBoxFor(m => m.NombreUsuario, new { placeholder = "@tu_usuario" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sep-label" id="sep1">Acceso</div>
+
+                <div class="field full" id="f5">
+                    <label>Correo electrónico</label>
+                    <div class="field-inner">
+                        <span class="field-icon">✉</span>
+                        @Html.TextBoxFor(m => m.Correo, new { type = "email", placeholder = "tu@correo.com" })
+                    </div>
+                </div>
+                <div class="field full" id="f6">
+                    <label>Contraseña</label>
+                    <div class="field-inner">
+                        <span class="field-icon">🔒</span>
+                        @Html.TextBoxFor(m => m.Contrasena, new { type = "password", placeholder = "Mínimo 8 caracteres", id = "pwd-input" })
+                    </div>
+                </div>
+                <div id="pwd-strength">
+                    <div id="pwd-strength-track"><div id="pwd-strength-bar"></div></div>
+                    <div id="pwd-strength-label">Escribe tu contraseña</div>
+                </div>
+
+                <div class="sep-label" id="sep2">Perfil</div>
+
+                <div class="grid-2">
+                    <div class="field" id="f7">
+                        <label>Fecha de nacimiento</label>
+                        <div class="field-inner">
+                            <span class="field-icon">📅</span>
+                            @Html.TextBoxFor(m => m.FechaNacimiento, new { type = "date" })
+                        </div>
+                    </div>
+                    <div class="field" id="f8">
+                        <label>País</label>
+                        <div class="field-inner">
+                            <span class="field-icon">🌎</span>
+                            @Html.TextBoxFor(m => m.Pais, new { placeholder = "México" })
+                        </div>
+                    </div>
+                </div>
+
+                @Html.HiddenFor(m => m.IdRol, new { Value = "2" })
+
+                <button type="submit" class="btn-submit" id="btn-register" onclick="rippleEffect(event,this)">
+                    Crear mi cuenta
+                </button>
+            }
+
+            <div class="card-footer" id="card-footer">
+                ¿Ya tienes cuenta? @Html.ActionLink("Inicia sesión", "Login", "Acceso")
+            </div>
+        </div>
+    </div>
+
+    <script>
+/* CANVAS */
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+resize(); addEventListener('resize', resize);
+const COLORS = ['#F7941D','#E91E8C','#29ABE2','#7B2FBE'];
+const blobs = Array.from({length:6},(_,i)=>({
+  x:Math.random()*W, y:Math.random()*H,
+  r:180+Math.random()*220,
+  vx:(Math.random()-.5)*.4, vy:(Math.random()-.5)*.4,
+  color:COLORS[i%4], phase:Math.random()*Math.PI*2
+}));
+function drawBg() {
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#06061A'; ctx.fillRect(0,0,W,H);
+  blobs.forEach(b => {
+    b.phase+=.004;
+    b.x+=b.vx+Math.sin(b.phase)*.3; b.y+=b.vy+Math.cos(b.phase*.7)*.3;
+    if(b.x<-b.r)b.x=W+b.r; if(b.x>W+b.r)b.x=-b.r;
+    if(b.y<-b.r)b.y=H+b.r; if(b.y>H+b.r)b.y=-b.r;
+    const g=ctx.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);
+    g.addColorStop(0,b.color+'16'); g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(b.x,b.y,b.r,0,Math.PI*2); ctx.fill();
+  });
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+/* ENTRANCE */
+const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
+tl.to('#register-wrap', { opacity:1, y:0, duration:.9 }, .1)
+  .to('#steps-row', { opacity:1, duration:.5 }, .5)
+  .to(['#f1','#f2','#f3','#f4'], { opacity:1, x:0, stagger:.07, duration:.5 }, .65)
+  .to('#sep1', { opacity:1, duration:.4 }, 1.05)
+  .to(['#f5','#f6'], { opacity:1, x:0, stagger:.08, duration:.5 }, 1.1)
+  .to('#sep2', { opacity:1, duration:.4 }, 1.45)
+  .to(['#f7','#f8'], { opacity:1, x:0, stagger:.08, duration:.5 }, 1.5)
+  .to('#btn-register', { opacity:1, duration:.4 }, 1.85)
+  .to('#card-footer', { opacity:1, duration:.4 }, 2.0);
+
+/* STEP INDICATOR */
+const allInputs = document.querySelectorAll('.field input');
+allInputs.forEach((el, i) => {
+  el.addEventListener('focus', () => {
+    const pct = i / allInputs.length;
+    const active = pct < 0.42 ? 1 : pct < 0.68 ? 2 : 3;
+    document.querySelectorAll('.step').forEach((s,si) => {
+      s.classList.remove('active','done');
+      if(si+1 < active) s.classList.add('done');
+      if(si+1 === active) s.classList.add('active');
+    });
+    document.querySelectorAll('.step-line').forEach((l,li) => {
+      l.classList.toggle('done', li+1 < active);
+    });
+    anime({ targets:'.step.active .step-dot', scale:[1,1.25,1], duration:400, easing:'easeOutElastic(1,.6)' });
+  });
+});
+
+/* PASSWORD STRENGTH */
+const pwdInput = document.getElementById('pwd-input');
+const sBar = document.getElementById('pwd-strength-bar');
+const sLabel = document.getElementById('pwd-strength-label');
+const sWrap = document.getElementById('pwd-strength');
+if(pwdInput) {
+  pwdInput.addEventListener('input', () => {
+    const v = pwdInput.value;
+    sWrap.style.opacity = v.length > 0 ? '1' : '0';
+    let score = 0;
+    if(v.length>=8) score++;
+    if(/[A-Z]/.test(v)) score++;
+    if(/[0-9]/.test(v)) score++;
+    if(/[^A-Za-z0-9]/.test(v)) score++;
+    const cfg = [
+      {w:'20%',bg:'#E91E8C',t:'Muy débil'},
+      {w:'45%',bg:'#F7941D',t:'Débil'},
+      {w:'70%',bg:'#29ABE2',t:'Buena'},
+      {w:'100%',bg:'linear-gradient(90deg,#29ABE2,#7B2FBE)',t:'Fuerte 🔥'}
+    ][Math.max(0,score-1)];
+    anime({ targets:sBar, width:cfg.w, duration:400, easing:'easeOutCubic' });
+    sBar.style.background = cfg.bg;
+    sLabel.textContent = cfg.t;
+  });
+}
+
+/* MICRO-INTERACTIONS */
+document.querySelectorAll('.field input').forEach(el => {
+  el.addEventListener('focus', () => {
+    anime({ targets:el, scale:[1,1.012,1], duration:300, easing:'easeOutElastic(1,.8)' });
+  });
+});
+
+/* RIPPLE */
+function rippleEffect(e, btn) {
+  const r = btn.getBoundingClientRect();
+  const s = document.createElement('span');
+  s.className = 'ripple';
+  const sz = Math.max(r.width,r.height)*2;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-r.left-sz/2}px;top:${e.clientY-r.top-sz/2}px`;
+  btn.appendChild(s);
+  s.addEventListener('animationend',()=>s.remove());
+  anime({ targets:btn, scale:[1,.96,1], duration:280, easing:'easeOutBounce' });
+}
+
+/* CARD TILT */
+const card = document.querySelector('.card');
+card.addEventListener('mousemove', e => {
+  const r = card.getBoundingClientRect();
+  const xF=(e.clientX-r.left)/r.width-.5; const yF=(e.clientY-r.top)/r.height-.5;
+  gsap.to(card, { rotateY:xF*3, rotateX:-yF*3, duration:.6, ease:'power2.out', transformPerspective:800 });
+});
+card.addEventListener('mouseleave', () => {
+  gsap.to(card, { rotateY:0, rotateX:0, duration:.8, ease:'power3.out' });
+});
+
+/* FLOATING NOTES */
+['#n1','#n2','#n3','#n4'].forEach((sel,i) => {
+  const el = document.querySelector(sel);
+  el.textContent = ['♪','♫','♩','♬'][i];
+  el.style.color = COLORS[i];
+  el.style.fontSize = (14+Math.random()*14)+'px';
+  function floatNote() {
+    el.style.left=(8+Math.random()*84)+'vw';
+    el.style.top=(30+Math.random()*60)+'vh';
+    const side=Math.random()>.5?1:-1;
+    anime({ targets:el, opacity:[0,.15+Math.random()*.12,0],
+      translateX:[(side*8)+'px',(side*(25+Math.random()*30))+'px'],
+      translateY:[0,-(35+Math.random()*55)+'px'],
+      rotate:[0,side*(8+Math.random()*18)],
+      duration:3200+Math.random()*2000, delay:i*700+600, easing:'easeOutCubic',
+      complete:()=>setTimeout(floatNote,1000+Math.random()*1500)
+    });
+  }
+  setTimeout(floatNote, i*700+400);
+});
+    </script>
+</body>
+</html>

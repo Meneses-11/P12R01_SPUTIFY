@@ -1,0 +1,206 @@
+﻿@model Sputiffy.Controllers.DeezerSearchResponse
+
+@{
+    ViewBag.Title = "Resultados API";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .res-wrap {
+        padding: 30px;
+        color: white;
+    }
+
+    .res-head {
+        background: linear-gradient(135deg, #1db954, #121212);
+        border-radius: 24px;
+        padding: 26px;
+        margin-bottom: 24px;
+        box-shadow: 0 16px 35px rgba(0,0,0,.22);
+    }
+
+        .res-head h1 {
+            margin: 0 0 8px 0;
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .res-head p {
+            margin: 0;
+            color: #ebebeb;
+        }
+
+    .res-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 18px;
+    }
+
+    .track-card {
+        background: #181818;
+        border-radius: 22px;
+        padding: 18px;
+        box-shadow: 0 12px 24px rgba(0,0,0,.18);
+        transition: .2s ease;
+        border: 1px solid rgba(255,255,255,.06);
+    }
+
+        .track-card:hover {
+            transform: translateY(-3px);
+            background: #202020;
+        }
+
+    .track-cover {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 16px;
+        background: #2c2c2c;
+        margin-bottom: 14px;
+    }
+
+    .track-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .track-meta {
+        color: #c8c8c8;
+        font-size: 14px;
+        line-height: 1.6;
+        margin-bottom: 14px;
+    }
+
+        .track-meta strong {
+            color: #1db954;
+        }
+
+    .track-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-save {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 14px;
+        background: #1db954;
+        color: white;
+        font-weight: 700;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+        .btn-save:hover {
+            background: #179847;
+        }
+
+    .btn-back {
+        display: inline-block;
+        margin-top: 24px;
+        text-decoration: none;
+        color: white;
+        background: #2a2a2a;
+        padding: 12px 18px;
+        border-radius: 12px;
+    }
+
+    .empty-box {
+        background: #181818;
+        border-radius: 20px;
+        padding: 24px;
+        color: #d0d0d0;
+    }
+
+    audio {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    @@media(max-width:768px) {
+        .res-wrap {
+            padding: 18px;
+        }
+
+        .res-head h1 {
+            font-size: 27px;
+        }
+    }
+</style>
+
+<div class="res-wrap">
+    <div class="res-head">
+        <h1>Resultados de Deezer</h1>
+        <p>Revisa los tracks encontrados y guarda los que quieras en tu catálogo de Sputiffy.</p>
+    </div>
+
+    @if (Model != null && Model.data != null && Model.data.Any())
+    {
+        <div class="res-grid">
+            @foreach (var item in Model.data)
+            {
+                var imagen = !string.IsNullOrWhiteSpace(item.album != null ? item.album.cover_medium : null)
+                    ? item.album.cover_medium
+                    : "https://via.placeholder.com/400x400?text=Sputiffy";
+
+                var anioLanzamiento = 1980;
+
+                if (item.album != null && !string.IsNullOrWhiteSpace(item.album.release_date))
+                {
+                    DateTime fechaTemp;
+                    if (DateTime.TryParse(item.album.release_date, out fechaTemp))
+                    {
+                        anioLanzamiento = fechaTemp.Year;
+                    }
+                }
+
+                <div class="track-card">
+                    <img src="@imagen" class="track-cover" alt="cover" />
+
+                    <div class="track-title">@item.title</div>
+
+                    <div class="track-meta">
+                        <div><strong>Artista:</strong> @(item.artist != null ? item.artist.name : "Sin artista")</div>
+                        <div><strong>Álbum:</strong> @(item.album != null ? item.album.title : "Sin álbum")</div>
+                        <div><strong>Duración:</strong> @(item.duration) seg</div>
+                        <div><strong>Año:</strong> @anioLanzamiento</div>
+                        <div><strong>ID Deezer:</strong> @item.id</div>
+                    </div>
+
+                    <div class="track-actions">
+                        @if (!string.IsNullOrWhiteSpace(item.preview))
+                        {
+                            <audio controls>
+                                <source src="@item.preview" type="audio/mpeg" />
+                            </audio>
+                        }
+
+                        @using (Html.BeginForm("GuardarDesdeApi", "ApiMusica", FormMethod.Post))
+                        {
+                            <input type="hidden" name="deezerId" value="@item.id" />
+                            <input type="hidden" name="titulo" value="@item.title" />
+                            <input type="hidden" name="duracion" value="@item.duration" />
+                            <input type="hidden" name="previewUrl" value="@item.preview" />
+                            <input type="hidden" name="imagenUrl" value="@(item.album != null ? item.album.cover_medium : "")" />
+                            <input type="hidden" name="anioLanzamiento" value="@anioLanzamiento" />
+                            <input type="hidden" name="artistaNombre" value="@(item.artist != null ? item.artist.name : "Sin artista")" />
+                            <input type="hidden" name="albumTitulo" value="@(item.album != null ? item.album.title : "Sin álbum")" />
+
+                            <button type="submit" class="btn-save">Guardar en Sputiffy</button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="empty-box">
+            No se encontraron resultados con ese término.
+        </div>
+    }
+
+    <a href="@Url.Action("Index", "ApiMusica")" class="btn-back">Volver a buscar</a>
+</div>

@@ -1,0 +1,87 @@
+﻿@{
+    ViewBag.Title = "Agregar canciones";
+}
+
+<link rel="stylesheet" href="~/Content/css/offline.css" />
+
+<div class="sputiffy-container">
+    <h1>Agregar canciones</h1>
+    <p>Navega tu carpeta de música y selecciona los MP3 que quieras agregar a Sputiffy.</p>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="sputiffy-mensaje">@TempData["Mensaje"]</div>
+    }
+
+    <div class="explorador">
+        <div class="explorador-ruta">
+            <button type="button" id="btnSubir">⬆ Subir</button>
+            <span id="rutaActual"></span>
+        </div>
+
+        <ul id="listaCarpetas" class="explorador-lista"></ul>
+
+        <form id="formAgregar" method="post" action="@Url.Action("AgregarSeleccionadas", "Offline")">
+            <ul id="listaArchivos" class="explorador-lista"></ul>
+            <button type="submit" class="btn-play">Agregar seleccionadas</button>
+            <a href="@Url.Action("Index", "Offline")" class="btn-pause sputiffy-link-btn">Cancelar</a>
+        </form>
+    </div>
+</div>
+
+<script>
+    var rutaActual = @Html.Raw(Json.Encode(ViewBag.CarpetaInicial));
+    var urlExplorar = '@Url.Action("ExplorarCarpeta", "Offline")';
+
+    function cargarCarpeta(ruta) {
+        fetch(urlExplorar + '?ruta=' + encodeURIComponent(ruta))
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                rutaActual = data.rutaActual;
+                document.getElementById('rutaActual').textContent = rutaActual;
+
+                var listaCarpetas = document.getElementById('listaCarpetas');
+                listaCarpetas.innerHTML = '';
+                data.carpetas.forEach(function (c) {
+                    var li = document.createElement('li');
+                    li.textContent = '📁 ' + c.nombre;
+                    li.style.cursor = 'pointer';
+                    li.onclick = function () { cargarCarpeta(c.ruta); };
+                    listaCarpetas.appendChild(li);
+                });
+
+                var listaArchivos = document.getElementById('listaArchivos');
+                listaArchivos.innerHTML = '';
+                if (data.archivos.length === 0) {
+                    listaArchivos.innerHTML = '<li>No hay archivos .mp3 en esta carpeta.</li>';
+                } else {
+                    data.archivos.forEach(function (a) {
+                        var li = document.createElement('li');
+                        var label = document.createElement('label');
+                        var chk = document.createElement('input');
+                        chk.type = 'checkbox';
+                        chk.name = 'rutasSeleccionadas';
+                        chk.value = a.ruta;
+                        label.appendChild(chk);
+                        label.appendChild(document.createTextNode(' 🎵 ' + a.nombre));
+                        li.appendChild(label);
+                        listaArchivos.appendChild(li);
+                    });
+                }
+
+                document.getElementById('btnSubir').onclick = function () {
+                    if (data.carpetaPadre) cargarCarpeta(data.carpetaPadre);
+                };
+            })
+            .catch(function (err) {
+                alert('Error al leer la carpeta: ' + err);
+            });
+    }
+
+    cargarCarpeta(rutaActual);
+</script>

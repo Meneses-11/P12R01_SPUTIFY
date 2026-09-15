@@ -1,0 +1,66 @@
+﻿@model Sputiffy.Models.Albumes
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Albumes</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Titulo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Titulo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaLanzamiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaLanzamiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AnioLanzamiento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AnioLanzamiento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PortadaUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PortadaUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Activo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Activo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Artistas.NombreArtistico)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Artistas.NombreArtistico)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.IdAlbum }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
