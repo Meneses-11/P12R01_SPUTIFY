@@ -1,8 +1,18 @@
+/*
+ P12R01_Sputify
+ Autores: Adrián Manuel Meneses Lopez, Adrián Eleuterio Hernández Martínez
+ FECHA: 15/09/2026
+*/
+
+--=============================
+-- CREACIÓN DE VISTAS
+--=============================
+
 USE sputiffy;
 GO
 
 -- CREACIÓN DE VISTAS
-CREATE VIEW vw_Usuarios_AnioBaseRecomendacion
+CREATE OR ALTER VIEW vw_Usuarios_AnioBaseRecomendacion
 AS
 SELECT
     U.IdUsuario,
