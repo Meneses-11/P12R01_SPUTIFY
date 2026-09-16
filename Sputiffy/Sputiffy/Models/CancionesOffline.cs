@@ -12,15 +12,14 @@ namespace Sputiffy.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PreferenciasUsuario
+    public partial class CancionesOffline
     {
-        public int IdPreferencia { get; set; }
-        public int IdUsuario { get; set; }
-        public Nullable<int> DecadaPreferida { get; set; }
-        public Nullable<int> IdGeneroFavorito { get; set; }
-        public string ModoRecomendacion { get; set; }
-    
-        public virtual Generos Generos { get; set; }
-        public virtual Usuarios Usuarios { get; set; }
+        public int Id { get; set; }
+        public string Titulo { get; set; }
+        public string Artista { get; set; }
+        public string Album { get; set; }
+        public string RutaArchivo { get; set; }
+        public Nullable<int> Duracion { get; set; }
+        public System.DateTime FechaRegistro { get; set; }
     }
 }

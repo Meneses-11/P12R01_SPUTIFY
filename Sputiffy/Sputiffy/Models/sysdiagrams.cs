@@ -12,15 +12,12 @@ namespace Sputiffy.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class PreferenciasUsuario
+    public partial class sysdiagrams
     {
-        public int IdPreferencia { get; set; }
-        public int IdUsuario { get; set; }
-        public Nullable<int> DecadaPreferida { get; set; }
-        public Nullable<int> IdGeneroFavorito { get; set; }
-        public string ModoRecomendacion { get; set; }
-    
-        public virtual Generos Generos { get; set; }
-        public virtual Usuarios Usuarios { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

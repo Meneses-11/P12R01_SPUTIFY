@@ -43,4 +43,4 @@ LEFT JOIN Generos G
     ON C.IdGenero = G.IdGenero
 WHERE V.IdUsuario = 1
 ORDER BY C.Reproducciones DESC, C.Titulo ASC;
-
+GO

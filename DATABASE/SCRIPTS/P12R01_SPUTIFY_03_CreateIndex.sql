@@ -176,3 +176,24 @@ BEGIN CATCH
     THROW;
 END CATCH
 GO
+
+--Indice para audiolibros (AEHM)
+BEGIN TRANSACTION
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM sys.indexes 
+                       WHERE name = N'IX_AudiolibrosGuardados_IdUsuario' 
+                         AND object_id = OBJECT_ID(N'dbo.AudiolibrosGuardados'))
+        BEGIN
+            CREATE INDEX IX_AudiolibrosGuardados_IdUsuario 
+                ON dbo.AudiolibrosGuardados(IdUsuario) 
+                INCLUDE (Titulo, CanalTitulo, VideoId);
+            PRINT 'IX_AudiolibrosGuardados_IdUsuario creado';
+        END
+        ELSE PRINT 'IX_AudiolibrosGuardados_IdUsuario ya existe';
+    COMMIT TRANSACTION
+    END TRY
+BEGIN CATCH
+    IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION
+    THROW;
+END CATCH
+GO

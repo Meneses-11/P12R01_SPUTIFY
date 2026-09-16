@@ -1,1181 +1,1376 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
-  <!-- EF Runtime content -->
-  <edmx:Runtime>
-    <!-- SSDL content -->
-    <edmx:StorageModels>
-      <Schema Namespace="sputiffyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="Albumes">
-          <Key>
-            <PropertyRef Name="IdAlbum" />
-          </Key>
-          <Property Name="IdAlbum" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Titulo" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="FechaLanzamiento" Type="date" />
-          <Property Name="AnioLanzamiento" Type="int" />
-          <Property Name="PortadaUrl" Type="varchar" MaxLength="500" />
-          <Property Name="IdArtista" Type="int" Nullable="false" />
-          <Property Name="Activo" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Artistas">
-          <Key>
-            <PropertyRef Name="IdArtista" />
-          </Key>
-          <Property Name="IdArtista" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NombreArtistico" Type="varchar" MaxLength="150" Nullable="false" />
-          <Property Name="PaisOrigen" Type="varchar" MaxLength="80" />
-          <Property Name="FechaDebut" Type="date" />
-          <Property Name="FotoUrl" Type="varchar" MaxLength="500" />
-          <Property Name="Activo" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Canciones">
-          <Key>
-            <PropertyRef Name="IdCancion" />
-          </Key>
-          <Property Name="IdCancion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Titulo" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="DuracionSegundos" Type="int" />
-          <Property Name="AnioLanzamiento" Type="int" Nullable="false" />
-          <Property Name="PreviewUrl" Type="varchar" MaxLength="500" />
-          <Property Name="AudioUrl" Type="varchar" MaxLength="500" />
-          <Property Name="ImagenUrl" Type="varchar" MaxLength="500" />
-          <Property Name="FuenteApi" Type="varchar" MaxLength="50" />
-          <Property Name="IdExternoApi" Type="varchar" MaxLength="100" />
-          <Property Name="IdArtista" Type="int" Nullable="false" />
-          <Property Name="IdAlbum" Type="int" />
-          <Property Name="IdGenero" Type="int" />
-          <Property Name="Reproducciones" Type="bigint" Nullable="false" />
-          <Property Name="EsExplIcita" Type="bit" Nullable="false" />
-          <Property Name="Activo" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Favoritos">
-          <Key>
-            <PropertyRef Name="IdFavorito" />
-          </Key>
-          <Property Name="IdFavorito" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdUsuario" Type="int" Nullable="false" />
-          <Property Name="IdCancion" Type="int" Nullable="false" />
-          <Property Name="FechaAgregado" Type="datetime" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Generos">
-          <Key>
-            <PropertyRef Name="IdGenero" />
-          </Key>
-          <Property Name="IdGenero" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NombreGenero" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Descripcion" Type="varchar" MaxLength="250" />
-          <Property Name="Activo" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="HistorialReproduccion">
-          <Key>
-            <PropertyRef Name="IdHistorial" />
-          </Key>
-          <Property Name="IdHistorial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdUsuario" Type="int" Nullable="false" />
-          <Property Name="IdCancion" Type="int" Nullable="false" />
-          <Property Name="FechaReproduccion" Type="datetime" Nullable="false" />
-          <Property Name="SegundosEscuchados" Type="int" />
-          <Property Name="Completa" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="PlaylistCanciones">
-          <Key>
-            <PropertyRef Name="IdPlaylistCancion" />
-          </Key>
-          <Property Name="IdPlaylistCancion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdPlaylist" Type="int" Nullable="false" />
-          <Property Name="VideoId" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Titulo" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Artista" Type="varchar" MaxLength="200" />
-          <Property Name="Portada" Type="varchar" MaxLength="500" />
-          <Property Name="FechaAgregado" Type="datetime" Nullable="false" />
-        </EntityType>
-        <EntityType Name="PlaylistDetalle">
-          <Key>
-            <PropertyRef Name="IdPlaylistDetalle" />
-          </Key>
-          <Property Name="IdPlaylistDetalle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdPlaylist" Type="int" Nullable="false" />
-          <Property Name="IdCancion" Type="int" Nullable="false" />
-          <Property Name="FechaAgregado" Type="datetime" Nullable="false" />
-          <Property Name="OrdenCancion" Type="int" />
-        </EntityType>
-        <EntityType Name="Playlists">
-          <Key>
-            <PropertyRef Name="IdPlaylist" />
-          </Key>
-          <Property Name="IdPlaylist" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NombrePlaylist" Type="varchar" MaxLength="150" Nullable="false" />
-          <Property Name="Descripcion" Type="varchar" MaxLength="300" />
-          <Property Name="FechaCreacion" Type="datetime" Nullable="false" />
-          <Property Name="Publica" Type="bit" Nullable="false" />
-          <Property Name="IdUsuario" Type="int" Nullable="false" />
-          <Property Name="Activo" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="PreferenciasUsuario">
-          <Key>
-            <PropertyRef Name="IdPreferencia" />
-          </Key>
-          <Property Name="IdPreferencia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdUsuario" Type="int" Nullable="false" />
-          <Property Name="DecadaPreferida" Type="int" />
-          <Property Name="IdGeneroFavorito" Type="int" />
-          <Property Name="ModoRecomendacion" Type="varchar" MaxLength="50" Nullable="false" />
-        </EntityType>
-        <EntityType Name="RecomendacionesUsuario">
-          <Key>
-            <PropertyRef Name="IdRecomendacion" />
-          </Key>
-          <Property Name="IdRecomendacion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="IdUsuario" Type="int" Nullable="false" />
-          <Property Name="IdCancion" Type="int" Nullable="false" />
-          <Property Name="Motivo" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Puntaje" Type="decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="FechaGenerada" Type="datetime" Nullable="false" />
-          <Property Name="Mostrada" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Roles">
-          <Key>
-            <PropertyRef Name="IdRol" />
-          </Key>
-          <Property Name="IdRol" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NombreRol" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Activo" Type="bit" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Usuarios">
-          <Key>
-            <PropertyRef Name="IdUsuario" />
-          </Key>
-          <Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="ApellidoPaterno" Type="varchar" MaxLength="100" />
-          <Property Name="ApellidoMaterno" Type="varchar" MaxLength="100" />
-          <Property Name="NombreUsuario" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Correo" Type="varchar" MaxLength="150" Nullable="false" />
-          <Property Name="Contrasena" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="FechaNacimiento" Type="date" Nullable="false" />
-          <Property Name="Pais" Type="varchar" MaxLength="80" />
-          <Property Name="FechaRegistro" Type="datetime" Nullable="false" />
-          <Property Name="Activo" Type="bit" Nullable="false" />
-          <Property Name="IdRol" Type="int" Nullable="false" />
-        </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'sputiffy.dbo.vw_Usuarios_AnioBaseRecomendacion' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="vw_Usuarios_AnioBaseRecomendacion">
-          <Key>
-            <PropertyRef Name="IdUsuario" />
-            <PropertyRef Name="Nombre" />
-            <PropertyRef Name="NombreUsuario" />
-            <PropertyRef Name="Correo" />
-            <PropertyRef Name="FechaNacimiento" />
-          </Key>
-          <Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="NombreUsuario" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Correo" Type="varchar" MaxLength="150" Nullable="false" />
-          <Property Name="FechaNacimiento" Type="date" Nullable="false" />
-          <Property Name="AnioNacimiento" Type="int" />
-          <Property Name="AnioBaseRecomendacion" Type="int" />
-        </EntityType>
-        <Association Name="FK_Albumes_Artistas">
-          <End Role="Artistas" Type="Self.Artistas" Multiplicity="1" />
-          <End Role="Albumes" Type="Self.Albumes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Artistas">
-              <PropertyRef Name="IdArtista" />
-            </Principal>
-            <Dependent Role="Albumes">
-              <PropertyRef Name="IdArtista" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Canciones_Albumes">
-          <End Role="Albumes" Type="Self.Albumes" Multiplicity="0..1" />
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Albumes">
-              <PropertyRef Name="IdAlbum" />
-            </Principal>
-            <Dependent Role="Canciones">
-              <PropertyRef Name="IdAlbum" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Canciones_Artistas">
-          <End Role="Artistas" Type="Self.Artistas" Multiplicity="1" />
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Artistas">
-              <PropertyRef Name="IdArtista" />
-            </Principal>
-            <Dependent Role="Canciones">
-              <PropertyRef Name="IdArtista" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Canciones_Generos">
-          <End Role="Generos" Type="Self.Generos" Multiplicity="0..1" />
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Generos">
-              <PropertyRef Name="IdGenero" />
-            </Principal>
-            <Dependent Role="Canciones">
-              <PropertyRef Name="IdGenero" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Favoritos_Canciones">
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
-          <End Role="Favoritos" Type="Self.Favoritos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Canciones">
-              <PropertyRef Name="IdCancion" />
-            </Principal>
-            <Dependent Role="Favoritos">
-              <PropertyRef Name="IdCancion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Favoritos_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="Favoritos" Type="Self.Favoritos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="Favoritos">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Historial_Canciones">
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
-          <End Role="HistorialReproduccion" Type="Self.HistorialReproduccion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Canciones">
-              <PropertyRef Name="IdCancion" />
-            </Principal>
-            <Dependent Role="HistorialReproduccion">
-              <PropertyRef Name="IdCancion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Historial_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="HistorialReproduccion" Type="Self.HistorialReproduccion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="HistorialReproduccion">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlaylistCanciones_Playlists">
-          <End Role="Playlists" Type="Self.Playlists" Multiplicity="1" />
-          <End Role="PlaylistCanciones" Type="Self.PlaylistCanciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Playlists">
-              <PropertyRef Name="IdPlaylist" />
-            </Principal>
-            <Dependent Role="PlaylistCanciones">
-              <PropertyRef Name="IdPlaylist" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlaylistDetalle_Canciones">
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
-          <End Role="PlaylistDetalle" Type="Self.PlaylistDetalle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Canciones">
-              <PropertyRef Name="IdCancion" />
-            </Principal>
-            <Dependent Role="PlaylistDetalle">
-              <PropertyRef Name="IdCancion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlaylistDetalle_Playlists">
-          <End Role="Playlists" Type="Self.Playlists" Multiplicity="1" />
-          <End Role="PlaylistDetalle" Type="Self.PlaylistDetalle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Playlists">
-              <PropertyRef Name="IdPlaylist" />
-            </Principal>
-            <Dependent Role="PlaylistDetalle">
-              <PropertyRef Name="IdPlaylist" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Playlists_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="Playlists" Type="Self.Playlists" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="Playlists">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Preferencias_Generos">
-          <End Role="Generos" Type="Self.Generos" Multiplicity="0..1" />
-          <End Role="PreferenciasUsuario" Type="Self.PreferenciasUsuario" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Generos">
-              <PropertyRef Name="IdGenero" />
-            </Principal>
-            <Dependent Role="PreferenciasUsuario">
-              <PropertyRef Name="IdGeneroFavorito" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Preferencias_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="PreferenciasUsuario" Type="Self.PreferenciasUsuario" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="PreferenciasUsuario">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Recomendaciones_Canciones">
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
-          <End Role="RecomendacionesUsuario" Type="Self.RecomendacionesUsuario" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Canciones">
-              <PropertyRef Name="IdCancion" />
-            </Principal>
-            <Dependent Role="RecomendacionesUsuario">
-              <PropertyRef Name="IdCancion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Recomendaciones_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="RecomendacionesUsuario" Type="Self.RecomendacionesUsuario" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="RecomendacionesUsuario">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Usuarios_Roles">
-          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Roles">
-              <PropertyRef Name="IdRol" />
-            </Principal>
-            <Dependent Role="Usuarios">
-              <PropertyRef Name="IdRol" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="sputiffyModelStoreContainer">
-          <EntitySet Name="Albumes" EntityType="Self.Albumes" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Artistas" EntityType="Self.Artistas" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Canciones" EntityType="Self.Canciones" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Favoritos" EntityType="Self.Favoritos" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Generos" EntityType="Self.Generos" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="HistorialReproduccion" EntityType="Self.HistorialReproduccion" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="PlaylistCanciones" EntityType="Self.PlaylistCanciones" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="PlaylistDetalle" EntityType="Self.PlaylistDetalle" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Playlists" EntityType="Self.Playlists" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="PreferenciasUsuario" EntityType="Self.PreferenciasUsuario" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="RecomendacionesUsuario" EntityType="Self.RecomendacionesUsuario" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="vw_Usuarios_AnioBaseRecomendacion" EntityType="Self.vw_Usuarios_AnioBaseRecomendacion" store:Type="Views" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [vw_Usuarios_AnioBaseRecomendacion].[IdUsuario] AS [IdUsuario], 
-    [vw_Usuarios_AnioBaseRecomendacion].[Nombre] AS [Nombre], 
-    [vw_Usuarios_AnioBaseRecomendacion].[NombreUsuario] AS [NombreUsuario], 
-    [vw_Usuarios_AnioBaseRecomendacion].[Correo] AS [Correo], 
-    [vw_Usuarios_AnioBaseRecomendacion].[FechaNacimiento] AS [FechaNacimiento], 
-    [vw_Usuarios_AnioBaseRecomendacion].[AnioNacimiento] AS [AnioNacimiento], 
-    [vw_Usuarios_AnioBaseRecomendacion].[AnioBaseRecomendacion] AS [AnioBaseRecomendacion]
-    FROM [dbo].[vw_Usuarios_AnioBaseRecomendacion] AS [vw_Usuarios_AnioBaseRecomendacion]</DefiningQuery>
-          </EntitySet>
-          <AssociationSet Name="FK_Albumes_Artistas" Association="Self.FK_Albumes_Artistas">
-            <End Role="Artistas" EntitySet="Artistas" />
-            <End Role="Albumes" EntitySet="Albumes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Canciones_Albumes" Association="Self.FK_Canciones_Albumes">
-            <End Role="Albumes" EntitySet="Albumes" />
-            <End Role="Canciones" EntitySet="Canciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Canciones_Artistas" Association="Self.FK_Canciones_Artistas">
-            <End Role="Artistas" EntitySet="Artistas" />
-            <End Role="Canciones" EntitySet="Canciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Canciones_Generos" Association="Self.FK_Canciones_Generos">
-            <End Role="Generos" EntitySet="Generos" />
-            <End Role="Canciones" EntitySet="Canciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Favoritos_Canciones" Association="Self.FK_Favoritos_Canciones">
-            <End Role="Canciones" EntitySet="Canciones" />
-            <End Role="Favoritos" EntitySet="Favoritos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Favoritos_Usuarios" Association="Self.FK_Favoritos_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="Favoritos" EntitySet="Favoritos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Historial_Canciones" Association="Self.FK_Historial_Canciones">
-            <End Role="Canciones" EntitySet="Canciones" />
-            <End Role="HistorialReproduccion" EntitySet="HistorialReproduccion" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Historial_Usuarios" Association="Self.FK_Historial_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="HistorialReproduccion" EntitySet="HistorialReproduccion" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlaylistCanciones_Playlists" Association="Self.FK_PlaylistCanciones_Playlists">
-            <End Role="Playlists" EntitySet="Playlists" />
-            <End Role="PlaylistCanciones" EntitySet="PlaylistCanciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlaylistDetalle_Canciones" Association="Self.FK_PlaylistDetalle_Canciones">
-            <End Role="Canciones" EntitySet="Canciones" />
-            <End Role="PlaylistDetalle" EntitySet="PlaylistDetalle" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlaylistDetalle_Playlists" Association="Self.FK_PlaylistDetalle_Playlists">
-            <End Role="Playlists" EntitySet="Playlists" />
-            <End Role="PlaylistDetalle" EntitySet="PlaylistDetalle" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Playlists_Usuarios" Association="Self.FK_Playlists_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="Playlists" EntitySet="Playlists" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Preferencias_Generos" Association="Self.FK_Preferencias_Generos">
-            <End Role="Generos" EntitySet="Generos" />
-            <End Role="PreferenciasUsuario" EntitySet="PreferenciasUsuario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Preferencias_Usuarios" Association="Self.FK_Preferencias_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="PreferenciasUsuario" EntitySet="PreferenciasUsuario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Recomendaciones_Canciones" Association="Self.FK_Recomendaciones_Canciones">
-            <End Role="Canciones" EntitySet="Canciones" />
-            <End Role="RecomendacionesUsuario" EntitySet="RecomendacionesUsuario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Recomendaciones_Usuarios" Association="Self.FK_Recomendaciones_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="RecomendacionesUsuario" EntitySet="RecomendacionesUsuario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Usuarios_Roles" Association="Self.FK_Usuarios_Roles">
-            <End Role="Roles" EntitySet="Roles" />
-            <End Role="Usuarios" EntitySet="Usuarios" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
-    <!-- CSDL content -->
-    <edmx:ConceptualModels>
-      <Schema Namespace="sputiffyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Albumes">
-          <Key>
-            <PropertyRef Name="IdAlbum" />
-          </Key>
-          <Property Name="IdAlbum" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FechaLanzamiento" Type="DateTime" Precision="0" />
-          <Property Name="AnioLanzamiento" Type="Int32" />
-          <Property Name="PortadaUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="IdArtista" Type="Int32" Nullable="false" />
-          <Property Name="Activo" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Artistas" Relationship="Self.FK_Albumes_Artistas" FromRole="Albumes" ToRole="Artistas" />
-          <NavigationProperty Name="Canciones" Relationship="Self.FK_Canciones_Albumes" FromRole="Albumes" ToRole="Canciones" />
-        </EntityType>
-        <EntityType Name="Artistas">
-          <Key>
-            <PropertyRef Name="IdArtista" />
-          </Key>
-          <Property Name="IdArtista" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NombreArtistico" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="PaisOrigen" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
-          <Property Name="FechaDebut" Type="DateTime" Precision="0" />
-          <Property Name="FotoUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="Activo" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Albumes" Relationship="Self.FK_Albumes_Artistas" FromRole="Artistas" ToRole="Albumes" />
-          <NavigationProperty Name="Canciones" Relationship="Self.FK_Canciones_Artistas" FromRole="Artistas" ToRole="Canciones" />
-        </EntityType>
-        <EntityType Name="Canciones">
-          <Key>
-            <PropertyRef Name="IdCancion" />
-          </Key>
-          <Property Name="IdCancion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="DuracionSegundos" Type="Int32" />
-          <Property Name="AnioLanzamiento" Type="Int32" Nullable="false" />
-          <Property Name="PreviewUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="AudioUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ImagenUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FuenteApi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="IdExternoApi" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="IdArtista" Type="Int32" Nullable="false" />
-          <Property Name="IdAlbum" Type="Int32" />
-          <Property Name="IdGenero" Type="Int32" />
-          <Property Name="Reproducciones" Type="Int64" Nullable="false" />
-          <Property Name="EsExplIcita" Type="Boolean" Nullable="false" />
-          <Property Name="Activo" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Albumes" Relationship="Self.FK_Canciones_Albumes" FromRole="Canciones" ToRole="Albumes" />
-          <NavigationProperty Name="Artistas" Relationship="Self.FK_Canciones_Artistas" FromRole="Canciones" ToRole="Artistas" />
-          <NavigationProperty Name="Generos" Relationship="Self.FK_Canciones_Generos" FromRole="Canciones" ToRole="Generos" />
-          <NavigationProperty Name="Favoritos" Relationship="Self.FK_Favoritos_Canciones" FromRole="Canciones" ToRole="Favoritos" />
-          <NavigationProperty Name="HistorialReproduccion" Relationship="Self.FK_Historial_Canciones" FromRole="Canciones" ToRole="HistorialReproduccion" />
-          <NavigationProperty Name="PlaylistDetalle" Relationship="Self.FK_PlaylistDetalle_Canciones" FromRole="Canciones" ToRole="PlaylistDetalle" />
-          <NavigationProperty Name="RecomendacionesUsuario" Relationship="Self.FK_Recomendaciones_Canciones" FromRole="Canciones" ToRole="RecomendacionesUsuario" />
-        </EntityType>
-        <EntityType Name="Favoritos">
-          <Key>
-            <PropertyRef Name="IdFavorito" />
-          </Key>
-          <Property Name="IdFavorito" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
-          <Property Name="IdCancion" Type="Int32" Nullable="false" />
-          <Property Name="FechaAgregado" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Canciones" Relationship="Self.FK_Favoritos_Canciones" FromRole="Favoritos" ToRole="Canciones" />
-          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Favoritos_Usuarios" FromRole="Favoritos" ToRole="Usuarios" />
-        </EntityType>
-        <EntityType Name="Generos">
-          <Key>
-            <PropertyRef Name="IdGenero" />
-          </Key>
-          <Property Name="IdGenero" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NombreGenero" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Descripcion" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="Activo" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Canciones" Relationship="Self.FK_Canciones_Generos" FromRole="Generos" ToRole="Canciones" />
-          <NavigationProperty Name="PreferenciasUsuario" Relationship="Self.FK_Preferencias_Generos" FromRole="Generos" ToRole="PreferenciasUsuario" />
-        </EntityType>
-        <EntityType Name="HistorialReproduccion">
-          <Key>
-            <PropertyRef Name="IdHistorial" />
-          </Key>
-          <Property Name="IdHistorial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
-          <Property Name="IdCancion" Type="Int32" Nullable="false" />
-          <Property Name="FechaReproduccion" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="SegundosEscuchados" Type="Int32" />
-          <Property Name="Completa" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Canciones" Relationship="Self.FK_Historial_Canciones" FromRole="HistorialReproduccion" ToRole="Canciones" />
-          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Historial_Usuarios" FromRole="HistorialReproduccion" ToRole="Usuarios" />
-        </EntityType>
-        <EntityType Name="PlaylistCanciones">
-          <Key>
-            <PropertyRef Name="IdPlaylistCancion" />
-          </Key>
-          <Property Name="IdPlaylistCancion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdPlaylist" Type="Int32" Nullable="false" />
-          <Property Name="VideoId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Artista" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Portada" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="FechaAgregado" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Playlists" Relationship="Self.FK_PlaylistCanciones_Playlists" FromRole="PlaylistCanciones" ToRole="Playlists" />
-        </EntityType>
-        <EntityType Name="PlaylistDetalle">
-          <Key>
-            <PropertyRef Name="IdPlaylistDetalle" />
-          </Key>
-          <Property Name="IdPlaylistDetalle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdPlaylist" Type="Int32" Nullable="false" />
-          <Property Name="IdCancion" Type="Int32" Nullable="false" />
-          <Property Name="FechaAgregado" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="OrdenCancion" Type="Int32" />
-          <NavigationProperty Name="Canciones" Relationship="Self.FK_PlaylistDetalle_Canciones" FromRole="PlaylistDetalle" ToRole="Canciones" />
-          <NavigationProperty Name="Playlists" Relationship="Self.FK_PlaylistDetalle_Playlists" FromRole="PlaylistDetalle" ToRole="Playlists" />
-        </EntityType>
-        <EntityType Name="Playlists">
-          <Key>
-            <PropertyRef Name="IdPlaylist" />
-          </Key>
-          <Property Name="IdPlaylist" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NombrePlaylist" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Descripcion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Publica" Type="Boolean" Nullable="false" />
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
-          <Property Name="Activo" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="PlaylistCanciones" Relationship="Self.FK_PlaylistCanciones_Playlists" FromRole="Playlists" ToRole="PlaylistCanciones" />
-          <NavigationProperty Name="PlaylistDetalle" Relationship="Self.FK_PlaylistDetalle_Playlists" FromRole="Playlists" ToRole="PlaylistDetalle" />
-          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Playlists_Usuarios" FromRole="Playlists" ToRole="Usuarios" />
-        </EntityType>
-        <EntityType Name="PreferenciasUsuario">
-          <Key>
-            <PropertyRef Name="IdPreferencia" />
-          </Key>
-          <Property Name="IdPreferencia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
-          <Property Name="DecadaPreferida" Type="Int32" />
-          <Property Name="IdGeneroFavorito" Type="Int32" />
-          <Property Name="ModoRecomendacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="Generos" Relationship="Self.FK_Preferencias_Generos" FromRole="PreferenciasUsuario" ToRole="Generos" />
-          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Preferencias_Usuarios" FromRole="PreferenciasUsuario" ToRole="Usuarios" />
-        </EntityType>
-        <EntityType Name="RecomendacionesUsuario">
-          <Key>
-            <PropertyRef Name="IdRecomendacion" />
-          </Key>
-          <Property Name="IdRecomendacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" />
-          <Property Name="IdCancion" Type="Int32" Nullable="false" />
-          <Property Name="Motivo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Puntaje" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="FechaGenerada" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Mostrada" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Canciones" Relationship="Self.FK_Recomendaciones_Canciones" FromRole="RecomendacionesUsuario" ToRole="Canciones" />
-          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Recomendaciones_Usuarios" FromRole="RecomendacionesUsuario" ToRole="Usuarios" />
-        </EntityType>
-        <EntityType Name="Roles">
-          <Key>
-            <PropertyRef Name="IdRol" />
-          </Key>
-          <Property Name="IdRol" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NombreRol" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Activo" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Usuarios" Relationship="Self.FK_Usuarios_Roles" FromRole="Roles" ToRole="Usuarios" />
-        </EntityType>
-        <EntityType Name="Usuarios">
-          <Key>
-            <PropertyRef Name="IdUsuario" />
-          </Key>
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ApellidoPaterno" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ApellidoMaterno" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="NombreUsuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Correo" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Contrasena" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FechaNacimiento" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Pais" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
-          <Property Name="FechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Activo" Type="Boolean" Nullable="false" />
-          <Property Name="IdRol" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Favoritos" Relationship="Self.FK_Favoritos_Usuarios" FromRole="Usuarios" ToRole="Favoritos" />
-          <NavigationProperty Name="HistorialReproduccion" Relationship="Self.FK_Historial_Usuarios" FromRole="Usuarios" ToRole="HistorialReproduccion" />
-          <NavigationProperty Name="Playlists" Relationship="Self.FK_Playlists_Usuarios" FromRole="Usuarios" ToRole="Playlists" />
-          <NavigationProperty Name="PreferenciasUsuario" Relationship="Self.FK_Preferencias_Usuarios" FromRole="Usuarios" ToRole="PreferenciasUsuario" />
-          <NavigationProperty Name="RecomendacionesUsuario" Relationship="Self.FK_Recomendaciones_Usuarios" FromRole="Usuarios" ToRole="RecomendacionesUsuario" />
-          <NavigationProperty Name="Roles" Relationship="Self.FK_Usuarios_Roles" FromRole="Usuarios" ToRole="Roles" />
-        </EntityType>
-        <EntityType Name="vw_Usuarios_AnioBaseRecomendacion">
-          <Key>
-            <PropertyRef Name="IdUsuario" />
-            <PropertyRef Name="Nombre" />
-            <PropertyRef Name="NombreUsuario" />
-            <PropertyRef Name="Correo" />
-            <PropertyRef Name="FechaNacimiento" />
-          </Key>
-          <Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="NombreUsuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Correo" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FechaNacimiento" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="AnioNacimiento" Type="Int32" />
-          <Property Name="AnioBaseRecomendacion" Type="Int32" />
-        </EntityType>
-        <Association Name="FK_Albumes_Artistas">
-          <End Role="Artistas" Type="Self.Artistas" Multiplicity="1" />
-          <End Role="Albumes" Type="Self.Albumes" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Artistas">
-              <PropertyRef Name="IdArtista" />
-            </Principal>
-            <Dependent Role="Albumes">
-              <PropertyRef Name="IdArtista" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Canciones_Albumes">
-          <End Role="Albumes" Type="Self.Albumes" Multiplicity="0..1" />
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Albumes">
-              <PropertyRef Name="IdAlbum" />
-            </Principal>
-            <Dependent Role="Canciones">
-              <PropertyRef Name="IdAlbum" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Canciones_Artistas">
-          <End Role="Artistas" Type="Self.Artistas" Multiplicity="1" />
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Artistas">
-              <PropertyRef Name="IdArtista" />
-            </Principal>
-            <Dependent Role="Canciones">
-              <PropertyRef Name="IdArtista" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Canciones_Generos">
-          <End Role="Generos" Type="Self.Generos" Multiplicity="0..1" />
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Generos">
-              <PropertyRef Name="IdGenero" />
-            </Principal>
-            <Dependent Role="Canciones">
-              <PropertyRef Name="IdGenero" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Favoritos_Canciones">
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
-          <End Role="Favoritos" Type="Self.Favoritos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Canciones">
-              <PropertyRef Name="IdCancion" />
-            </Principal>
-            <Dependent Role="Favoritos">
-              <PropertyRef Name="IdCancion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Historial_Canciones">
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
-          <End Role="HistorialReproduccion" Type="Self.HistorialReproduccion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Canciones">
-              <PropertyRef Name="IdCancion" />
-            </Principal>
-            <Dependent Role="HistorialReproduccion">
-              <PropertyRef Name="IdCancion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlaylistDetalle_Canciones">
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
-          <End Role="PlaylistDetalle" Type="Self.PlaylistDetalle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Canciones">
-              <PropertyRef Name="IdCancion" />
-            </Principal>
-            <Dependent Role="PlaylistDetalle">
-              <PropertyRef Name="IdCancion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Recomendaciones_Canciones">
-          <End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
-          <End Role="RecomendacionesUsuario" Type="Self.RecomendacionesUsuario" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Canciones">
-              <PropertyRef Name="IdCancion" />
-            </Principal>
-            <Dependent Role="RecomendacionesUsuario">
-              <PropertyRef Name="IdCancion" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Favoritos_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="Favoritos" Type="Self.Favoritos" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="Favoritos">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Preferencias_Generos">
-          <End Role="Generos" Type="Self.Generos" Multiplicity="0..1" />
-          <End Role="PreferenciasUsuario" Type="Self.PreferenciasUsuario" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Generos">
-              <PropertyRef Name="IdGenero" />
-            </Principal>
-            <Dependent Role="PreferenciasUsuario">
-              <PropertyRef Name="IdGeneroFavorito" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Historial_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="HistorialReproduccion" Type="Self.HistorialReproduccion" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="HistorialReproduccion">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlaylistCanciones_Playlists">
-          <End Role="Playlists" Type="Self.Playlists" Multiplicity="1" />
-          <End Role="PlaylistCanciones" Type="Self.PlaylistCanciones" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Playlists">
-              <PropertyRef Name="IdPlaylist" />
-            </Principal>
-            <Dependent Role="PlaylistCanciones">
-              <PropertyRef Name="IdPlaylist" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_PlaylistDetalle_Playlists">
-          <End Role="Playlists" Type="Self.Playlists" Multiplicity="1" />
-          <End Role="PlaylistDetalle" Type="Self.PlaylistDetalle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Playlists">
-              <PropertyRef Name="IdPlaylist" />
-            </Principal>
-            <Dependent Role="PlaylistDetalle">
-              <PropertyRef Name="IdPlaylist" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Playlists_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="Playlists" Type="Self.Playlists" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="Playlists">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Preferencias_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="PreferenciasUsuario" Type="Self.PreferenciasUsuario" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="PreferenciasUsuario">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Recomendaciones_Usuarios">
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
-          <End Role="RecomendacionesUsuario" Type="Self.RecomendacionesUsuario" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Usuarios">
-              <PropertyRef Name="IdUsuario" />
-            </Principal>
-            <Dependent Role="RecomendacionesUsuario">
-              <PropertyRef Name="IdUsuario" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Usuarios_Roles">
-          <End Role="Roles" Type="Self.Roles" Multiplicity="1" />
-          <End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Roles">
-              <PropertyRef Name="IdRol" />
-            </Principal>
-            <Dependent Role="Usuarios">
-              <PropertyRef Name="IdRol" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="sputiffyEntities1" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Albumes" EntityType="Self.Albumes" />
-          <EntitySet Name="Artistas" EntityType="Self.Artistas" />
-          <EntitySet Name="Canciones" EntityType="Self.Canciones" />
-          <EntitySet Name="Favoritos" EntityType="Self.Favoritos" />
-          <EntitySet Name="Generos" EntityType="Self.Generos" />
-          <EntitySet Name="HistorialReproduccion" EntityType="Self.HistorialReproduccion" />
-          <EntitySet Name="PlaylistCanciones" EntityType="Self.PlaylistCanciones" />
-          <EntitySet Name="PlaylistDetalle" EntityType="Self.PlaylistDetalle" />
-          <EntitySet Name="Playlists" EntityType="Self.Playlists" />
-          <EntitySet Name="PreferenciasUsuario" EntityType="Self.PreferenciasUsuario" />
-          <EntitySet Name="RecomendacionesUsuario" EntityType="Self.RecomendacionesUsuario" />
-          <EntitySet Name="Roles" EntityType="Self.Roles" />
-          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
-          <EntitySet Name="vw_Usuarios_AnioBaseRecomendacion" EntityType="Self.vw_Usuarios_AnioBaseRecomendacion" />
-          <AssociationSet Name="FK_Albumes_Artistas" Association="Self.FK_Albumes_Artistas">
-            <End Role="Artistas" EntitySet="Artistas" />
-            <End Role="Albumes" EntitySet="Albumes" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Canciones_Albumes" Association="Self.FK_Canciones_Albumes">
-            <End Role="Albumes" EntitySet="Albumes" />
-            <End Role="Canciones" EntitySet="Canciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Canciones_Artistas" Association="Self.FK_Canciones_Artistas">
-            <End Role="Artistas" EntitySet="Artistas" />
-            <End Role="Canciones" EntitySet="Canciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Canciones_Generos" Association="Self.FK_Canciones_Generos">
-            <End Role="Generos" EntitySet="Generos" />
-            <End Role="Canciones" EntitySet="Canciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Favoritos_Canciones" Association="Self.FK_Favoritos_Canciones">
-            <End Role="Canciones" EntitySet="Canciones" />
-            <End Role="Favoritos" EntitySet="Favoritos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Historial_Canciones" Association="Self.FK_Historial_Canciones">
-            <End Role="Canciones" EntitySet="Canciones" />
-            <End Role="HistorialReproduccion" EntitySet="HistorialReproduccion" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlaylistDetalle_Canciones" Association="Self.FK_PlaylistDetalle_Canciones">
-            <End Role="Canciones" EntitySet="Canciones" />
-            <End Role="PlaylistDetalle" EntitySet="PlaylistDetalle" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Recomendaciones_Canciones" Association="Self.FK_Recomendaciones_Canciones">
-            <End Role="Canciones" EntitySet="Canciones" />
-            <End Role="RecomendacionesUsuario" EntitySet="RecomendacionesUsuario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Favoritos_Usuarios" Association="Self.FK_Favoritos_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="Favoritos" EntitySet="Favoritos" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Preferencias_Generos" Association="Self.FK_Preferencias_Generos">
-            <End Role="Generos" EntitySet="Generos" />
-            <End Role="PreferenciasUsuario" EntitySet="PreferenciasUsuario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Historial_Usuarios" Association="Self.FK_Historial_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="HistorialReproduccion" EntitySet="HistorialReproduccion" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlaylistCanciones_Playlists" Association="Self.FK_PlaylistCanciones_Playlists">
-            <End Role="Playlists" EntitySet="Playlists" />
-            <End Role="PlaylistCanciones" EntitySet="PlaylistCanciones" />
-          </AssociationSet>
-          <AssociationSet Name="FK_PlaylistDetalle_Playlists" Association="Self.FK_PlaylistDetalle_Playlists">
-            <End Role="Playlists" EntitySet="Playlists" />
-            <End Role="PlaylistDetalle" EntitySet="PlaylistDetalle" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Playlists_Usuarios" Association="Self.FK_Playlists_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="Playlists" EntitySet="Playlists" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Preferencias_Usuarios" Association="Self.FK_Preferencias_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="PreferenciasUsuario" EntitySet="PreferenciasUsuario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Recomendaciones_Usuarios" Association="Self.FK_Recomendaciones_Usuarios">
-            <End Role="Usuarios" EntitySet="Usuarios" />
-            <End Role="RecomendacionesUsuario" EntitySet="RecomendacionesUsuario" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Usuarios_Roles" Association="Self.FK_Usuarios_Roles">
-            <End Role="Roles" EntitySet="Roles" />
-            <End Role="Usuarios" EntitySet="Usuarios" />
-          </AssociationSet>
-        </EntityContainer>
-      </Schema>
-    </edmx:ConceptualModels>
-    <!-- C-S mapping content -->
-    <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="sputiffyModelStoreContainer" CdmEntityContainer="sputiffyEntities1">
-          <EntitySetMapping Name="Albumes">
-            <EntityTypeMapping TypeName="sputiffyModel.Albumes">
-              <MappingFragment StoreEntitySet="Albumes">
-                <ScalarProperty Name="IdAlbum" ColumnName="IdAlbum" />
-                <ScalarProperty Name="Titulo" ColumnName="Titulo" />
-                <ScalarProperty Name="FechaLanzamiento" ColumnName="FechaLanzamiento" />
-                <ScalarProperty Name="AnioLanzamiento" ColumnName="AnioLanzamiento" />
-                <ScalarProperty Name="PortadaUrl" ColumnName="PortadaUrl" />
-                <ScalarProperty Name="IdArtista" ColumnName="IdArtista" />
-                <ScalarProperty Name="Activo" ColumnName="Activo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Artistas">
-            <EntityTypeMapping TypeName="sputiffyModel.Artistas">
-              <MappingFragment StoreEntitySet="Artistas">
-                <ScalarProperty Name="IdArtista" ColumnName="IdArtista" />
-                <ScalarProperty Name="NombreArtistico" ColumnName="NombreArtistico" />
-                <ScalarProperty Name="PaisOrigen" ColumnName="PaisOrigen" />
-                <ScalarProperty Name="FechaDebut" ColumnName="FechaDebut" />
-                <ScalarProperty Name="FotoUrl" ColumnName="FotoUrl" />
-                <ScalarProperty Name="Activo" ColumnName="Activo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Canciones">
-            <EntityTypeMapping TypeName="sputiffyModel.Canciones">
-              <MappingFragment StoreEntitySet="Canciones">
-                <ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
-                <ScalarProperty Name="Titulo" ColumnName="Titulo" />
-                <ScalarProperty Name="DuracionSegundos" ColumnName="DuracionSegundos" />
-                <ScalarProperty Name="AnioLanzamiento" ColumnName="AnioLanzamiento" />
-                <ScalarProperty Name="PreviewUrl" ColumnName="PreviewUrl" />
-                <ScalarProperty Name="AudioUrl" ColumnName="AudioUrl" />
-                <ScalarProperty Name="ImagenUrl" ColumnName="ImagenUrl" />
-                <ScalarProperty Name="FuenteApi" ColumnName="FuenteApi" />
-                <ScalarProperty Name="IdExternoApi" ColumnName="IdExternoApi" />
-                <ScalarProperty Name="IdArtista" ColumnName="IdArtista" />
-                <ScalarProperty Name="IdAlbum" ColumnName="IdAlbum" />
-                <ScalarProperty Name="IdGenero" ColumnName="IdGenero" />
-                <ScalarProperty Name="Reproducciones" ColumnName="Reproducciones" />
-                <ScalarProperty Name="EsExplIcita" ColumnName="EsExplIcita" />
-                <ScalarProperty Name="Activo" ColumnName="Activo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Favoritos">
-            <EntityTypeMapping TypeName="sputiffyModel.Favoritos">
-              <MappingFragment StoreEntitySet="Favoritos">
-                <ScalarProperty Name="IdFavorito" ColumnName="IdFavorito" />
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-                <ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
-                <ScalarProperty Name="FechaAgregado" ColumnName="FechaAgregado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Generos">
-            <EntityTypeMapping TypeName="sputiffyModel.Generos">
-              <MappingFragment StoreEntitySet="Generos">
-                <ScalarProperty Name="IdGenero" ColumnName="IdGenero" />
-                <ScalarProperty Name="NombreGenero" ColumnName="NombreGenero" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="Activo" ColumnName="Activo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="HistorialReproduccion">
-            <EntityTypeMapping TypeName="sputiffyModel.HistorialReproduccion">
-              <MappingFragment StoreEntitySet="HistorialReproduccion">
-                <ScalarProperty Name="IdHistorial" ColumnName="IdHistorial" />
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-                <ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
-                <ScalarProperty Name="FechaReproduccion" ColumnName="FechaReproduccion" />
-                <ScalarProperty Name="SegundosEscuchados" ColumnName="SegundosEscuchados" />
-                <ScalarProperty Name="Completa" ColumnName="Completa" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PlaylistCanciones">
-            <EntityTypeMapping TypeName="sputiffyModel.PlaylistCanciones">
-              <MappingFragment StoreEntitySet="PlaylistCanciones">
-                <ScalarProperty Name="IdPlaylistCancion" ColumnName="IdPlaylistCancion" />
-                <ScalarProperty Name="IdPlaylist" ColumnName="IdPlaylist" />
-                <ScalarProperty Name="VideoId" ColumnName="VideoId" />
-                <ScalarProperty Name="Titulo" ColumnName="Titulo" />
-                <ScalarProperty Name="Artista" ColumnName="Artista" />
-                <ScalarProperty Name="Portada" ColumnName="Portada" />
-                <ScalarProperty Name="FechaAgregado" ColumnName="FechaAgregado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PlaylistDetalle">
-            <EntityTypeMapping TypeName="sputiffyModel.PlaylistDetalle">
-              <MappingFragment StoreEntitySet="PlaylistDetalle">
-                <ScalarProperty Name="IdPlaylistDetalle" ColumnName="IdPlaylistDetalle" />
-                <ScalarProperty Name="IdPlaylist" ColumnName="IdPlaylist" />
-                <ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
-                <ScalarProperty Name="FechaAgregado" ColumnName="FechaAgregado" />
-                <ScalarProperty Name="OrdenCancion" ColumnName="OrdenCancion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Playlists">
-            <EntityTypeMapping TypeName="sputiffyModel.Playlists">
-              <MappingFragment StoreEntitySet="Playlists">
-                <ScalarProperty Name="IdPlaylist" ColumnName="IdPlaylist" />
-                <ScalarProperty Name="NombrePlaylist" ColumnName="NombrePlaylist" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
-                <ScalarProperty Name="Publica" ColumnName="Publica" />
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-                <ScalarProperty Name="Activo" ColumnName="Activo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="PreferenciasUsuario">
-            <EntityTypeMapping TypeName="sputiffyModel.PreferenciasUsuario">
-              <MappingFragment StoreEntitySet="PreferenciasUsuario">
-                <ScalarProperty Name="IdPreferencia" ColumnName="IdPreferencia" />
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-                <ScalarProperty Name="DecadaPreferida" ColumnName="DecadaPreferida" />
-                <ScalarProperty Name="IdGeneroFavorito" ColumnName="IdGeneroFavorito" />
-                <ScalarProperty Name="ModoRecomendacion" ColumnName="ModoRecomendacion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="RecomendacionesUsuario">
-            <EntityTypeMapping TypeName="sputiffyModel.RecomendacionesUsuario">
-              <MappingFragment StoreEntitySet="RecomendacionesUsuario">
-                <ScalarProperty Name="IdRecomendacion" ColumnName="IdRecomendacion" />
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-                <ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
-                <ScalarProperty Name="Motivo" ColumnName="Motivo" />
-                <ScalarProperty Name="Puntaje" ColumnName="Puntaje" />
-                <ScalarProperty Name="FechaGenerada" ColumnName="FechaGenerada" />
-                <ScalarProperty Name="Mostrada" ColumnName="Mostrada" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Roles">
-            <EntityTypeMapping TypeName="sputiffyModel.Roles">
-              <MappingFragment StoreEntitySet="Roles">
-                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
-                <ScalarProperty Name="NombreRol" ColumnName="NombreRol" />
-                <ScalarProperty Name="Activo" ColumnName="Activo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Usuarios">
-            <EntityTypeMapping TypeName="sputiffyModel.Usuarios">
-              <MappingFragment StoreEntitySet="Usuarios">
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
-                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
-                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
-                <ScalarProperty Name="Correo" ColumnName="Correo" />
-                <ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
-                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
-                <ScalarProperty Name="Pais" ColumnName="Pais" />
-                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
-                <ScalarProperty Name="Activo" ColumnName="Activo" />
-                <ScalarProperty Name="IdRol" ColumnName="IdRol" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="vw_Usuarios_AnioBaseRecomendacion">
-            <EntityTypeMapping TypeName="sputiffyModel.vw_Usuarios_AnioBaseRecomendacion">
-              <MappingFragment StoreEntitySet="vw_Usuarios_AnioBaseRecomendacion">
-                <ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
-                <ScalarProperty Name="Correo" ColumnName="Correo" />
-                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
-                <ScalarProperty Name="AnioNacimiento" ColumnName="AnioNacimiento" />
-                <ScalarProperty Name="AnioBaseRecomendacion" ColumnName="AnioBaseRecomendacion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-        </EntityContainerMapping>
-      </Mapping>
-    </edmx:Mappings>
-  </edmx:Runtime>
-  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
-  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
-    <Connection>
-      <DesignerInfoPropertySet>
-        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
-      </DesignerInfoPropertySet>
-    </Connection>
-    <Options>
-      <DesignerInfoPropertySet>
-        <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
-      </DesignerInfoPropertySet>
-    </Options>
-    <!-- Diagram content (shape and connector positions) -->
-    <Diagrams></Diagrams>
-  </Designer>
+	<!-- EF Runtime content -->
+	<edmx:Runtime>
+		<!-- SSDL content -->
+		<edmx:StorageModels>
+			<Schema Namespace="sputiffyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+				<EntityType Name="Albumes">
+					<Key>
+						<PropertyRef Name="IdAlbum" />
+					</Key>
+					<Property Name="IdAlbum" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="Titulo" Type="varchar" MaxLength="200" Nullable="false" />
+					<Property Name="FechaLanzamiento" Type="date" />
+					<Property Name="AnioLanzamiento" Type="int" />
+					<Property Name="PortadaUrl" Type="varchar" MaxLength="500" />
+					<Property Name="IdArtista" Type="int" Nullable="false" />
+					<Property Name="Activo" Type="bit" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Artistas">
+					<Key>
+						<PropertyRef Name="IdArtista" />
+					</Key>
+					<Property Name="IdArtista" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="NombreArtistico" Type="varchar" MaxLength="150" Nullable="false" />
+					<Property Name="PaisOrigen" Type="varchar" MaxLength="80" />
+					<Property Name="FechaDebut" Type="date" />
+					<Property Name="FotoUrl" Type="varchar" MaxLength="500" />
+					<Property Name="Activo" Type="bit" Nullable="false" />
+				</EntityType>
+				<EntityType Name="AudiolibrosGuardados">
+					<Key>
+						<PropertyRef Name="IdAudiolibro" />
+					</Key>
+					<Property Name="IdAudiolibro" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="IdUsuario" Type="int" Nullable="false" />
+					<Property Name="VideoId" Type="varchar" MaxLength="50" Nullable="false" />
+					<Property Name="Titulo" Type="varchar" MaxLength="200" Nullable="false" />
+					<Property Name="CanalTitulo" Type="varchar" MaxLength="200" />
+					<Property Name="Descripcion" Type="varchar" MaxLength="1000" />
+					<Property Name="FechaPublicacion" Type="datetime" />
+					<Property Name="DuracionSegundos" Type="int" />
+					<Property Name="ThumbnailUrl" Type="varchar" MaxLength="500" />
+					<Property Name="ThumbnailMediumUrl" Type="varchar" MaxLength="500" />
+					<Property Name="ThumbnailHighUrl" Type="varchar" MaxLength="500" />
+					<Property Name="TipoContenido" Type="varchar" MaxLength="50" Nullable="false" />
+					<Property Name="FechaGuardado" Type="datetime" Nullable="false" />
+					<Property Name="Activo" Type="bit" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Canciones">
+					<Key>
+						<PropertyRef Name="IdCancion" />
+					</Key>
+					<Property Name="IdCancion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="Titulo" Type="varchar" MaxLength="200" Nullable="false" />
+					<Property Name="DuracionSegundos" Type="int" />
+					<Property Name="AnioLanzamiento" Type="int" Nullable="false" />
+					<Property Name="PreviewUrl" Type="varchar" MaxLength="500" />
+					<Property Name="AudioUrl" Type="varchar" MaxLength="500" />
+					<Property Name="ImagenUrl" Type="varchar" MaxLength="500" />
+					<Property Name="FuenteApi" Type="varchar" MaxLength="50" />
+					<Property Name="IdExternoApi" Type="varchar" MaxLength="100" />
+					<Property Name="IdArtista" Type="int" Nullable="false" />
+					<Property Name="IdAlbum" Type="int" />
+					<Property Name="IdGenero" Type="int" />
+					<Property Name="Reproducciones" Type="bigint" Nullable="false" />
+					<Property Name="EsExplIcita" Type="bit" Nullable="false" />
+					<Property Name="Activo" Type="bit" Nullable="false" />
+				</EntityType>
+				<EntityType Name="CancionesOffline">
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="Titulo" Type="nvarchar" MaxLength="200" Nullable="false" />
+					<Property Name="Artista" Type="nvarchar" MaxLength="200" />
+					<Property Name="Album" Type="nvarchar" MaxLength="200" />
+					<Property Name="RutaArchivo" Type="nvarchar" MaxLength="500" Nullable="false" />
+					<Property Name="Duracion" Type="int" />
+					<Property Name="FechaRegistro" Type="datetime" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Favoritos">
+					<Key>
+						<PropertyRef Name="IdFavorito" />
+					</Key>
+					<Property Name="IdFavorito" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="IdUsuario" Type="int" Nullable="false" />
+					<Property Name="IdCancion" Type="int" Nullable="false" />
+					<Property Name="FechaAgregado" Type="datetime" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Generos">
+					<Key>
+						<PropertyRef Name="IdGenero" />
+					</Key>
+					<Property Name="IdGenero" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="NombreGenero" Type="varchar" MaxLength="100" Nullable="false" />
+					<Property Name="Descripcion" Type="varchar" MaxLength="250" />
+					<Property Name="Activo" Type="bit" Nullable="false" />
+				</EntityType>
+				<EntityType Name="HistorialReproduccion">
+					<Key>
+						<PropertyRef Name="IdHistorial" />
+					</Key>
+					<Property Name="IdHistorial" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="IdUsuario" Type="int" Nullable="false" />
+					<Property Name="IdCancion" Type="int" Nullable="false" />
+					<Property Name="FechaReproduccion" Type="datetime" Nullable="false" />
+					<Property Name="SegundosEscuchados" Type="int" />
+					<Property Name="Completa" Type="bit" Nullable="false" />
+				</EntityType>
+				<EntityType Name="PlaylistCanciones">
+					<Key>
+						<PropertyRef Name="IdPlaylistCancion" />
+					</Key>
+					<Property Name="IdPlaylistCancion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="IdPlaylist" Type="int" Nullable="false" />
+					<Property Name="VideoId" Type="varchar" MaxLength="50" Nullable="false" />
+					<Property Name="Titulo" Type="varchar" MaxLength="200" Nullable="false" />
+					<Property Name="Artista" Type="varchar" MaxLength="200" />
+					<Property Name="Portada" Type="varchar" MaxLength="500" />
+					<Property Name="FechaAgregado" Type="datetime" Nullable="false" />
+				</EntityType>
+				<EntityType Name="PlaylistDetalle">
+					<Key>
+						<PropertyRef Name="IdPlaylistDetalle" />
+					</Key>
+					<Property Name="IdPlaylistDetalle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="IdPlaylist" Type="int" Nullable="false" />
+					<Property Name="IdCancion" Type="int" Nullable="false" />
+					<Property Name="FechaAgregado" Type="datetime" Nullable="false" />
+					<Property Name="OrdenCancion" Type="int" />
+				</EntityType>
+				<EntityType Name="Playlists">
+					<Key>
+						<PropertyRef Name="IdPlaylist" />
+					</Key>
+					<Property Name="IdPlaylist" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="NombrePlaylist" Type="varchar" MaxLength="150" Nullable="false" />
+					<Property Name="Descripcion" Type="varchar" MaxLength="300" />
+					<Property Name="FechaCreacion" Type="datetime" Nullable="false" />
+					<Property Name="Publica" Type="bit" Nullable="false" />
+					<Property Name="IdUsuario" Type="int" Nullable="false" />
+					<Property Name="Activo" Type="bit" Nullable="false" />
+				</EntityType>
+				<EntityType Name="PreferenciasUsuario">
+					<Key>
+						<PropertyRef Name="IdPreferencia" />
+					</Key>
+					<Property Name="IdPreferencia" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="IdUsuario" Type="int" Nullable="false" />
+					<Property Name="DecadaPreferida" Type="int" />
+					<Property Name="IdGeneroFavorito" Type="int" />
+					<Property Name="ModoRecomendacion" Type="varchar" MaxLength="50" Nullable="false" />
+				</EntityType>
+				<EntityType Name="RecomendacionesUsuario">
+					<Key>
+						<PropertyRef Name="IdRecomendacion" />
+					</Key>
+					<Property Name="IdRecomendacion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="IdUsuario" Type="int" Nullable="false" />
+					<Property Name="IdCancion" Type="int" Nullable="false" />
+					<Property Name="Motivo" Type="varchar" MaxLength="200" Nullable="false" />
+					<Property Name="Puntaje" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+					<Property Name="FechaGenerada" Type="datetime" Nullable="false" />
+					<Property Name="Mostrada" Type="bit" Nullable="false" />
+				</EntityType>
+				<EntityType Name="Roles">
+					<Key>
+						<PropertyRef Name="IdRol" />
+					</Key>
+					<Property Name="IdRol" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="NombreRol" Type="varchar" MaxLength="50" Nullable="false" />
+					<Property Name="Activo" Type="bit" Nullable="false" />
+				</EntityType>
+				<EntityType Name="sysdiagrams">
+					<Key>
+						<PropertyRef Name="diagram_id" />
+					</Key>
+					<Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+					<Property Name="principal_id" Type="int" Nullable="false" />
+					<Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="version" Type="int" />
+					<Property Name="definition" Type="varbinary(max)" />
+				</EntityType>
+				<EntityType Name="Usuarios">
+					<Key>
+						<PropertyRef Name="IdUsuario" />
+					</Key>
+					<Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+					<Property Name="ApellidoPaterno" Type="varchar" MaxLength="100" />
+					<Property Name="ApellidoMaterno" Type="varchar" MaxLength="100" />
+					<Property Name="NombreUsuario" Type="varchar" MaxLength="50" Nullable="false" />
+					<Property Name="Correo" Type="varchar" MaxLength="150" Nullable="false" />
+					<Property Name="Contrasena" Type="varchar" MaxLength="100" Nullable="false" />
+					<Property Name="FechaNacimiento" Type="date" Nullable="false" />
+					<Property Name="Pais" Type="varchar" MaxLength="80" />
+					<Property Name="FechaRegistro" Type="datetime" Nullable="false" />
+					<Property Name="Activo" Type="bit" Nullable="false" />
+					<Property Name="IdRol" Type="int" Nullable="false" />
+				</EntityType>
+				<!-- NUEVO: EntityType de la vista en el store -->
+				<EntityType Name="vw_Usuarios_AnioBaseRecomendacion">
+					<Key>
+						<PropertyRef Name="IdUsuario" />
+						<PropertyRef Name="Nombre" />
+						<PropertyRef Name="NombreUsuario" />
+						<PropertyRef Name="Correo" />
+						<PropertyRef Name="FechaNacimiento" />
+					</Key>
+					<Property Name="IdUsuario" Type="int" Nullable="false" />
+					<Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+					<Property Name="NombreUsuario" Type="varchar" MaxLength="50" Nullable="false" />
+					<Property Name="Correo" Type="varchar" MaxLength="150" Nullable="false" />
+					<Property Name="FechaNacimiento" Type="date" Nullable="false" />
+					<Property Name="AnioNacimiento" Type="int" />
+					<Property Name="AnioBaseRecomendacion" Type="int" />
+				</EntityType>
+				<Association Name="FK_Albumes_Artistas">
+					<End Role="Artistas" Type="Self.Artistas" Multiplicity="1" />
+					<End Role="Albumes" Type="Self.Albumes" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Artistas">
+							<PropertyRef Name="IdArtista" />
+						</Principal>
+						<Dependent Role="Albumes">
+							<PropertyRef Name="IdArtista" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Audiolibros_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="AudiolibrosGuardados" Type="Self.AudiolibrosGuardados" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="AudiolibrosGuardados">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Canciones_Albumes">
+					<End Role="Albumes" Type="Self.Albumes" Multiplicity="0..1" />
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Albumes">
+							<PropertyRef Name="IdAlbum" />
+						</Principal>
+						<Dependent Role="Canciones">
+							<PropertyRef Name="IdAlbum" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Canciones_Artistas">
+					<End Role="Artistas" Type="Self.Artistas" Multiplicity="1" />
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Artistas">
+							<PropertyRef Name="IdArtista" />
+						</Principal>
+						<Dependent Role="Canciones">
+							<PropertyRef Name="IdArtista" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Canciones_Generos">
+					<End Role="Generos" Type="Self.Generos" Multiplicity="0..1" />
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Generos">
+							<PropertyRef Name="IdGenero" />
+						</Principal>
+						<Dependent Role="Canciones">
+							<PropertyRef Name="IdGenero" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Favoritos_Canciones">
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
+					<End Role="Favoritos" Type="Self.Favoritos" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Canciones">
+							<PropertyRef Name="IdCancion" />
+						</Principal>
+						<Dependent Role="Favoritos">
+							<PropertyRef Name="IdCancion" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Favoritos_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="Favoritos" Type="Self.Favoritos" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="Favoritos">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Historial_Canciones">
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
+					<End Role="HistorialReproduccion" Type="Self.HistorialReproduccion" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Canciones">
+							<PropertyRef Name="IdCancion" />
+						</Principal>
+						<Dependent Role="HistorialReproduccion">
+							<PropertyRef Name="IdCancion" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Historial_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="HistorialReproduccion" Type="Self.HistorialReproduccion" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="HistorialReproduccion">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_PlaylistCanciones_Playlists">
+					<End Role="Playlists" Type="Self.Playlists" Multiplicity="1" />
+					<End Role="PlaylistCanciones" Type="Self.PlaylistCanciones" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Playlists">
+							<PropertyRef Name="IdPlaylist" />
+						</Principal>
+						<Dependent Role="PlaylistCanciones">
+							<PropertyRef Name="IdPlaylist" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_PlaylistDetalle_Canciones">
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
+					<End Role="PlaylistDetalle" Type="Self.PlaylistDetalle" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Canciones">
+							<PropertyRef Name="IdCancion" />
+						</Principal>
+						<Dependent Role="PlaylistDetalle">
+							<PropertyRef Name="IdCancion" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_PlaylistDetalle_Playlists">
+					<End Role="Playlists" Type="Self.Playlists" Multiplicity="1" />
+					<End Role="PlaylistDetalle" Type="Self.PlaylistDetalle" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Playlists">
+							<PropertyRef Name="IdPlaylist" />
+						</Principal>
+						<Dependent Role="PlaylistDetalle">
+							<PropertyRef Name="IdPlaylist" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Playlists_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="Playlists" Type="Self.Playlists" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="Playlists">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Preferencias_Generos">
+					<End Role="Generos" Type="Self.Generos" Multiplicity="0..1" />
+					<End Role="PreferenciasUsuario" Type="Self.PreferenciasUsuario" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Generos">
+							<PropertyRef Name="IdGenero" />
+						</Principal>
+						<Dependent Role="PreferenciasUsuario">
+							<PropertyRef Name="IdGeneroFavorito" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Preferencias_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="PreferenciasUsuario" Type="Self.PreferenciasUsuario" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="PreferenciasUsuario">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Recomendaciones_Canciones">
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
+					<End Role="RecomendacionesUsuario" Type="Self.RecomendacionesUsuario" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Canciones">
+							<PropertyRef Name="IdCancion" />
+						</Principal>
+						<Dependent Role="RecomendacionesUsuario">
+							<PropertyRef Name="IdCancion" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Recomendaciones_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="RecomendacionesUsuario" Type="Self.RecomendacionesUsuario" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="RecomendacionesUsuario">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Usuarios_Roles">
+					<End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Roles">
+							<PropertyRef Name="IdRol" />
+						</Principal>
+						<Dependent Role="Usuarios">
+							<PropertyRef Name="IdRol" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<EntityContainer Name="sputiffyModelStoreContainer">
+					<EntitySet Name="Albumes" EntityType="Self.Albumes" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="Artistas" EntityType="Self.Artistas" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="AudiolibrosGuardados" EntityType="Self.AudiolibrosGuardados" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="Canciones" EntityType="Self.Canciones" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="CancionesOffline" EntityType="Self.CancionesOffline" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="Favoritos" EntityType="Self.Favoritos" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="Generos" EntityType="Self.Generos" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="HistorialReproduccion" EntityType="Self.HistorialReproduccion" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="PlaylistCanciones" EntityType="Self.PlaylistCanciones" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="PlaylistDetalle" EntityType="Self.PlaylistDetalle" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="Playlists" EntityType="Self.Playlists" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="PreferenciasUsuario" EntityType="Self.PreferenciasUsuario" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="RecomendacionesUsuario" EntityType="Self.RecomendacionesUsuario" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+					<!-- NUEVO: EntitySet de la vista -->
+					<EntitySet Name="vw_Usuarios_AnioBaseRecomendacion" EntityType="Self.vw_Usuarios_AnioBaseRecomendacion" Schema="dbo" store:Type="Views" />
+					<AssociationSet Name="FK_Albumes_Artistas" Association="Self.FK_Albumes_Artistas">
+						<End Role="Artistas" EntitySet="Artistas" />
+						<End Role="Albumes" EntitySet="Albumes" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Audiolibros_Usuarios" Association="Self.FK_Audiolibros_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="AudiolibrosGuardados" EntitySet="AudiolibrosGuardados" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Canciones_Albumes" Association="Self.FK_Canciones_Albumes">
+						<End Role="Albumes" EntitySet="Albumes" />
+						<End Role="Canciones" EntitySet="Canciones" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Canciones_Artistas" Association="Self.FK_Canciones_Artistas">
+						<End Role="Artistas" EntitySet="Artistas" />
+						<End Role="Canciones" EntitySet="Canciones" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Canciones_Generos" Association="Self.FK_Canciones_Generos">
+						<End Role="Generos" EntitySet="Generos" />
+						<End Role="Canciones" EntitySet="Canciones" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Favoritos_Canciones" Association="Self.FK_Favoritos_Canciones">
+						<End Role="Canciones" EntitySet="Canciones" />
+						<End Role="Favoritos" EntitySet="Favoritos" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Favoritos_Usuarios" Association="Self.FK_Favoritos_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="Favoritos" EntitySet="Favoritos" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Historial_Canciones" Association="Self.FK_Historial_Canciones">
+						<End Role="Canciones" EntitySet="Canciones" />
+						<End Role="HistorialReproduccion" EntitySet="HistorialReproduccion" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Historial_Usuarios" Association="Self.FK_Historial_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="HistorialReproduccion" EntitySet="HistorialReproduccion" />
+					</AssociationSet>
+					<AssociationSet Name="FK_PlaylistCanciones_Playlists" Association="Self.FK_PlaylistCanciones_Playlists">
+						<End Role="Playlists" EntitySet="Playlists" />
+						<End Role="PlaylistCanciones" EntitySet="PlaylistCanciones" />
+					</AssociationSet>
+					<AssociationSet Name="FK_PlaylistDetalle_Canciones" Association="Self.FK_PlaylistDetalle_Canciones">
+						<End Role="Canciones" EntitySet="Canciones" />
+						<End Role="PlaylistDetalle" EntitySet="PlaylistDetalle" />
+					</AssociationSet>
+					<AssociationSet Name="FK_PlaylistDetalle_Playlists" Association="Self.FK_PlaylistDetalle_Playlists">
+						<End Role="Playlists" EntitySet="Playlists" />
+						<End Role="PlaylistDetalle" EntitySet="PlaylistDetalle" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Playlists_Usuarios" Association="Self.FK_Playlists_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="Playlists" EntitySet="Playlists" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Preferencias_Generos" Association="Self.FK_Preferencias_Generos">
+						<End Role="Generos" EntitySet="Generos" />
+						<End Role="PreferenciasUsuario" EntitySet="PreferenciasUsuario" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Preferencias_Usuarios" Association="Self.FK_Preferencias_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="PreferenciasUsuario" EntitySet="PreferenciasUsuario" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Recomendaciones_Canciones" Association="Self.FK_Recomendaciones_Canciones">
+						<End Role="Canciones" EntitySet="Canciones" />
+						<End Role="RecomendacionesUsuario" EntitySet="RecomendacionesUsuario" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Recomendaciones_Usuarios" Association="Self.FK_Recomendaciones_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="RecomendacionesUsuario" EntitySet="RecomendacionesUsuario" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Usuarios_Roles" Association="Self.FK_Usuarios_Roles">
+						<End Role="Roles" EntitySet="Roles" />
+						<End Role="Usuarios" EntitySet="Usuarios" />
+					</AssociationSet>
+				</EntityContainer>
+			</Schema>
+		</edmx:StorageModels>
+		<!-- CSDL content -->
+		<edmx:ConceptualModels>
+			<Schema Namespace="sputiffyModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+				<EntityType Name="Albumes">
+					<Key>
+						<PropertyRef Name="IdAlbum" />
+					</Key>
+					<Property Name="IdAlbum" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="Titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="FechaLanzamiento" Type="DateTime" Precision="0" />
+					<Property Name="AnioLanzamiento" Type="Int32" />
+					<Property Name="PortadaUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="IdArtista" Type="Int32" Nullable="false" />
+					<Property Name="Activo" Type="Boolean" Nullable="false" />
+					<NavigationProperty Name="Artistas" Relationship="Self.FK_Albumes_Artistas" FromRole="Albumes" ToRole="Artistas" />
+					<NavigationProperty Name="Canciones" Relationship="Self.FK_Canciones_Albumes" FromRole="Albumes" ToRole="Canciones" />
+				</EntityType>
+				<EntityType Name="Artistas">
+					<Key>
+						<PropertyRef Name="IdArtista" />
+					</Key>
+					<Property Name="IdArtista" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="NombreArtistico" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="PaisOrigen" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+					<Property Name="FechaDebut" Type="DateTime" Precision="0" />
+					<Property Name="FotoUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="Activo" Type="Boolean" Nullable="false" />
+					<NavigationProperty Name="Albumes" Relationship="Self.FK_Albumes_Artistas" FromRole="Artistas" ToRole="Albumes" />
+					<NavigationProperty Name="Canciones" Relationship="Self.FK_Canciones_Artistas" FromRole="Artistas" ToRole="Canciones" />
+				</EntityType>
+				<EntityType Name="AudiolibrosGuardados">
+					<Key>
+						<PropertyRef Name="IdAudiolibro" />
+					</Key>
+					<Property Name="IdAudiolibro" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="IdUsuario" Type="Int32" Nullable="false" />
+					<Property Name="VideoId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="Titulo" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+					<Property Name="CanalTitulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+					<Property Name="Descripcion" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+					<Property Name="FechaPublicacion" Type="DateTime" Precision="3" />
+					<Property Name="DuracionSegundos" Type="Int32" />
+					<Property Name="ThumbnailUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="ThumbnailMediumUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="ThumbnailHighUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="TipoContenido" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="FechaGuardado" Type="DateTime" Nullable="false" Precision="3" />
+					<Property Name="Activo" Type="Boolean" Nullable="false" />
+					<NavigationProperty Name="Usuarios" Relationship="sputiffyModel.FK_Audiolibros_Usuarios" FromRole="AudiolibrosGuardados" ToRole="Usuarios" />
+				</EntityType>
+				<EntityType Name="Canciones">
+					<Key>
+						<PropertyRef Name="IdCancion" />
+					</Key>
+					<Property Name="IdCancion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="Titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="DuracionSegundos" Type="Int32" />
+					<Property Name="AnioLanzamiento" Type="Int32" Nullable="false" />
+					<Property Name="PreviewUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="AudioUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="ImagenUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="FuenteApi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="IdExternoApi" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+					<Property Name="IdArtista" Type="Int32" Nullable="false" />
+					<Property Name="IdAlbum" Type="Int32" />
+					<Property Name="IdGenero" Type="Int32" />
+					<Property Name="Reproducciones" Type="Int64" Nullable="false" />
+					<Property Name="EsExplIcita" Type="Boolean" Nullable="false" />
+					<Property Name="Activo" Type="Boolean" Nullable="false" />
+					<NavigationProperty Name="Albumes" Relationship="Self.FK_Canciones_Albumes" FromRole="Canciones" ToRole="Albumes" />
+					<NavigationProperty Name="Artistas" Relationship="Self.FK_Canciones_Artistas" FromRole="Canciones" ToRole="Artistas" />
+					<NavigationProperty Name="Generos" Relationship="Self.FK_Canciones_Generos" FromRole="Canciones" ToRole="Generos" />
+					<NavigationProperty Name="Favoritos" Relationship="Self.FK_Favoritos_Canciones" FromRole="Canciones" ToRole="Favoritos" />
+					<NavigationProperty Name="HistorialReproduccion" Relationship="Self.FK_Historial_Canciones" FromRole="Canciones" ToRole="HistorialReproduccion" />
+					<NavigationProperty Name="PlaylistDetalle" Relationship="Self.FK_PlaylistDetalle_Canciones" FromRole="Canciones" ToRole="PlaylistDetalle" />
+					<NavigationProperty Name="RecomendacionesUsuario" Relationship="Self.FK_Recomendaciones_Canciones" FromRole="Canciones" ToRole="RecomendacionesUsuario" />
+				</EntityType>
+				<EntityType Name="CancionesOffline">
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="Titulo" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+					<Property Name="Artista" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+					<Property Name="Album" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+					<Property Name="RutaArchivo" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+					<Property Name="Duracion" Type="Int32" />
+					<Property Name="FechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+				</EntityType>
+				<EntityType Name="Favoritos">
+					<Key>
+						<PropertyRef Name="IdFavorito" />
+					</Key>
+					<Property Name="IdFavorito" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="IdUsuario" Type="Int32" Nullable="false" />
+					<Property Name="IdCancion" Type="Int32" Nullable="false" />
+					<Property Name="FechaAgregado" Type="DateTime" Nullable="false" Precision="3" />
+					<NavigationProperty Name="Canciones" Relationship="Self.FK_Favoritos_Canciones" FromRole="Favoritos" ToRole="Canciones" />
+					<NavigationProperty Name="Usuarios" Relationship="Self.FK_Favoritos_Usuarios" FromRole="Favoritos" ToRole="Usuarios" />
+				</EntityType>
+				<EntityType Name="Generos">
+					<Key>
+						<PropertyRef Name="IdGenero" />
+					</Key>
+					<Property Name="IdGenero" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="NombreGenero" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="Descripcion" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+					<Property Name="Activo" Type="Boolean" Nullable="false" />
+					<NavigationProperty Name="Canciones" Relationship="Self.FK_Canciones_Generos" FromRole="Generos" ToRole="Canciones" />
+					<NavigationProperty Name="PreferenciasUsuario" Relationship="Self.FK_Preferencias_Generos" FromRole="Generos" ToRole="PreferenciasUsuario" />
+				</EntityType>
+				<EntityType Name="HistorialReproduccion">
+					<Key>
+						<PropertyRef Name="IdHistorial" />
+					</Key>
+					<Property Name="IdHistorial" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="IdUsuario" Type="Int32" Nullable="false" />
+					<Property Name="IdCancion" Type="Int32" Nullable="false" />
+					<Property Name="FechaReproduccion" Type="DateTime" Nullable="false" Precision="3" />
+					<Property Name="SegundosEscuchados" Type="Int32" />
+					<Property Name="Completa" Type="Boolean" Nullable="false" />
+					<NavigationProperty Name="Canciones" Relationship="Self.FK_Historial_Canciones" FromRole="HistorialReproduccion" ToRole="Canciones" />
+					<NavigationProperty Name="Usuarios" Relationship="Self.FK_Historial_Usuarios" FromRole="HistorialReproduccion" ToRole="Usuarios" />
+				</EntityType>
+				<EntityType Name="PlaylistCanciones">
+					<Key>
+						<PropertyRef Name="IdPlaylistCancion" />
+					</Key>
+					<Property Name="IdPlaylistCancion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="IdPlaylist" Type="Int32" Nullable="false" />
+					<Property Name="VideoId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="Titulo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="Artista" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+					<Property Name="Portada" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="FechaAgregado" Type="DateTime" Nullable="false" Precision="3" />
+					<NavigationProperty Name="Playlists" Relationship="Self.FK_PlaylistCanciones_Playlists" FromRole="PlaylistCanciones" ToRole="Playlists" />
+				</EntityType>
+				<EntityType Name="PlaylistDetalle">
+					<Key>
+						<PropertyRef Name="IdPlaylistDetalle" />
+					</Key>
+					<Property Name="IdPlaylistDetalle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="IdPlaylist" Type="Int32" Nullable="false" />
+					<Property Name="IdCancion" Type="Int32" Nullable="false" />
+					<Property Name="FechaAgregado" Type="DateTime" Nullable="false" Precision="3" />
+					<Property Name="OrdenCancion" Type="Int32" />
+					<NavigationProperty Name="Canciones" Relationship="Self.FK_PlaylistDetalle_Canciones" FromRole="PlaylistDetalle" ToRole="Canciones" />
+					<NavigationProperty Name="Playlists" Relationship="Self.FK_PlaylistDetalle_Playlists" FromRole="PlaylistDetalle" ToRole="Playlists" />
+				</EntityType>
+				<EntityType Name="Playlists">
+					<Key>
+						<PropertyRef Name="IdPlaylist" />
+					</Key>
+					<Property Name="IdPlaylist" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="NombrePlaylist" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="Descripcion" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+					<Property Name="FechaCreacion" Type="DateTime" Nullable="false" Precision="3" />
+					<Property Name="Publica" Type="Boolean" Nullable="false" />
+					<Property Name="IdUsuario" Type="Int32" Nullable="false" />
+					<Property Name="Activo" Type="Boolean" Nullable="false" />
+					<NavigationProperty Name="PlaylistCanciones" Relationship="Self.FK_PlaylistCanciones_Playlists" FromRole="Playlists" ToRole="PlaylistCanciones" />
+					<NavigationProperty Name="PlaylistDetalle" Relationship="Self.FK_PlaylistDetalle_Playlists" FromRole="Playlists" ToRole="PlaylistDetalle" />
+					<NavigationProperty Name="Usuarios" Relationship="Self.FK_Playlists_Usuarios" FromRole="Playlists" ToRole="Usuarios" />
+				</EntityType>
+				<EntityType Name="PreferenciasUsuario">
+					<Key>
+						<PropertyRef Name="IdPreferencia" />
+					</Key>
+					<Property Name="IdPreferencia" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="IdUsuario" Type="Int32" Nullable="false" />
+					<Property Name="DecadaPreferida" Type="Int32" />
+					<Property Name="IdGeneroFavorito" Type="Int32" />
+					<Property Name="ModoRecomendacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+					<NavigationProperty Name="Generos" Relationship="Self.FK_Preferencias_Generos" FromRole="PreferenciasUsuario" ToRole="Generos" />
+					<NavigationProperty Name="Usuarios" Relationship="Self.FK_Preferencias_Usuarios" FromRole="PreferenciasUsuario" ToRole="Usuarios" />
+				</EntityType>
+				<EntityType Name="RecomendacionesUsuario">
+					<Key>
+						<PropertyRef Name="IdRecomendacion" />
+					</Key>
+					<Property Name="IdRecomendacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="IdUsuario" Type="Int32" Nullable="false" />
+					<Property Name="IdCancion" Type="Int32" Nullable="false" />
+					<Property Name="Motivo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="Puntaje" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+					<Property Name="FechaGenerada" Type="DateTime" Nullable="false" Precision="3" />
+					<Property Name="Mostrada" Type="Boolean" Nullable="false" />
+					<NavigationProperty Name="Canciones" Relationship="Self.FK_Recomendaciones_Canciones" FromRole="RecomendacionesUsuario" ToRole="Canciones" />
+					<NavigationProperty Name="Usuarios" Relationship="Self.FK_Recomendaciones_Usuarios" FromRole="RecomendacionesUsuario" ToRole="Usuarios" />
+				</EntityType>
+				<EntityType Name="Roles">
+					<Key>
+						<PropertyRef Name="IdRol" />
+					</Key>
+					<Property Name="IdRol" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="NombreRol" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="Activo" Type="Boolean" Nullable="false" />
+					<NavigationProperty Name="Usuarios" Relationship="Self.FK_Usuarios_Roles" FromRole="Roles" ToRole="Usuarios" />
+				</EntityType>
+				<EntityType Name="sysdiagrams">
+					<Key>
+						<PropertyRef Name="diagram_id" />
+					</Key>
+					<Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+					<Property Name="principal_id" Type="Int32" Nullable="false" />
+					<Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="version" Type="Int32" />
+					<Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+				</EntityType>
+				<EntityType Name="Usuarios">
+					<Key>
+						<PropertyRef Name="IdUsuario" />
+					</Key>
+					<Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="ApellidoPaterno" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+					<Property Name="ApellidoMaterno" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+					<Property Name="NombreUsuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="Correo" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="Contrasena" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="FechaNacimiento" Type="DateTime" Nullable="false" Precision="0" />
+					<Property Name="Pais" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+					<Property Name="FechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+					<Property Name="Activo" Type="Boolean" Nullable="false" />
+					<Property Name="IdRol" Type="Int32" Nullable="false" />
+					<NavigationProperty Name="AudiolibrosGuardados" Relationship="sputiffyModel.FK_Audiolibros_Usuarios" FromRole="Usuarios" ToRole="AudiolibrosGuardados" />
+					<NavigationProperty Name="Favoritos" Relationship="Self.FK_Favoritos_Usuarios" FromRole="Usuarios" ToRole="Favoritos" />
+					<NavigationProperty Name="HistorialReproduccion" Relationship="Self.FK_Historial_Usuarios" FromRole="Usuarios" ToRole="HistorialReproduccion" />
+					<NavigationProperty Name="Playlists" Relationship="Self.FK_Playlists_Usuarios" FromRole="Usuarios" ToRole="Playlists" />
+					<NavigationProperty Name="PreferenciasUsuario" Relationship="Self.FK_Preferencias_Usuarios" FromRole="Usuarios" ToRole="PreferenciasUsuario" />
+					<NavigationProperty Name="RecomendacionesUsuario" Relationship="Self.FK_Recomendaciones_Usuarios" FromRole="Usuarios" ToRole="RecomendacionesUsuario" />
+					<NavigationProperty Name="Roles" Relationship="Self.FK_Usuarios_Roles" FromRole="Usuarios" ToRole="Roles" />
+				</EntityType>
+				<EntityType Name="vw_Usuarios_AnioBaseRecomendacion">
+					<Key>
+						<PropertyRef Name="IdUsuario" />
+						<PropertyRef Name="Nombre" />
+						<PropertyRef Name="NombreUsuario" />
+						<PropertyRef Name="Correo" />
+						<PropertyRef Name="FechaNacimiento" />
+					</Key>
+					<Property Name="IdUsuario" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="NombreUsuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="Correo" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+					<Property Name="FechaNacimiento" Type="DateTime" Nullable="false" Precision="0" />
+					<Property Name="AnioNacimiento" Type="Int32" />
+					<Property Name="AnioBaseRecomendacion" Type="Int32" />
+				</EntityType>
+				<Association Name="FK_Albumes_Artistas">
+					<End Role="Artistas" Type="Self.Artistas" Multiplicity="1" />
+					<End Role="Albumes" Type="Self.Albumes" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Artistas">
+							<PropertyRef Name="IdArtista" />
+						</Principal>
+						<Dependent Role="Albumes">
+							<PropertyRef Name="IdArtista" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Audiolibros_Usuarios">
+					<End Type="sputiffyModel.Usuarios" Role="Usuarios" Multiplicity="1" />
+					<End Type="sputiffyModel.AudiolibrosGuardados" Role="AudiolibrosGuardados" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="AudiolibrosGuardados">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Canciones_Albumes">
+					<End Role="Albumes" Type="Self.Albumes" Multiplicity="0..1" />
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Albumes">
+							<PropertyRef Name="IdAlbum" />
+						</Principal>
+						<Dependent Role="Canciones">
+							<PropertyRef Name="IdAlbum" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Canciones_Artistas">
+					<End Role="Artistas" Type="Self.Artistas" Multiplicity="1" />
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Artistas">
+							<PropertyRef Name="IdArtista" />
+						</Principal>
+						<Dependent Role="Canciones">
+							<PropertyRef Name="IdArtista" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Canciones_Generos">
+					<End Role="Generos" Type="Self.Generos" Multiplicity="0..1" />
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Generos">
+							<PropertyRef Name="IdGenero" />
+						</Principal>
+						<Dependent Role="Canciones">
+							<PropertyRef Name="IdGenero" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Favoritos_Canciones">
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
+					<End Role="Favoritos" Type="Self.Favoritos" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Canciones">
+							<PropertyRef Name="IdCancion" />
+						</Principal>
+						<Dependent Role="Favoritos">
+							<PropertyRef Name="IdCancion" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Favoritos_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="Favoritos" Type="Self.Favoritos" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="Favoritos">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Historial_Canciones">
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
+					<End Role="HistorialReproduccion" Type="Self.HistorialReproduccion" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Canciones">
+							<PropertyRef Name="IdCancion" />
+						</Principal>
+						<Dependent Role="HistorialReproduccion">
+							<PropertyRef Name="IdCancion" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Historial_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="HistorialReproduccion" Type="Self.HistorialReproduccion" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="HistorialReproduccion">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_PlaylistCanciones_Playlists">
+					<End Role="Playlists" Type="Self.Playlists" Multiplicity="1" />
+					<End Role="PlaylistCanciones" Type="Self.PlaylistCanciones" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Playlists">
+							<PropertyRef Name="IdPlaylist" />
+						</Principal>
+						<Dependent Role="PlaylistCanciones">
+							<PropertyRef Name="IdPlaylist" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_PlaylistDetalle_Canciones">
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
+					<End Role="PlaylistDetalle" Type="Self.PlaylistDetalle" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Canciones">
+							<PropertyRef Name="IdCancion" />
+						</Principal>
+						<Dependent Role="PlaylistDetalle">
+							<PropertyRef Name="IdCancion" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_PlaylistDetalle_Playlists">
+					<End Role="Playlists" Type="Self.Playlists" Multiplicity="1" />
+					<End Role="PlaylistDetalle" Type="Self.PlaylistDetalle" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Playlists">
+							<PropertyRef Name="IdPlaylist" />
+						</Principal>
+						<Dependent Role="PlaylistDetalle">
+							<PropertyRef Name="IdPlaylist" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Playlists_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="Playlists" Type="Self.Playlists" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="Playlists">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Preferencias_Generos">
+					<End Role="Generos" Type="Self.Generos" Multiplicity="0..1" />
+					<End Role="PreferenciasUsuario" Type="Self.PreferenciasUsuario" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Generos">
+							<PropertyRef Name="IdGenero" />
+						</Principal>
+						<Dependent Role="PreferenciasUsuario">
+							<PropertyRef Name="IdGeneroFavorito" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Preferencias_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="PreferenciasUsuario" Type="Self.PreferenciasUsuario" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="PreferenciasUsuario">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Recomendaciones_Canciones">
+					<End Role="Canciones" Type="Self.Canciones" Multiplicity="1" />
+					<End Role="RecomendacionesUsuario" Type="Self.RecomendacionesUsuario" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Canciones">
+							<PropertyRef Name="IdCancion" />
+						</Principal>
+						<Dependent Role="RecomendacionesUsuario">
+							<PropertyRef Name="IdCancion" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Recomendaciones_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="RecomendacionesUsuario" Type="Self.RecomendacionesUsuario" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="RecomendacionesUsuario">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Usuarios_Roles">
+					<End Role="Roles" Type="Self.Roles" Multiplicity="1" />
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Roles">
+							<PropertyRef Name="IdRol" />
+						</Principal>
+						<Dependent Role="Usuarios">
+							<PropertyRef Name="IdRol" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<EntityContainer Name="sputiffyEntities1" annotation:LazyLoadingEnabled="true">
+					<EntitySet Name="Albumes" EntityType="Self.Albumes" />
+					<EntitySet Name="Artistas" EntityType="Self.Artistas" />
+					<EntitySet Name="AudiolibrosGuardados" EntityType="Self.AudiolibrosGuardados" />
+					<EntitySet Name="Canciones" EntityType="Self.Canciones" />
+					<EntitySet Name="CancionesOffline" EntityType="Self.CancionesOffline" />
+					<EntitySet Name="Favoritos" EntityType="Self.Favoritos" />
+					<EntitySet Name="Generos" EntityType="Self.Generos" />
+					<EntitySet Name="HistorialReproduccion" EntityType="Self.HistorialReproduccion" />
+					<EntitySet Name="PlaylistCanciones" EntityType="Self.PlaylistCanciones" />
+					<EntitySet Name="PlaylistDetalle" EntityType="Self.PlaylistDetalle" />
+					<EntitySet Name="Playlists" EntityType="Self.Playlists" />
+					<EntitySet Name="PreferenciasUsuario" EntityType="Self.PreferenciasUsuario" />
+					<EntitySet Name="RecomendacionesUsuario" EntityType="Self.RecomendacionesUsuario" />
+					<EntitySet Name="Roles" EntityType="Self.Roles" />
+					<EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+					<EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
+					<EntitySet Name="vw_Usuarios_AnioBaseRecomendacion" EntityType="Self.vw_Usuarios_AnioBaseRecomendacion" />
+					<AssociationSet Name="FK_Albumes_Artistas" Association="Self.FK_Albumes_Artistas">
+						<End Role="Artistas" EntitySet="Artistas" />
+						<End Role="Albumes" EntitySet="Albumes" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Audiolibros_Usuarios" Association="sputiffyModel.FK_Audiolibros_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="AudiolibrosGuardados" EntitySet="AudiolibrosGuardados" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Canciones_Albumes" Association="Self.FK_Canciones_Albumes">
+						<End Role="Albumes" EntitySet="Albumes" />
+						<End Role="Canciones" EntitySet="Canciones" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Canciones_Artistas" Association="Self.FK_Canciones_Artistas">
+						<End Role="Artistas" EntitySet="Artistas" />
+						<End Role="Canciones" EntitySet="Canciones" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Canciones_Generos" Association="Self.FK_Canciones_Generos">
+						<End Role="Generos" EntitySet="Generos" />
+						<End Role="Canciones" EntitySet="Canciones" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Favoritos_Canciones" Association="Self.FK_Favoritos_Canciones">
+						<End Role="Canciones" EntitySet="Canciones" />
+						<End Role="Favoritos" EntitySet="Favoritos" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Favoritos_Usuarios" Association="Self.FK_Favoritos_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="Favoritos" EntitySet="Favoritos" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Historial_Canciones" Association="Self.FK_Historial_Canciones">
+						<End Role="Canciones" EntitySet="Canciones" />
+						<End Role="HistorialReproduccion" EntitySet="HistorialReproduccion" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Historial_Usuarios" Association="Self.FK_Historial_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="HistorialReproduccion" EntitySet="HistorialReproduccion" />
+					</AssociationSet>
+					<AssociationSet Name="FK_PlaylistCanciones_Playlists" Association="Self.FK_PlaylistCanciones_Playlists">
+						<End Role="Playlists" EntitySet="Playlists" />
+						<End Role="PlaylistCanciones" EntitySet="PlaylistCanciones" />
+					</AssociationSet>
+					<AssociationSet Name="FK_PlaylistDetalle_Canciones" Association="Self.FK_PlaylistDetalle_Canciones">
+						<End Role="Canciones" EntitySet="Canciones" />
+						<End Role="PlaylistDetalle" EntitySet="PlaylistDetalle" />
+					</AssociationSet>
+					<AssociationSet Name="FK_PlaylistDetalle_Playlists" Association="Self.FK_PlaylistDetalle_Playlists">
+						<End Role="Playlists" EntitySet="Playlists" />
+						<End Role="PlaylistDetalle" EntitySet="PlaylistDetalle" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Playlists_Usuarios" Association="Self.FK_Playlists_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="Playlists" EntitySet="Playlists" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Preferencias_Generos" Association="Self.FK_Preferencias_Generos">
+						<End Role="Generos" EntitySet="Generos" />
+						<End Role="PreferenciasUsuario" EntitySet="PreferenciasUsuario" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Preferencias_Usuarios" Association="Self.FK_Preferencias_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="PreferenciasUsuario" EntitySet="PreferenciasUsuario" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Recomendaciones_Canciones" Association="Self.FK_Recomendaciones_Canciones">
+						<End Role="Canciones" EntitySet="Canciones" />
+						<End Role="RecomendacionesUsuario" EntitySet="RecomendacionesUsuario" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Recomendaciones_Usuarios" Association="Self.FK_Recomendaciones_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="RecomendacionesUsuario" EntitySet="RecomendacionesUsuario" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Usuarios_Roles" Association="Self.FK_Usuarios_Roles">
+						<End Role="Roles" EntitySet="Roles" />
+						<End Role="Usuarios" EntitySet="Usuarios" />
+					</AssociationSet>
+				</EntityContainer>
+			</Schema>
+		</edmx:ConceptualModels>
+		<!-- C-S mapping content -->
+		<edmx:Mappings>
+			<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+				<EntityContainerMapping StorageEntityContainer="sputiffyModelStoreContainer" CdmEntityContainer="sputiffyEntities1">
+					<EntitySetMapping Name="Albumes">
+						<EntityTypeMapping TypeName="sputiffyModel.Albumes">
+							<MappingFragment StoreEntitySet="Albumes">
+								<ScalarProperty Name="IdAlbum" ColumnName="IdAlbum" />
+								<ScalarProperty Name="Titulo" ColumnName="Titulo" />
+								<ScalarProperty Name="FechaLanzamiento" ColumnName="FechaLanzamiento" />
+								<ScalarProperty Name="AnioLanzamiento" ColumnName="AnioLanzamiento" />
+								<ScalarProperty Name="PortadaUrl" ColumnName="PortadaUrl" />
+								<ScalarProperty Name="IdArtista" ColumnName="IdArtista" />
+								<ScalarProperty Name="Activo" ColumnName="Activo" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Artistas">
+						<EntityTypeMapping TypeName="sputiffyModel.Artistas">
+							<MappingFragment StoreEntitySet="Artistas">
+								<ScalarProperty Name="IdArtista" ColumnName="IdArtista" />
+								<ScalarProperty Name="NombreArtistico" ColumnName="NombreArtistico" />
+								<ScalarProperty Name="PaisOrigen" ColumnName="PaisOrigen" />
+								<ScalarProperty Name="FechaDebut" ColumnName="FechaDebut" />
+								<ScalarProperty Name="FotoUrl" ColumnName="FotoUrl" />
+								<ScalarProperty Name="Activo" ColumnName="Activo" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="AudiolibrosGuardados">
+						<EntityTypeMapping TypeName="sputiffyModel.AudiolibrosGuardados">
+							<MappingFragment StoreEntitySet="AudiolibrosGuardados">
+								<ScalarProperty Name="IdAudiolibro" ColumnName="IdAudiolibro" />
+								<ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+								<ScalarProperty Name="VideoId" ColumnName="VideoId" />
+								<ScalarProperty Name="Titulo" ColumnName="Titulo" />
+								<ScalarProperty Name="CanalTitulo" ColumnName="CanalTitulo" />
+								<ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+								<ScalarProperty Name="FechaPublicacion" ColumnName="FechaPublicacion" />
+								<ScalarProperty Name="DuracionSegundos" ColumnName="DuracionSegundos" />
+								<ScalarProperty Name="ThumbnailUrl" ColumnName="ThumbnailUrl" />
+								<ScalarProperty Name="ThumbnailMediumUrl" ColumnName="ThumbnailMediumUrl" />
+								<ScalarProperty Name="ThumbnailHighUrl" ColumnName="ThumbnailHighUrl" />
+								<ScalarProperty Name="TipoContenido" ColumnName="TipoContenido" />
+								<ScalarProperty Name="FechaGuardado" ColumnName="FechaGuardado" />
+								<ScalarProperty Name="Activo" ColumnName="Activo" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Canciones">
+						<EntityTypeMapping TypeName="sputiffyModel.Canciones">
+							<MappingFragment StoreEntitySet="Canciones">
+								<ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
+								<ScalarProperty Name="Titulo" ColumnName="Titulo" />
+								<ScalarProperty Name="DuracionSegundos" ColumnName="DuracionSegundos" />
+								<ScalarProperty Name="AnioLanzamiento" ColumnName="AnioLanzamiento" />
+								<ScalarProperty Name="PreviewUrl" ColumnName="PreviewUrl" />
+								<ScalarProperty Name="AudioUrl" ColumnName="AudioUrl" />
+								<ScalarProperty Name="ImagenUrl" ColumnName="ImagenUrl" />
+								<ScalarProperty Name="FuenteApi" ColumnName="FuenteApi" />
+								<ScalarProperty Name="IdExternoApi" ColumnName="IdExternoApi" />
+								<ScalarProperty Name="IdArtista" ColumnName="IdArtista" />
+								<ScalarProperty Name="IdAlbum" ColumnName="IdAlbum" />
+								<ScalarProperty Name="IdGenero" ColumnName="IdGenero" />
+								<ScalarProperty Name="Reproducciones" ColumnName="Reproducciones" />
+								<ScalarProperty Name="EsExplIcita" ColumnName="EsExplIcita" />
+								<ScalarProperty Name="Activo" ColumnName="Activo" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="CancionesOffline">
+						<EntityTypeMapping TypeName="sputiffyModel.CancionesOffline">
+							<MappingFragment StoreEntitySet="CancionesOffline">
+								<ScalarProperty Name="Id" ColumnName="Id" />
+								<ScalarProperty Name="Titulo" ColumnName="Titulo" />
+								<ScalarProperty Name="Artista" ColumnName="Artista" />
+								<ScalarProperty Name="Album" ColumnName="Album" />
+								<ScalarProperty Name="RutaArchivo" ColumnName="RutaArchivo" />
+								<ScalarProperty Name="Duracion" ColumnName="Duracion" />
+								<ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Favoritos">
+						<EntityTypeMapping TypeName="sputiffyModel.Favoritos">
+							<MappingFragment StoreEntitySet="Favoritos">
+								<ScalarProperty Name="IdFavorito" ColumnName="IdFavorito" />
+								<ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+								<ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
+								<ScalarProperty Name="FechaAgregado" ColumnName="FechaAgregado" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Generos">
+						<EntityTypeMapping TypeName="sputiffyModel.Generos">
+							<MappingFragment StoreEntitySet="Generos">
+								<ScalarProperty Name="IdGenero" ColumnName="IdGenero" />
+								<ScalarProperty Name="NombreGenero" ColumnName="NombreGenero" />
+								<ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+								<ScalarProperty Name="Activo" ColumnName="Activo" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="HistorialReproduccion">
+						<EntityTypeMapping TypeName="sputiffyModel.HistorialReproduccion">
+							<MappingFragment StoreEntitySet="HistorialReproduccion">
+								<ScalarProperty Name="IdHistorial" ColumnName="IdHistorial" />
+								<ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+								<ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
+								<ScalarProperty Name="FechaReproduccion" ColumnName="FechaReproduccion" />
+								<ScalarProperty Name="SegundosEscuchados" ColumnName="SegundosEscuchados" />
+								<ScalarProperty Name="Completa" ColumnName="Completa" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="PlaylistCanciones">
+						<EntityTypeMapping TypeName="sputiffyModel.PlaylistCanciones">
+							<MappingFragment StoreEntitySet="PlaylistCanciones">
+								<ScalarProperty Name="IdPlaylistCancion" ColumnName="IdPlaylistCancion" />
+								<ScalarProperty Name="IdPlaylist" ColumnName="IdPlaylist" />
+								<ScalarProperty Name="VideoId" ColumnName="VideoId" />
+								<ScalarProperty Name="Titulo" ColumnName="Titulo" />
+								<ScalarProperty Name="Artista" ColumnName="Artista" />
+								<ScalarProperty Name="Portada" ColumnName="Portada" />
+								<ScalarProperty Name="FechaAgregado" ColumnName="FechaAgregado" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="PlaylistDetalle">
+						<EntityTypeMapping TypeName="sputiffyModel.PlaylistDetalle">
+							<MappingFragment StoreEntitySet="PlaylistDetalle">
+								<ScalarProperty Name="IdPlaylistDetalle" ColumnName="IdPlaylistDetalle" />
+								<ScalarProperty Name="IdPlaylist" ColumnName="IdPlaylist" />
+								<ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
+								<ScalarProperty Name="FechaAgregado" ColumnName="FechaAgregado" />
+								<ScalarProperty Name="OrdenCancion" ColumnName="OrdenCancion" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Playlists">
+						<EntityTypeMapping TypeName="sputiffyModel.Playlists">
+							<MappingFragment StoreEntitySet="Playlists">
+								<ScalarProperty Name="IdPlaylist" ColumnName="IdPlaylist" />
+								<ScalarProperty Name="NombrePlaylist" ColumnName="NombrePlaylist" />
+								<ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+								<ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+								<ScalarProperty Name="Publica" ColumnName="Publica" />
+								<ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+								<ScalarProperty Name="Activo" ColumnName="Activo" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="PreferenciasUsuario">
+						<EntityTypeMapping TypeName="sputiffyModel.PreferenciasUsuario">
+							<MappingFragment StoreEntitySet="PreferenciasUsuario">
+								<ScalarProperty Name="IdPreferencia" ColumnName="IdPreferencia" />
+								<ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+								<ScalarProperty Name="DecadaPreferida" ColumnName="DecadaPreferida" />
+								<ScalarProperty Name="IdGeneroFavorito" ColumnName="IdGeneroFavorito" />
+								<ScalarProperty Name="ModoRecomendacion" ColumnName="ModoRecomendacion" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="RecomendacionesUsuario">
+						<EntityTypeMapping TypeName="sputiffyModel.RecomendacionesUsuario">
+							<MappingFragment StoreEntitySet="RecomendacionesUsuario">
+								<ScalarProperty Name="IdRecomendacion" ColumnName="IdRecomendacion" />
+								<ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+								<ScalarProperty Name="IdCancion" ColumnName="IdCancion" />
+								<ScalarProperty Name="Motivo" ColumnName="Motivo" />
+								<ScalarProperty Name="Puntaje" ColumnName="Puntaje" />
+								<ScalarProperty Name="FechaGenerada" ColumnName="FechaGenerada" />
+								<ScalarProperty Name="Mostrada" ColumnName="Mostrada" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Roles">
+						<EntityTypeMapping TypeName="sputiffyModel.Roles">
+							<MappingFragment StoreEntitySet="Roles">
+								<ScalarProperty Name="IdRol" ColumnName="IdRol" />
+								<ScalarProperty Name="NombreRol" ColumnName="NombreRol" />
+								<ScalarProperty Name="Activo" ColumnName="Activo" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="sysdiagrams">
+						<EntityTypeMapping TypeName="sputiffyModel.sysdiagrams">
+							<MappingFragment StoreEntitySet="sysdiagrams">
+								<ScalarProperty Name="name" ColumnName="name" />
+								<ScalarProperty Name="principal_id" ColumnName="principal_id" />
+								<ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+								<ScalarProperty Name="version" ColumnName="version" />
+								<ScalarProperty Name="definition" ColumnName="definition" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Usuarios">
+						<EntityTypeMapping TypeName="sputiffyModel.Usuarios">
+							<MappingFragment StoreEntitySet="Usuarios">
+								<ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+								<ScalarProperty Name="Nombre" ColumnName="Nombre" />
+								<ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+								<ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+								<ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+								<ScalarProperty Name="Correo" ColumnName="Correo" />
+								<ScalarProperty Name="Contrasena" ColumnName="Contrasena" />
+								<ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+								<ScalarProperty Name="Pais" ColumnName="Pais" />
+								<ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+								<ScalarProperty Name="Activo" ColumnName="Activo" />
+								<ScalarProperty Name="IdRol" ColumnName="IdRol" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<!-- NUEVO: mapeo de la vista que faltaba -->
+					<EntitySetMapping Name="vw_Usuarios_AnioBaseRecomendacion">
+						<EntityTypeMapping TypeName="IsTypeOf(sputiffyModel.vw_Usuarios_AnioBaseRecomendacion)">
+							<MappingFragment StoreEntitySet="vw_Usuarios_AnioBaseRecomendacion">
+								<ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+								<ScalarProperty Name="Nombre" ColumnName="Nombre" />
+								<ScalarProperty Name="NombreUsuario" ColumnName="NombreUsuario" />
+								<ScalarProperty Name="Correo" ColumnName="Correo" />
+								<ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+								<ScalarProperty Name="AnioNacimiento" ColumnName="AnioNacimiento" />
+								<ScalarProperty Name="AnioBaseRecomendacion" ColumnName="AnioBaseRecomendacion" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+				</EntityContainerMapping>
+			</Mapping>
+		</edmx:Mappings>
+	</edmx:Runtime>
+	<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+	<Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+		<Connection>
+			<DesignerInfoPropertySet>
+				<DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+			</DesignerInfoPropertySet>
+		</Connection>
+		<Options>
+			<DesignerInfoPropertySet>
+				<DesignerProperty Name="ValidateOnBuild" Value="true" />
+				<DesignerProperty Name="EnablePluralization" Value="false" />
+				<DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+				<DesignerProperty Name="UseLegacyProvider" Value="false" />
+				<DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+			</DesignerInfoPropertySet>
+		</Options>
+		<!-- Diagram content (shape and connector positions) -->
+		<Diagrams>
+			<Diagram DiagramId="82951e893e35498a8e62ef07245517f9" Name="Diagram1">
+				<EntityTypeShape EntityType="sputiffyModel.Albumes" Width="1.5" PointX="3" PointY="6.125" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.Artistas" Width="1.5" PointX="0.75" PointY="6.25" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.Canciones" Width="1.5" PointX="5.25" PointY="4.875" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.Favoritos" Width="1.5" PointX="7.5" PointY="6.375" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.Generos" Width="1.5" PointX="3" PointY="2.375" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.HistorialReproduccion" Width="1.5" PointX="10.5" PointY="6.25" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.PlaylistCanciones" Width="1.5" PointX="7.5" PointY="14.25" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.PlaylistDetalle" Width="1.5" PointX="7.5" PointY="3.25" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.Playlists" Width="1.5" PointX="5.25" PointY="12" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.PreferenciasUsuario" Width="1.5" PointX="10.25" PointY="9.875" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.RecomendacionesUsuario" Width="1.5" PointX="7.5" PointY="10.125" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.Roles" Width="1.5" PointX="0.75" PointY="12.625" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.Usuarios" Width="1.5" PointX="3" PointY="11.25" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.vw_Usuarios_AnioBaseRecomendacion" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+				<EntityTypeShape EntityType="sputiffyModel.AudiolibrosGuardados" Width="1.5" PointX="5.25" PointY="16.625" />
+				<EntityTypeShape EntityType="sputiffyModel.CancionesOffline" Width="1.5" PointX="12.375" PointY="0.75" />
+				<EntityTypeShape EntityType="sputiffyModel.sysdiagrams" Width="1.5" PointX="12.375" PointY="9.75" />
+				<AssociationConnector Association="sputiffyModel.FK_Albumes_Artistas" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Audiolibros_Usuarios" />
+				<AssociationConnector Association="sputiffyModel.FK_Canciones_Albumes" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Canciones_Artistas" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Canciones_Generos" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Favoritos_Canciones" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Historial_Canciones" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_PlaylistDetalle_Canciones" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Recomendaciones_Canciones" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Favoritos_Usuarios" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Preferencias_Generos" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Historial_Usuarios" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_PlaylistCanciones_Playlists" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_PlaylistDetalle_Playlists" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Playlists_Usuarios" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Preferencias_Usuarios" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Recomendaciones_Usuarios" ManuallyRouted="false" />
+				<AssociationConnector Association="sputiffyModel.FK_Usuarios_Roles" ManuallyRouted="false" />
+			</Diagram>
+		</Diagrams>
+	</Designer>
 </edmx:Edmx>

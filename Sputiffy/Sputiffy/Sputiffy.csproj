@@ -136,6 +136,7 @@
     <Compile Include="Controllers\AlbumesController.cs" />
     <Compile Include="Controllers\ApiMusicaController.cs" />
     <Compile Include="Controllers\ArtistasController.cs" />
+    <Compile Include="Controllers\AudiolibrosController.cs" />
     <Compile Include="Controllers\CancionesController.cs" />
     <Compile Include="Controllers\FavoritosController.cs" />
     <Compile Include="Controllers\GenerosController.cs" />
@@ -162,8 +163,14 @@
     <Compile Include="Models\Artistas.cs">
       <DependentUpon>SputiffyModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\AudiolibrosGuardados.cs">
+      <DependentUpon>SputiffyModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Cancion.cs" />
     <Compile Include="Models\Canciones.cs">
+      <DependentUpon>SputiffyModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CancionesOffline.cs">
       <DependentUpon>SputiffyModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Favoritos.cs">
@@ -208,6 +215,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SputiffyModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sysdiagrams.cs">
+      <DependentUpon>SputiffyModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Usuarios.cs">
       <DependentUpon>SputiffyModel.tt</DependentUpon>
@@ -358,6 +368,7 @@
     <Content Include="Views\Podcast\Index.cshtml" />
     <Content Include="Views\Offline\Agregar.cshtml" />
     <Content Include="Views\Offline\Editar.cshtml" />
+    <Content Include="Views\Audiolibros\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

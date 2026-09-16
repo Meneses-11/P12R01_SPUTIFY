@@ -437,26 +437,27 @@ BEGIN CATCH
 	THROW;
 END CATCH
 GO
------------------ Roles
+
+----------------- AudiolibrosGuardados
 BEGIN TRANSACTION
 BEGIN TRY
 	--VALIDACIONES
 	IF EXISTS (
 			SELECT 1
 			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'Roles'
+			WHERE TABLE_NAME = 'AudiolibrosGuardados'
 				AND TABLE_SCHEMA = 'dbo'
 			)
 	BEGIN
-		--ELIMINAR: Datos de Roles
+		--ELIMINAR: Datos de AudiolibrosGuardados
 		DELETE
-		FROM dbo.Roles
+		FROM dbo.AudiolibrosGuardados
 
-		PRINT 'Datos de la tabla Roles eliminados correctamente.'
+		PRINT 'Datos de la tabla AudiolibrosGuardados eliminados correctamente.'
 	END
 	ELSE
 	BEGIN
-		PRINT 'La tabla [dbo].[Roles] no existe.'
+		PRINT 'La tabla [dbo].[AudiolibrosGuardados] no existe.'
 	END
 
 	COMMIT TRANSACTION;
@@ -490,6 +491,39 @@ BEGIN TRY
 	ELSE
 	BEGIN
 		PRINT 'La tabla [dbo].[Usuarios] no existe.'
+	END
+
+	COMMIT TRANSACTION;
+END TRY
+
+BEGIN CATCH
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+
+	THROW;
+END CATCH
+GO
+
+----------------- Roles
+BEGIN TRANSACTION
+BEGIN TRY
+	--VALIDACIONES
+	IF EXISTS (
+			SELECT 1
+			FROM INFORMATION_SCHEMA.TABLES
+			WHERE TABLE_NAME = 'Roles'
+				AND TABLE_SCHEMA = 'dbo'
+			)
+	BEGIN
+		--ELIMINAR: Datos de Roles
+		DELETE
+		FROM dbo.Roles
+
+		PRINT 'Datos de la tabla Roles eliminados correctamente.'
+	END
+	ELSE
+	BEGIN
+		PRINT 'La tabla [dbo].[Roles] no existe.'
 	END
 
 	COMMIT TRANSACTION;

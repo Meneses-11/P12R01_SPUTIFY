@@ -5,3 +5,5 @@ SELECT * FROM Usuarios;
 SELECT * FROM CancionesOffline;
 SELECT * FROM Canciones;
 SELECT * FROM Artistas;
+
+SELECT * FROM AudiolibrosGuardados

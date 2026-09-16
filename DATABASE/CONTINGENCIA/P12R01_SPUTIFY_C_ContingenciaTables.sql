@@ -279,17 +279,19 @@ BEGIN CATCH
 END CATCH
 GO
 
-
-/* -----Tabla Roles----- */
+/* -----Tabla AudiolibrosGuardados----- */
 BEGIN TRANSACTION;
 BEGIN TRY
 
-	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Roles' AND TABLE_SCHEMA = 'dbo')
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'AudiolibrosGuardados' AND TABLE_SCHEMA = 'dbo')
 	BEGIN
-		DROP TABLE dbo.Roles;
-		PRINT 'Tabla Roles eliminada correctamente';
+		DROP TABLE dbo.AudiolibrosGuardados;
+		PRINT 'Tabla AudiolibrosGuardados eliminada correctamente';
 	END
-
+	ELSE
+	BEGIN
+		PRINT 'Tabla AudiolibrosGuardados no existe';
+	END
 COMMIT TRANSACTION;--Confirmar cambios
 END TRY
 BEGIN CATCH
@@ -300,7 +302,6 @@ BEGIN CATCH
 
 END CATCH
 GO
-
 
 /* -----Tabla Usuarios----- */
 BEGIN TRANSACTION;
@@ -316,6 +317,27 @@ COMMIT TRANSACTION;--Confirmar cambios
 END TRY
 BEGIN CATCH
 	
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+	THROW;
+
+END CATCH
+GO
+
+/* -----Tabla Roles----- */
+BEGIN TRANSACTION;
+BEGIN TRY
+
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Roles' AND TABLE_SCHEMA = 'dbo')
+	BEGIN
+		DROP TABLE dbo.Roles;
+		PRINT 'Tabla Roles eliminada correctamente';
+	END
+
+COMMIT TRANSACTION;--Confirmar cambios
+END TRY
+BEGIN CATCH
+
 	IF @@TRANCOUNT > 0
 		ROLLBACK TRANSACTION;
 	THROW;

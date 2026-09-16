@@ -479,3 +479,46 @@ BEGIN TRANSACTION
 		THROW;
 	END CATCH
 GO
+
+--===================================
+-- Tabla: AudiolibrosGuardados (AEHM)
+--===================================
+
+BEGIN TRANSACTION
+	BEGIN TRY
+		IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'AudiolibrosGuardados' AND TABLE_SCHEMA = 'dbo')
+		BEGIN
+            CREATE TABLE AudiolibrosGuardados (
+                IdAudiolibro INT IDENTITY(1,1) PRIMARY KEY,
+                IdUsuario INT NOT NULL,
+                VideoId VARCHAR(50) NOT NULL,
+                Titulo VARCHAR(200) NOT NULL,
+                CanalTitulo VARCHAR(200) NULL,
+                Descripcion VARCHAR(1000) NULL,
+                FechaPublicacion DATETIME NULL,
+                DuracionSegundos INT NULL,
+                ThumbnailUrl VARCHAR(500) NULL,
+                ThumbnailMediumUrl VARCHAR(500) NULL,
+                ThumbnailHighUrl VARCHAR(500) NULL,
+                TipoContenido VARCHAR(50) NOT NULL DEFAULT 'AUDIOLIBRO',
+                FechaGuardado DATETIME NOT NULL DEFAULT GETDATE(),
+                Activo BIT NOT NULL DEFAULT 1,
+                CONSTRAINT FK_Audiolibros_Usuarios
+                    FOREIGN KEY (IdUsuario) REFERENCES Usuarios(IdUsuario),
+                CONSTRAINT UQ_Audiolibros_Usuario_Video
+                    UNIQUE (IdUsuario, VideoId)
+            );
+			PRINT 'Tabla AudiolibrosGuardados creada correctamente'
+		END
+		ELSE
+		BEGIN
+			PRINT 'Tabla AudiolibrosGuardados ya existe'
+		END
+	COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		IF @@TRANCOUNT > 0
+			ROLLBACK TRANSACTION
+		THROW;
+	END CATCH
+GO
