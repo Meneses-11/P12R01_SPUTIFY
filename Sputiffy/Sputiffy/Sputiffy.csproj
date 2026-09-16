@@ -142,6 +142,7 @@
     <Compile Include="Controllers\GenerosController.cs" />
     <Compile Include="Controllers\HistorialReproduccionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NarracionesDeportivasController.cs" />
     <Compile Include="Controllers\OfflineController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
     <Compile Include="Controllers\PodcastController.cs" />
@@ -180,6 +181,9 @@
       <DependentUpon>SputiffyModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\HistorialReproduccion.cs">
+      <DependentUpon>SputiffyModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\NarracionesDeportivas.cs">
       <DependentUpon>SputiffyModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PlaylistCanciones.cs">
@@ -369,6 +373,7 @@
     <Content Include="Views\Offline\Agregar.cshtml" />
     <Content Include="Views\Offline\Editar.cshtml" />
     <Content Include="Views\Audiolibros\Index.cshtml" />
+    <Content Include="Views\NarracionesDeportivas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

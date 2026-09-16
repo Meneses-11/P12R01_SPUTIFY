@@ -14,90 +14,29 @@ FECHA: 15/09/2026
   ==========================================*/
 
 SELECT name FROM sys.tables ORDER BY name;
---------------------------------Albumes
+
+
+----------------- Narraciones deportivas
+
 BEGIN TRANSACTION
 BEGIN TRY
 	--VALIDACIONES
 	IF EXISTS (
 			SELECT 1
 			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'Albumes'
+			WHERE TABLE_NAME = 'NarracionesDeportivas'
 				AND TABLE_SCHEMA = 'dbo'
 			)
 	BEGIN
-		--ELIMINAR: Datos de Albumes
+		--ELIMINAR: Datos de NarracionesDeportivas
 		DELETE
-		FROM dbo.Albumes
+		FROM dbo.NarracionesDeportivas
 
-		PRINT 'Datos de la tabla Albumes eliminados correctamente.'
+		PRINT 'Datos de la tabla NarracionesDeportivas eliminados correctamente.'
 	END
 	ELSE
 	BEGIN
-		PRINT 'La tabla [dbo].[Albumes] no existe.'
-	END
-
-	COMMIT TRANSACTION;
-END TRY
-
-BEGIN CATCH
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-
-	THROW;
-END CATCH
-GO
----------------------------------------------Artistas
-BEGIN TRANSACTION
-BEGIN TRY
-	--VALIDACIONES
-	IF EXISTS (
-			SELECT 1
-			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'Artistas'
-				AND TABLE_SCHEMA = 'dbo'
-			)
-	BEGIN
-		--ELIMINAR: Datos de Albumes
-		DELETE
-		FROM dbo.Artistas
-
-		PRINT 'Datos de la tabla Artistas eliminados correctamente.'
-	END
-	ELSE
-	BEGIN
-		PRINT 'La tabla [dbo].[Artistas] no existe.'
-	END
-
-	COMMIT TRANSACTION;
-END TRY
-
-BEGIN CATCH
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-
-	THROW;
-END CATCH
-GO
------------------ Canciones
-BEGIN TRANSACTION
-BEGIN TRY
-	--VALIDACIONES
-	IF EXISTS (
-			SELECT 1
-			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'Artistas'
-				AND TABLE_SCHEMA = 'dbo'
-			)
-	BEGIN
-		--ELIMINAR: Datos de Albumes
-		DELETE
-		FROM dbo.Artistas
-
-		PRINT 'Datos de la tabla Artistas eliminados correctamente.'
-	END
-	ELSE
-	BEGIN
-		PRINT 'La tabla [dbo].[Artistas] no existe.'
+		PRINT 'La tabla [dbo].[NarracionesDeportivas] no existe.'
 	END
 
 	COMMIT TRANSACTION;
@@ -111,26 +50,159 @@ BEGIN CATCH
 END CATCH
 GO
 
------------------ CancionesOffline
+----------------- AudiolibrosGuardados
 BEGIN TRANSACTION
 BEGIN TRY
 	--VALIDACIONES
 	IF EXISTS (
 			SELECT 1
 			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'CancionesOffline'
+			WHERE TABLE_NAME = 'AudiolibrosGuardados'
+				AND TABLE_SCHEMA = 'dbo'
+			)
+	BEGIN
+		--ELIMINAR: Datos de AudiolibrosGuardados
+		DELETE
+		FROM dbo.AudiolibrosGuardados
+
+		PRINT 'Datos de la tabla AudiolibrosGuardados eliminados correctamente.'
+	END
+	ELSE
+	BEGIN
+		PRINT 'La tabla [dbo].[AudiolibrosGuardados] no existe.'
+	END
+
+	COMMIT TRANSACTION;
+END TRY
+
+BEGIN CATCH
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+
+	THROW;
+END CATCH
+GO
+
+----------------- PlaylistCanciones
+BEGIN TRANSACTION
+BEGIN TRY
+	--VALIDACIONES
+	IF EXISTS (
+			SELECT 1
+			FROM INFORMATION_SCHEMA.TABLES
+			WHERE TABLE_NAME = 'PlaylistCanciones'
 				AND TABLE_SCHEMA = 'dbo'
 			)
 	BEGIN
 		--ELIMINAR: Datos de Albumes
 		DELETE
-		FROM dbo.CancionesOffline
+		FROM dbo.PlaylistCanciones
 
-		PRINT 'Datos de la tabla CancionesOffline eliminados correctamente.'
+		PRINT 'Datos de la tabla PlaylistCanciones eliminados correctamente.'
 	END
 	ELSE
 	BEGIN
-		PRINT 'La tabla [dbo].[CancionesOffline] no existe.'
+		PRINT 'La tabla [dbo].[PlaylistCanciones] no existe.'
+	END
+
+	COMMIT TRANSACTION;
+END TRY
+
+BEGIN CATCH
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+
+	THROW;
+END CATCH
+GO
+
+----------------- PreferenciasUsuario
+
+BEGIN TRANSACTION
+BEGIN TRY
+	--VALIDACIONES
+	IF EXISTS (
+			SELECT 1
+			FROM INFORMATION_SCHEMA.TABLES
+			WHERE TABLE_NAME = 'PreferenciasUsuario'
+				AND TABLE_SCHEMA = 'dbo'
+			)
+	BEGIN
+		--ELIMINAR: Datos de Albumes
+		DELETE
+		FROM dbo.PreferenciasUsuario
+
+		PRINT 'Datos de la tabla PreferenciasUsuario eliminados correctamente.'
+	END
+	ELSE
+	BEGIN
+		PRINT 'La tabla [dbo].[PreferenciasUsuario] no existe.'
+	END
+
+	COMMIT TRANSACTION;
+END TRY
+
+BEGIN CATCH
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+
+	THROW;
+END CATCH
+GO
+
+----------------- RecomendacionesUsuario
+BEGIN TRANSACTION
+BEGIN TRY
+	--VALIDACIONES
+	IF EXISTS (
+			SELECT 1
+			FROM INFORMATION_SCHEMA.TABLES
+			WHERE TABLE_NAME = 'RecomendacionesUsuario'
+				AND TABLE_SCHEMA = 'dbo'
+			)
+	BEGIN
+		--ELIMINAR: Datos de Albumes
+		DELETE
+		FROM dbo.RecomendacionesUsuario
+
+		PRINT 'Datos de la tabla RecomendacionesUsuario eliminados correctamente.'
+	END
+	ELSE
+	BEGIN
+		PRINT 'La tabla [dbo].[RecomendacionesUsuario] no existe.'
+	END
+
+	COMMIT TRANSACTION;
+END TRY
+
+BEGIN CATCH
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+
+	THROW;
+END CATCH
+GO
+
+----------------- HistorialReproduccion
+BEGIN TRANSACTION
+BEGIN TRY
+	--VALIDACIONES
+	IF EXISTS (
+			SELECT 1
+			FROM INFORMATION_SCHEMA.TABLES
+			WHERE TABLE_NAME = 'HistorialReproduccion'
+				AND TABLE_SCHEMA = 'dbo'
+			)
+	BEGIN
+		--ELIMINAR: Datos de Albumes
+		DELETE
+		FROM dbo.HistorialReproduccion
+
+		PRINT 'Datos de la tabla HistorialReproduccion eliminados correctamente.'
+	END
+	ELSE
+	BEGIN
+		PRINT 'La tabla [dbo].[HistorialReproduccion] no existe.'
 	END
 
 	COMMIT TRANSACTION;
@@ -177,138 +249,6 @@ BEGIN CATCH
 END CATCH
 GO
 
------------------ Generos
-BEGIN TRANSACTION
-BEGIN TRY
-	--VALIDACIONES
-	IF EXISTS (
-			SELECT 1
-			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'Generos'
-				AND TABLE_SCHEMA = 'dbo'
-			)
-	BEGIN
-		--ELIMINAR: Datos de Albumes
-		DELETE
-		FROM dbo.Generos
-
-		PRINT 'Datos de la tabla Generos eliminados correctamente.'
-	END
-	ELSE
-	BEGIN
-		PRINT 'La tabla [dbo].[Generos] no existe.'
-	END
-
-	COMMIT TRANSACTION;
-END TRY
-
-BEGIN CATCH
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-
-	THROW;
-END CATCH
-GO
-
-
------------------ HistorialReproduccion
-BEGIN TRANSACTION
-BEGIN TRY
-	--VALIDACIONES
-	IF EXISTS (
-			SELECT 1
-			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'HistorialReproduccion'
-				AND TABLE_SCHEMA = 'dbo'
-			)
-	BEGIN
-		--ELIMINAR: Datos de Albumes
-		DELETE
-		FROM dbo.HistorialReproduccion
-
-		PRINT 'Datos de la tabla HistorialReproduccion eliminados correctamente.'
-	END
-	ELSE
-	BEGIN
-		PRINT 'La tabla [dbo].[HistorialReproduccion] no existe.'
-	END
-
-	COMMIT TRANSACTION;
-END TRY
-
-BEGIN CATCH
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-
-	THROW;
-END CATCH
-GO
-
------------------ HistorialReproduccion
-BEGIN TRANSACTION
-BEGIN TRY
-	--VALIDACIONES
-	IF EXISTS (
-			SELECT 1
-			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'HistorialReproduccion'
-				AND TABLE_SCHEMA = 'dbo'
-			)
-	BEGIN
-		--ELIMINAR: Datos de Albumes
-		DELETE
-		FROM dbo.HistorialReproduccion
-
-		PRINT 'Datos de la tabla HistorialReproduccion eliminados correctamente.'
-	END
-	ELSE
-	BEGIN
-		PRINT 'La tabla [dbo].[HistorialReproduccion] no existe.'
-	END
-
-	COMMIT TRANSACTION;
-END TRY
-
-BEGIN CATCH
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-
-	THROW;
-END CATCH
-GO
------------------ PlaylistCanciones
-BEGIN TRANSACTION
-BEGIN TRY
-	--VALIDACIONES
-	IF EXISTS (
-			SELECT 1
-			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'PlaylistCanciones'
-				AND TABLE_SCHEMA = 'dbo'
-			)
-	BEGIN
-		--ELIMINAR: Datos de Albumes
-		DELETE
-		FROM dbo.PlaylistCanciones
-
-		PRINT 'Datos de la tabla PlaylistCanciones eliminados correctamente.'
-	END
-	ELSE
-	BEGIN
-		PRINT 'La tabla [dbo].[PlaylistCanciones] no existe.'
-	END
-
-	COMMIT TRANSACTION;
-END TRY
-
-BEGIN CATCH
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-
-	THROW;
-END CATCH
-GO
-
 ----------------- PlaylistDetalle
 BEGIN TRANSACTION
 BEGIN TRY
@@ -341,6 +281,7 @@ BEGIN CATCH
 	THROW;
 END CATCH
 GO
+
 ----------------- Playlists
 BEGIN TRANSACTION
 BEGIN TRY
@@ -373,58 +314,27 @@ BEGIN CATCH
 	THROW;
 END CATCH
 GO
------------------ PreferenciasUsuario
+
+----------------- Canciones
 BEGIN TRANSACTION
 BEGIN TRY
 	--VALIDACIONES
 	IF EXISTS (
 			SELECT 1
 			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'PreferenciasUsuario'
+			WHERE TABLE_NAME = 'Artistas'
 				AND TABLE_SCHEMA = 'dbo'
 			)
 	BEGIN
 		--ELIMINAR: Datos de Albumes
 		DELETE
-		FROM dbo.PreferenciasUsuario
+		FROM dbo.Artistas
 
-		PRINT 'Datos de la tabla PreferenciasUsuario eliminados correctamente.'
+		PRINT 'Datos de la tabla Artistas eliminados correctamente.'
 	END
 	ELSE
 	BEGIN
-		PRINT 'La tabla [dbo].[PreferenciasUsuario] no existe.'
-	END
-
-	COMMIT TRANSACTION;
-END TRY
-
-BEGIN CATCH
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-
-	THROW;
-END CATCH
-GO
------------------ RecomendacionesUsuario
-BEGIN TRANSACTION
-BEGIN TRY
-	--VALIDACIONES
-	IF EXISTS (
-			SELECT 1
-			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'RecomendacionesUsuario'
-				AND TABLE_SCHEMA = 'dbo'
-			)
-	BEGIN
-		--ELIMINAR: Datos de Albumes
-		DELETE
-		FROM dbo.RecomendacionesUsuario
-
-		PRINT 'Datos de la tabla RecomendacionesUsuario eliminados correctamente.'
-	END
-	ELSE
-	BEGIN
-		PRINT 'La tabla [dbo].[RecomendacionesUsuario] no existe.'
+		PRINT 'La tabla [dbo].[Artistas] no existe.'
 	END
 
 	COMMIT TRANSACTION;
@@ -438,26 +348,59 @@ BEGIN CATCH
 END CATCH
 GO
 
------------------ AudiolibrosGuardados
+---------------------------------------------Artistas
 BEGIN TRANSACTION
 BEGIN TRY
 	--VALIDACIONES
 	IF EXISTS (
 			SELECT 1
 			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'AudiolibrosGuardados'
+			WHERE TABLE_NAME = 'Artistas'
 				AND TABLE_SCHEMA = 'dbo'
 			)
 	BEGIN
-		--ELIMINAR: Datos de AudiolibrosGuardados
+		--ELIMINAR: Datos de Albumes
 		DELETE
-		FROM dbo.AudiolibrosGuardados
+		FROM dbo.Artistas
 
-		PRINT 'Datos de la tabla AudiolibrosGuardados eliminados correctamente.'
+		PRINT 'Datos de la tabla Artistas eliminados correctamente.'
 	END
 	ELSE
 	BEGIN
-		PRINT 'La tabla [dbo].[AudiolibrosGuardados] no existe.'
+		PRINT 'La tabla [dbo].[Artistas] no existe.'
+	END
+
+	COMMIT TRANSACTION;
+END TRY
+
+BEGIN CATCH
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+
+	THROW;
+END CATCH
+GO
+
+----------------- Generos
+BEGIN TRANSACTION
+BEGIN TRY
+	--VALIDACIONES
+	IF EXISTS (
+			SELECT 1
+			FROM INFORMATION_SCHEMA.TABLES
+			WHERE TABLE_NAME = 'Generos'
+				AND TABLE_SCHEMA = 'dbo'
+			)
+	BEGIN
+		--ELIMINAR: Datos de Albumes
+		DELETE
+		FROM dbo.Generos
+
+		PRINT 'Datos de la tabla Generos eliminados correctamente.'
+	END
+	ELSE
+	BEGIN
+		PRINT 'La tabla [dbo].[Generos] no existe.'
 	END
 
 	COMMIT TRANSACTION;
@@ -524,6 +467,39 @@ BEGIN TRY
 	ELSE
 	BEGIN
 		PRINT 'La tabla [dbo].[Roles] no existe.'
+	END
+
+	COMMIT TRANSACTION;
+END TRY
+
+BEGIN CATCH
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+
+	THROW;
+END CATCH
+GO
+
+--------------------------------Albumes
+BEGIN TRANSACTION
+BEGIN TRY
+	--VALIDACIONES
+	IF EXISTS (
+			SELECT 1
+			FROM INFORMATION_SCHEMA.TABLES
+			WHERE TABLE_NAME = 'Albumes'
+				AND TABLE_SCHEMA = 'dbo'
+			)
+	BEGIN
+		--ELIMINAR: Datos de Albumes
+		DELETE
+		FROM dbo.Albumes
+
+		PRINT 'Datos de la tabla Albumes eliminados correctamente.'
+	END
+	ELSE
+	BEGIN
+		PRINT 'La tabla [dbo].[Albumes] no existe.'
 	END
 
 	COMMIT TRANSACTION;

@@ -108,6 +108,31 @@
 					<Property Name="SegundosEscuchados" Type="int" />
 					<Property Name="Completa" Type="bit" Nullable="false" />
 				</EntityType>
+				<EntityType Name="NarracionesDeportivas">
+					<Key>
+						<PropertyRef Name="IdNarracion" />
+					</Key>
+					<Property Name="IdNarracion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+					<Property Name="VideoId" Type="varchar" MaxLength="50" Nullable="false" />
+					<Property Name="Titulo" Type="varchar" MaxLength="300" Nullable="false" />
+					<Property Name="Descripcion" Type="varchar" MaxLength="1000" />
+					<Property Name="CanalYoutube" Type="varchar" MaxLength="200" />
+					<Property Name="ThumbnailUrl" Type="varchar" MaxLength="500" />
+					<Property Name="UrlYoutube" Type="varchar" MaxLength="500" />
+					<Property Name="DuracionSegundos" Type="int" />
+					<Property Name="FechaPublicacion" Type="date" />
+					<Property Name="Deporte" Type="varchar" MaxLength="80" />
+					<Property Name="EquipoLocal" Type="varchar" MaxLength="150" />
+					<Property Name="EquipoVisitante" Type="varchar" MaxLength="150" />
+					<Property Name="Evento" Type="varchar" MaxLength="200" />
+					<Property Name="FechaEvento" Type="date" />
+					<Property Name="Marcador" Type="varchar" MaxLength="50" />
+					<Property Name="IdUsuario" Type="int" Nullable="false" />
+					<Property Name="EsFavorito" Type="bit" Nullable="false" />
+					<Property Name="Notas" Type="varchar" MaxLength="500" />
+					<Property Name="FechaRegistro" Type="datetime" Nullable="false" />
+					<Property Name="Activo" Type="bit" Nullable="false" />
+				</EntityType>
 				<EntityType Name="PlaylistCanciones">
 					<Key>
 						<PropertyRef Name="IdPlaylistCancion" />
@@ -172,16 +197,6 @@
 					<Property Name="NombreRol" Type="varchar" MaxLength="50" Nullable="false" />
 					<Property Name="Activo" Type="bit" Nullable="false" />
 				</EntityType>
-				<EntityType Name="sysdiagrams">
-					<Key>
-						<PropertyRef Name="diagram_id" />
-					</Key>
-					<Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-					<Property Name="principal_id" Type="int" Nullable="false" />
-					<Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-					<Property Name="version" Type="int" />
-					<Property Name="definition" Type="varbinary(max)" />
-				</EntityType>
 				<EntityType Name="Usuarios">
 					<Key>
 						<PropertyRef Name="IdUsuario" />
@@ -199,7 +214,8 @@
 					<Property Name="Activo" Type="bit" Nullable="false" />
 					<Property Name="IdRol" Type="int" Nullable="false" />
 				</EntityType>
-				<!-- NUEVO: EntityType de la vista en el store -->
+				<!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'sputiffy.dbo.vw_Usuarios_AnioBaseRecomendacion' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
 				<EntityType Name="vw_Usuarios_AnioBaseRecomendacion">
 					<Key>
 						<PropertyRef Name="IdUsuario" />
@@ -208,7 +224,7 @@
 						<PropertyRef Name="Correo" />
 						<PropertyRef Name="FechaNacimiento" />
 					</Key>
-					<Property Name="IdUsuario" Type="int" Nullable="false" />
+					<Property Name="IdUsuario" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
 					<Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
 					<Property Name="NombreUsuario" Type="varchar" MaxLength="50" Nullable="false" />
 					<Property Name="Correo" Type="varchar" MaxLength="150" Nullable="false" />
@@ -320,6 +336,18 @@
 							<PropertyRef Name="IdUsuario" />
 						</Principal>
 						<Dependent Role="HistorialReproduccion">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK_Narraciones_Usuarios">
+					<End Role="Usuarios" Type="Self.Usuarios" Multiplicity="1" />
+					<End Role="NarracionesDeportivas" Type="Self.NarracionesDeportivas" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="NarracionesDeportivas">
 							<PropertyRef Name="IdUsuario" />
 						</Dependent>
 					</ReferentialConstraint>
@@ -441,16 +469,27 @@
 					<EntitySet Name="Favoritos" EntityType="Self.Favoritos" Schema="dbo" store:Type="Tables" />
 					<EntitySet Name="Generos" EntityType="Self.Generos" Schema="dbo" store:Type="Tables" />
 					<EntitySet Name="HistorialReproduccion" EntityType="Self.HistorialReproduccion" Schema="dbo" store:Type="Tables" />
+					<EntitySet Name="NarracionesDeportivas" EntityType="Self.NarracionesDeportivas" Schema="dbo" store:Type="Tables" />
 					<EntitySet Name="PlaylistCanciones" EntityType="Self.PlaylistCanciones" Schema="dbo" store:Type="Tables" />
 					<EntitySet Name="PlaylistDetalle" EntityType="Self.PlaylistDetalle" Schema="dbo" store:Type="Tables" />
 					<EntitySet Name="Playlists" EntityType="Self.Playlists" Schema="dbo" store:Type="Tables" />
 					<EntitySet Name="PreferenciasUsuario" EntityType="Self.PreferenciasUsuario" Schema="dbo" store:Type="Tables" />
 					<EntitySet Name="RecomendacionesUsuario" EntityType="Self.RecomendacionesUsuario" Schema="dbo" store:Type="Tables" />
 					<EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
-					<EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
 					<EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
-					<!-- NUEVO: EntitySet de la vista -->
-					<EntitySet Name="vw_Usuarios_AnioBaseRecomendacion" EntityType="Self.vw_Usuarios_AnioBaseRecomendacion" Schema="dbo" store:Type="Views" />
+					<EntitySet Name="vw_Usuarios_AnioBaseRecomendacion" EntityType="Self.vw_Usuarios_AnioBaseRecomendacion" store:Type="Views" store:Schema="dbo">
+						<DefiningQuery>
+							SELECT
+							[vw_Usuarios_AnioBaseRecomendacion].[IdUsuario] AS [IdUsuario],
+							[vw_Usuarios_AnioBaseRecomendacion].[Nombre] AS [Nombre],
+							[vw_Usuarios_AnioBaseRecomendacion].[NombreUsuario] AS [NombreUsuario],
+							[vw_Usuarios_AnioBaseRecomendacion].[Correo] AS [Correo],
+							[vw_Usuarios_AnioBaseRecomendacion].[FechaNacimiento] AS [FechaNacimiento],
+							[vw_Usuarios_AnioBaseRecomendacion].[AnioNacimiento] AS [AnioNacimiento],
+							[vw_Usuarios_AnioBaseRecomendacion].[AnioBaseRecomendacion] AS [AnioBaseRecomendacion]
+							FROM [dbo].[vw_Usuarios_AnioBaseRecomendacion] AS [vw_Usuarios_AnioBaseRecomendacion]
+						</DefiningQuery>
+					</EntitySet>
 					<AssociationSet Name="FK_Albumes_Artistas" Association="Self.FK_Albumes_Artistas">
 						<End Role="Artistas" EntitySet="Artistas" />
 						<End Role="Albumes" EntitySet="Albumes" />
@@ -486,6 +525,10 @@
 					<AssociationSet Name="FK_Historial_Usuarios" Association="Self.FK_Historial_Usuarios">
 						<End Role="Usuarios" EntitySet="Usuarios" />
 						<End Role="HistorialReproduccion" EntitySet="HistorialReproduccion" />
+					</AssociationSet>
+					<AssociationSet Name="FK_Narraciones_Usuarios" Association="Self.FK_Narraciones_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="NarracionesDeportivas" EntitySet="NarracionesDeportivas" />
 					</AssociationSet>
 					<AssociationSet Name="FK_PlaylistCanciones_Playlists" Association="Self.FK_PlaylistCanciones_Playlists">
 						<End Role="Playlists" EntitySet="Playlists" />
@@ -725,16 +768,6 @@
 					<Property Name="Activo" Type="Boolean" Nullable="false" />
 					<NavigationProperty Name="Usuarios" Relationship="Self.FK_Usuarios_Roles" FromRole="Roles" ToRole="Usuarios" />
 				</EntityType>
-				<EntityType Name="sysdiagrams">
-					<Key>
-						<PropertyRef Name="diagram_id" />
-					</Key>
-					<Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
-					<Property Name="principal_id" Type="Int32" Nullable="false" />
-					<Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-					<Property Name="version" Type="Int32" />
-					<Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
-				</EntityType>
 				<EntityType Name="Usuarios">
 					<Key>
 						<PropertyRef Name="IdUsuario" />
@@ -758,6 +791,7 @@
 					<NavigationProperty Name="PreferenciasUsuario" Relationship="Self.FK_Preferencias_Usuarios" FromRole="Usuarios" ToRole="PreferenciasUsuario" />
 					<NavigationProperty Name="RecomendacionesUsuario" Relationship="Self.FK_Recomendaciones_Usuarios" FromRole="Usuarios" ToRole="RecomendacionesUsuario" />
 					<NavigationProperty Name="Roles" Relationship="Self.FK_Usuarios_Roles" FromRole="Usuarios" ToRole="Roles" />
+					<NavigationProperty Name="NarracionesDeportivas" Relationship="sputiffyModel.FK_Narraciones_Usuarios" FromRole="Usuarios" ToRole="NarracionesDeportivas" />
 				</EntityType>
 				<EntityType Name="vw_Usuarios_AnioBaseRecomendacion">
 					<Key>
@@ -1006,9 +1040,9 @@
 					<EntitySet Name="PreferenciasUsuario" EntityType="Self.PreferenciasUsuario" />
 					<EntitySet Name="RecomendacionesUsuario" EntityType="Self.RecomendacionesUsuario" />
 					<EntitySet Name="Roles" EntityType="Self.Roles" />
-					<EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
 					<EntitySet Name="Usuarios" EntityType="Self.Usuarios" />
 					<EntitySet Name="vw_Usuarios_AnioBaseRecomendacion" EntityType="Self.vw_Usuarios_AnioBaseRecomendacion" />
+					<EntitySet Name="NarracionesDeportivas" EntityType="Self.NarracionesDeportivas" />
 					<AssociationSet Name="FK_Albumes_Artistas" Association="Self.FK_Albumes_Artistas">
 						<End Role="Artistas" EntitySet="Artistas" />
 						<End Role="Albumes" EntitySet="Albumes" />
@@ -1081,7 +1115,49 @@
 						<End Role="Roles" EntitySet="Roles" />
 						<End Role="Usuarios" EntitySet="Usuarios" />
 					</AssociationSet>
+					<AssociationSet Name="FK_Narraciones_Usuarios" Association="sputiffyModel.FK_Narraciones_Usuarios">
+						<End Role="Usuarios" EntitySet="Usuarios" />
+						<End Role="NarracionesDeportivas" EntitySet="NarracionesDeportivas" />
+					</AssociationSet>
 				</EntityContainer>
+				<EntityType Name="NarracionesDeportivas">
+					<Key>
+						<PropertyRef Name="IdNarracion" />
+					</Key>
+					<Property Name="IdNarracion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="VideoId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="Titulo" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
+					<Property Name="Descripcion" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+					<Property Name="CanalYoutube" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+					<Property Name="ThumbnailUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="UrlYoutube" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="DuracionSegundos" Type="Int32" />
+					<Property Name="FechaPublicacion" Type="DateTime" Precision="0" />
+					<Property Name="Deporte" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+					<Property Name="EquipoLocal" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+					<Property Name="EquipoVisitante" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+					<Property Name="Evento" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+					<Property Name="FechaEvento" Type="DateTime" Precision="0" />
+					<Property Name="Marcador" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+					<Property Name="IdUsuario" Type="Int32" Nullable="false" />
+					<Property Name="EsFavorito" Type="Boolean" Nullable="false" />
+					<Property Name="Notas" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+					<Property Name="FechaRegistro" Type="DateTime" Nullable="false" Precision="3" />
+					<Property Name="Activo" Type="Boolean" Nullable="false" />
+					<NavigationProperty Name="Usuarios" Relationship="sputiffyModel.FK_Narraciones_Usuarios" FromRole="NarracionesDeportivas" ToRole="Usuarios" />
+				</EntityType>
+				<Association Name="FK_Narraciones_Usuarios">
+					<End Type="sputiffyModel.Usuarios" Role="Usuarios" Multiplicity="1" />
+					<End Type="sputiffyModel.NarracionesDeportivas" Role="NarracionesDeportivas" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="Usuarios">
+							<PropertyRef Name="IdUsuario" />
+						</Principal>
+						<Dependent Role="NarracionesDeportivas">
+							<PropertyRef Name="IdUsuario" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
 			</Schema>
 		</edmx:ConceptualModels>
 		<!-- C-S mapping content -->
@@ -1269,17 +1345,6 @@
 							</MappingFragment>
 						</EntityTypeMapping>
 					</EntitySetMapping>
-					<EntitySetMapping Name="sysdiagrams">
-						<EntityTypeMapping TypeName="sputiffyModel.sysdiagrams">
-							<MappingFragment StoreEntitySet="sysdiagrams">
-								<ScalarProperty Name="name" ColumnName="name" />
-								<ScalarProperty Name="principal_id" ColumnName="principal_id" />
-								<ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-								<ScalarProperty Name="version" ColumnName="version" />
-								<ScalarProperty Name="definition" ColumnName="definition" />
-							</MappingFragment>
-						</EntityTypeMapping>
-					</EntitySetMapping>
 					<EntitySetMapping Name="Usuarios">
 						<EntityTypeMapping TypeName="sputiffyModel.Usuarios">
 							<MappingFragment StoreEntitySet="Usuarios">
@@ -1309,6 +1374,32 @@
 								<ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
 								<ScalarProperty Name="AnioNacimiento" ColumnName="AnioNacimiento" />
 								<ScalarProperty Name="AnioBaseRecomendacion" ColumnName="AnioBaseRecomendacion" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="NarracionesDeportivas">
+						<EntityTypeMapping TypeName="sputiffyModel.NarracionesDeportivas">
+							<MappingFragment StoreEntitySet="NarracionesDeportivas">
+								<ScalarProperty Name="Activo" ColumnName="Activo" />
+								<ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+								<ScalarProperty Name="Notas" ColumnName="Notas" />
+								<ScalarProperty Name="EsFavorito" ColumnName="EsFavorito" />
+								<ScalarProperty Name="IdUsuario" ColumnName="IdUsuario" />
+								<ScalarProperty Name="Marcador" ColumnName="Marcador" />
+								<ScalarProperty Name="FechaEvento" ColumnName="FechaEvento" />
+								<ScalarProperty Name="Evento" ColumnName="Evento" />
+								<ScalarProperty Name="EquipoVisitante" ColumnName="EquipoVisitante" />
+								<ScalarProperty Name="EquipoLocal" ColumnName="EquipoLocal" />
+								<ScalarProperty Name="Deporte" ColumnName="Deporte" />
+								<ScalarProperty Name="FechaPublicacion" ColumnName="FechaPublicacion" />
+								<ScalarProperty Name="DuracionSegundos" ColumnName="DuracionSegundos" />
+								<ScalarProperty Name="UrlYoutube" ColumnName="UrlYoutube" />
+								<ScalarProperty Name="ThumbnailUrl" ColumnName="ThumbnailUrl" />
+								<ScalarProperty Name="CanalYoutube" ColumnName="CanalYoutube" />
+								<ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+								<ScalarProperty Name="Titulo" ColumnName="Titulo" />
+								<ScalarProperty Name="VideoId" ColumnName="VideoId" />
+								<ScalarProperty Name="IdNarracion" ColumnName="IdNarracion" />
 							</MappingFragment>
 						</EntityTypeMapping>
 					</EntitySetMapping>
@@ -1351,7 +1442,6 @@
 				<EntityTypeShape EntityType="sputiffyModel.vw_Usuarios_AnioBaseRecomendacion" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
 				<EntityTypeShape EntityType="sputiffyModel.AudiolibrosGuardados" Width="1.5" PointX="5.25" PointY="16.625" />
 				<EntityTypeShape EntityType="sputiffyModel.CancionesOffline" Width="1.5" PointX="12.375" PointY="0.75" />
-				<EntityTypeShape EntityType="sputiffyModel.sysdiagrams" Width="1.5" PointX="12.375" PointY="9.75" />
 				<AssociationConnector Association="sputiffyModel.FK_Albumes_Artistas" ManuallyRouted="false" />
 				<AssociationConnector Association="sputiffyModel.FK_Audiolibros_Usuarios" />
 				<AssociationConnector Association="sputiffyModel.FK_Canciones_Albumes" ManuallyRouted="false" />
