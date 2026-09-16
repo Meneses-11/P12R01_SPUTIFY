@@ -32,3 +32,14 @@ EXEC sp_help '[dbo].[PreferenciasUsuario]'
 EXEC sp_help '[dbo].[RecomendacionesUsuario]'
 EXEC sp_help '[dbo].[Roles]'
 EXEC sp_help '[dbo].[Usuarios]'
+
+SELECT * FROM AudiolibrosGuardados
+
+SELECT * FROM NarracionesDeportivas
+
+USE sputiffy;
+GO
+
+SELECT * FROM INFORMATION_SCHEMA.TABLES 
+WHERE TABLE_NAME = 'NarracionesDeportivas';
+

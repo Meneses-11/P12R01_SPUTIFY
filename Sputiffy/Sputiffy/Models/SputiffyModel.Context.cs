@@ -27,7 +27,9 @@ namespace Sputiffy.Models
     
         public virtual DbSet<Albumes> Albumes { get; set; }
         public virtual DbSet<Artistas> Artistas { get; set; }
+        public virtual DbSet<AudiolibrosGuardados> AudiolibrosGuardados { get; set; }
         public virtual DbSet<Canciones> Canciones { get; set; }
+        public virtual DbSet<CancionesOffline> CancionesOffline { get; set; }
         public virtual DbSet<Favoritos> Favoritos { get; set; }
         public virtual DbSet<Generos> Generos { get; set; }
         public virtual DbSet<HistorialReproduccion> HistorialReproduccion { get; set; }
@@ -37,10 +39,9 @@ namespace Sputiffy.Models
         public virtual DbSet<PreferenciasUsuario> PreferenciasUsuario { get; set; }
         public virtual DbSet<RecomendacionesUsuario> RecomendacionesUsuario { get; set; }
         public virtual DbSet<Roles> Roles { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<Usuarios> Usuarios { get; set; }
         public virtual DbSet<vw_Usuarios_AnioBaseRecomendacion> vw_Usuarios_AnioBaseRecomendacion { get; set; }
-        public virtual DbSet<AudiolibrosGuardados> AudiolibrosGuardados { get; set; }
-        public virtual DbSet<CancionesOffline> CancionesOffline { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
+        public virtual DbSet<NarracionesDeportivas> NarracionesDeportivas { get; set; }
     }
 }

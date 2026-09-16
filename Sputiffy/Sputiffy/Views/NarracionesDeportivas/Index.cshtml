@@ -1,0 +1,1567 @@
+﻿@using Sputiffy.Models
+@model IEnumerable<NarracionesDeportivas>
+@{
+    ViewBag.Title = "Narraciones Deportivas";
+    Layout = null;
+
+    var usuario = ViewBag.Usuario as Usuarios;
+    var playlists = ViewBag.Playlists as List<Playlists>;
+    var searchString = ViewBag.SearchString as string ?? "";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Narraciones Deportivas | Sputiffy</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <style>
+        :root {
+            --orange: #F7941D;
+            --pink: #E91E8C;
+            --blue: #29ABE2;
+            --green: #22C55E;
+            --purple: #7B2FBE;
+            --dark: #080818;
+            --s1: #0E0E22;
+            --s2: #141428;
+            --s3: #1A1A32;
+            --border: rgba(255,255,255,0.07);
+            --muted: rgba(255,255,255,0.45);
+            --text: #fff;
+            --grad: linear-gradient(90deg, var(--orange), var(--pink), var(--blue));
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        .sp-shell {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sp-body {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* SIDEBAR */
+        .sp-sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: var(--s1);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-logo {
+            padding: 24px 20px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .sidebar-logo-text {
+            font-family: 'Syne', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+
+        .sidebar-logo-sub {
+            font-size: 9px;
+            color: var(--muted);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            -webkit-text-fill-color: var(--muted);
+        }
+
+        .sidebar-nav {
+            padding: 4px 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            font-size: 13.5px;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: background .2s, color .2s;
+            cursor: pointer;
+        }
+
+            .nav-item:hover, .nav-item.active {
+                background: rgba(255,255,255,0.06);
+                color: white;
+            }
+
+            .nav-item .ni {
+                font-size: 18px;
+                width: 22px;
+                text-align: center;
+            }
+
+        .sidebar-library {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 10px 16px;
+        }
+
+        .lib-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 12px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .playlist-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+            .playlist-row:hover {
+                background: rgba(255,255,255,0.05);
+            }
+
+        .playlist-thumb {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--orange), var(--purple));
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .playlist-info .pname {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .playlist-info .pmeta {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* TOPBAR */
+        .sp-topbar {
+            background: rgba(8,8,24,0.85);
+            backdrop-filter: blur(20px);
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .nav-arrows {
+            display: flex;
+            gap: 6px;
+        }
+
+        .nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            border: none;
+            color: var(--muted);
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .nav-btn:hover {
+                background: rgba(255,255,255,0.14);
+                color: white;
+            }
+
+        .search-wrap {
+            flex: 1;
+            max-width: 480px;
+            position: relative;
+        }
+
+            .search-wrap input {
+                width: 100%;
+                background: rgba(255,255,255,0.08);
+                border: 1.5px solid transparent;
+                border-radius: 999px;
+                color: white;
+                font-family: 'DM Sans', sans-serif;
+                font-size: 13.5px;
+                padding: 10px 18px 10px 44px;
+                outline: none;
+                transition: border-color .3s;
+            }
+
+                .search-wrap input::placeholder {
+                    color: rgba(255,255,255,0.3);
+                }
+
+                .search-wrap input:focus {
+                    border-color: var(--green);
+                    background: rgba(34,197,94,0.06);
+                }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255,255,255,0.3);
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .user-pill {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 6px 14px 6px 8px;
+        }
+
+        .user-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange), var(--pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* MAIN */
+        .sp-main {
+            flex: 1;
+            overflow-y: auto;
+            background: radial-gradient(circle at top left, rgba(34,197,94,0.12), transparent 30%), radial-gradient(circle at top right, rgba(41,171,226,0.10), transparent 35%), var(--dark);
+        }
+
+        .hero-band {
+            padding: 32px 28px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .hero-band::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                height: 240px;
+                background: linear-gradient(180deg, rgba(34,197,94,0.14) 0%, rgba(41,171,226,0.08) 40%, transparent 100%);
+                pointer-events: none;
+            }
+
+        .hero-greeting {
+            position: relative;
+        }
+
+        .greeting-text h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+            .greeting-text h1 span {
+                background: linear-gradient(90deg, var(--green), var(--blue));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+        .greeting-text p {
+            margin-top: 8px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        /* Toolbar */
+        .toolbar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 22px 28px 0;
+            flex-wrap: wrap;
+        }
+
+            .toolbar input[type="text"] {
+                flex: 1;
+                max-width: 420px;
+                background: rgba(255,255,255,0.05);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                color: white;
+                font-family: 'DM Sans', sans-serif;
+                font-size: 14px;
+                padding: 12px 16px;
+                outline: none;
+            }
+
+                .toolbar input[type="text"]:focus {
+                    border-color: var(--green);
+                    box-shadow: 0 0 0 4px rgba(34,197,94,.12);
+                }
+
+        .btn-cta {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--green), var(--blue));
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+            .btn-cta:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 30px rgba(34,197,94,0.4);
+                color: white;
+            }
+
+        .section {
+            padding: 28px 28px 0;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+            .section-head h2 {
+                font-family: 'Syne', sans-serif;
+                font-size: 22px;
+                font-weight: 800;
+            }
+
+        .songs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        /* Card */
+        .card-song {
+            background: var(--s2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 14px;
+            transition: background .25s, transform .25s, box-shadow .25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card-song:hover {
+                background: var(--s3);
+                transform: translateY(-4px);
+                box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+            }
+
+        .cover-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+            background: var(--s3);
+        }
+
+            .cover-wrap img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.45);
+            opacity: 0;
+            transition: opacity .25s;
+        }
+
+        .card-song:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-btn-circle {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--green), var(--blue));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            font-size: 17px;
+            color: white;
+            box-shadow: 0 6px 20px rgba(34,197,94,0.5);
+        }
+
+        .c-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 4px;
+        }
+
+        .c-meta {
+            font-size: 12px;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .c-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+
+        .c-badge {
+            display: inline-block;
+            font-size: 10px;
+            letter-spacing: .5px;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(34,197,94,.15);
+            color: #5fe08f;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+            .c-badge.blue {
+                background: rgba(41,171,226,.15);
+                color: #6ec8f0;
+            }
+
+            .c-badge.pink {
+                background: rgba(233,30,140,.15);
+                color: #f06cb4;
+            }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .mini-action {
+            flex: 1;
+            padding: 7px 9px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,0.06);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+            .mini-action:hover {
+                background: var(--pink);
+                border-color: var(--pink);
+            }
+
+            .mini-action.danger:hover {
+                background: #d33;
+                border-color: #d33;
+            }
+
+            .mini-action.fav-active {
+                background: linear-gradient(135deg, var(--pink), var(--orange));
+                border-color: transparent;
+            }
+
+        .empty-state {
+            background: var(--s2);
+            border: 1px dashed rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 40px 24px;
+            text-align: center;
+            color: var(--muted);
+        }
+
+            .empty-state .e-icon {
+                font-size: 42px;
+                margin-bottom: 12px;
+            }
+
+        .sp-main-pad {
+            padding-bottom: 100px;
+        }
+
+        /* Reproductor flotante */
+        .yt-floating {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 380px;
+            max-width: calc(100vw - 32px);
+            background: rgba(14,14,34,0.96);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.55);
+            z-index: 200;
+            display: none;
+            backdrop-filter: blur(18px);
+        }
+
+        .yt-floating-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.04);
+            gap: 12px;
+        }
+
+            .yt-floating-head strong {
+                font-size: 13px;
+            }
+
+        .yt-floating-song {
+            font-size: 12px;
+            color: var(--muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 230px;
+        }
+
+        .yt-floating-close {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            cursor: pointer;
+        }
+
+            .yt-floating-close:hover {
+                background: rgba(255,255,255,0.16);
+            }
+
+        .yt-frame-box {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #000;
+        }
+
+            .yt-frame-box iframe, #youtubePlayerInner {
+                width: 100%;
+                height: 100%;
+                border: 0;
+            }
+
+        /* Modal metadata deportiva */
+        .sp-modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.65);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+            .sp-modal-backdrop.active {
+                display: flex;
+            }
+
+        .sp-modal {
+            width: 100%;
+            max-width: 560px;
+            background: linear-gradient(180deg, #18182f 0%, #101120 100%);
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,.55);
+            animation: modalIn .22s ease;
+        }
+
+        @@keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: translateY(18px) scale(.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .sp-modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 20px 22px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+
+            .sp-modal-head h3 {
+                font-family: 'Syne', sans-serif;
+                font-size: 22px;
+                font-weight: 800;
+                margin: 0;
+            }
+
+        .sp-modal-close {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,.08);
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+            .sp-modal-close:hover {
+                background: rgba(255,255,255,.16);
+            }
+
+        .sp-modal-body {
+            padding: 20px 22px;
+        }
+
+        .sp-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 0 22px 22px;
+        }
+
+        .sp-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: rgba(255,255,255,.80);
+        }
+
+        .sp-input {
+            width: 100%;
+            border: 1px solid rgba(255,255,255,.10);
+            background: rgba(255,255,255,.05);
+            color: white;
+            border-radius: 14px;
+            padding: 12px 14px;
+            outline: none;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+
+            .sp-input:focus {
+                border-color: var(--green);
+                box-shadow: 0 0 0 4px rgba(34,197,94,.12);
+            }
+
+        .sp-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .sp-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 18px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+            .sp-btn.primary {
+                background: linear-gradient(90deg, var(--green), var(--blue));
+                color: white;
+            }
+
+            .sp-btn.ghost {
+                background: rgba(255,255,255,.08);
+                color: white;
+                border: 1px solid rgba(255,255,255,.08);
+            }
+
+        @@media (max-width: 860px) {
+            .sp-sidebar {
+                display: none;
+            }
+
+            .section, .toolbar, .hero-band {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .sp-topbar {
+                padding: 12px 16px;
+            }
+
+            .yt-floating {
+                left: 16px;
+                right: 16px;
+                width: auto;
+                bottom: 16px;
+            }
+
+            .sp-form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Modal chiquito de confirmación */
+        .sp-modal-sm {
+            max-width: 420px;
+        }
+
+        /* Botón rojo para eliminar */
+        .sp-btn.danger {
+            background: linear-gradient(90deg, #ef4444, #b91c1c);
+            color: white;
+            transition: transform .2s, box-shadow .2s;
+        }
+
+            .sp-btn.danger:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 28px rgba(239,68,68,.45);
+            }
+
+            .sp-btn.danger:disabled {
+                opacity: .6;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+    </style>
+</head>
+<body>
+    <div class="sp-shell">
+        <div class="sp-body">
+            <!-- SIDEBAR -->
+            <aside class="sp-sidebar">
+                <a class="sidebar-logo" href="@Url.Action("Index","Home")">
+                    <svg width="36" height="36" viewBox="0 0 46 46" fill="none">
+                        <defs>
+                            <linearGradient id="slg" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#F7941D" />
+                                <stop offset="50%" stop-color="#E91E8C" />
+                                <stop offset="100%" stop-color="#29ABE2" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="46" height="46" rx="12" fill="url(#slg)" opacity="0.18" />
+                        <path d="M15 13C15 10.8 17.4 9.5 19.2 10.7L35 21.7C36.7 22.8 36.7 25.2 35 26.3L19.2 37.3C17.4 38.5 15 37.2 15 35V13Z" fill="url(#slg)" />
+                        <polyline points="19,23 22,18 25,27 28,14 31,30 34,20 37,23"
+                                  stroke="white" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.75" />
+                    </svg>
+                    <div>
+                        <div class="sidebar-logo-text">Sputiffy</div>
+                        <div class="sidebar-logo-sub">Tu música</div>
+                    </div>
+                </a>
+
+                <nav class="sidebar-nav">
+                    <a class="nav-item" href="@Url.Action("Index", "Home")"><span class="ni">🏠</span> Inicio</a>
+                    <a class="nav-item" href="#" onclick="activarBusqueda()">
+                        <span class="ni">🔍</span> Explorar
+                    </a>
+                    <a class="nav-item" href="@Url.Action("Index", "Radio")"><span class="ni">📻</span> Radio</a>
+                    <a class="nav-item" href="@Url.Action("Index", "Offline")"><span class="ni">💀</span> Modo Offline</a>
+                    <a class="nav-item" href="@Url.Action("Index", "Podcast")"><span class="ni">🎙️</span> Podcast</a>
+                    <a class="nav-item" href="@Url.Action("Index", "Favoritos")"><span class="ni">❤</span> Favoritos</a>
+                    <a class="nav-item" href="@Url.Action("Index", "Audiolibros")"><span class="ni">📚</span> Audiolibros</a>
+                    <a class="nav-item active" href="@Url.Action("Index", "NarracionesDeportivas")"><span class="ni">🏟️</span> Narraciones Deportivas</a>
+                </nav>
+
+                <div class="sidebar-library">
+                    <div class="lib-header">Tu biblioteca</div>
+                    @if (playlists != null && playlists.Any())
+                    {
+                        foreach (var pl in playlists)
+                        {
+                            <a class="playlist-row" href="@Url.Action("Details","Playlists", new { id = pl.IdPlaylist })">
+                                <div class="playlist-thumb">🎵</div>
+                                <div class="playlist-info">
+                                    <div class="pname">@pl.NombrePlaylist</div>
+                                    <div class="pmeta">Playlist • tú</div>
+                                </div>
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <div style="padding:12px;font-size:12px;color:var(--muted);">Sin playlists aún</div>
+                    }
+                </div>
+            </aside>
+
+            <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+                <!-- TOPBAR -->
+                <header class="sp-topbar">
+                    <div class="nav-arrows">
+                        <button class="nav-btn" onclick="history.back()">‹</button>
+                        <button class="nav-btn" onclick="history.forward()">›</button>
+                    </div>
+
+                    <div class="search-wrap">
+                        <span class="search-icon">🔍</span>
+                        <form method="get" action="@Url.Action("Index","NarracionesDeportivas")" style="width:100%;">
+                            <input type="text" name="searchString"
+                                   placeholder="Buscar en mis narraciones (equipo, deporte, evento)..."
+                                   value="@searchString"
+                                   autocomplete="off" />
+                        </form>
+                    </div>
+
+                    <div class="user-pill">
+                        <div class="user-avatar">
+                            @(usuario != null && !string.IsNullOrEmpty(usuario.Nombre)
+                                ? usuario.Nombre.Substring(0,1).ToUpper() : "U")
+                        </div>
+                        <span class="user-name">@(usuario != null ? usuario.Nombre : "Usuario")</span>
+                    </div>
+
+                    <a href="@Url.Action("Logout","Usuarios")" class="btn-cta" style="background:rgba(255,255,255,0.08);">🚪 Cerrar sesión</a>
+                </header>
+
+                <!-- MAIN -->
+                <div class="sp-main">
+                    <div class="hero-band">
+                        <div class="hero-greeting">
+                            <div class="greeting-text">
+                                <h1>🏟️ Narraciones <span>Deportivas</span></h1>
+                                <p>Busca, guarda y revive los mejores momentos del deporte. La voz de la pasión.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar: buscar en YouTube -->
+                    <div class="toolbar">
+                        <input type="text" id="youtubeSearchInput"
+                               placeholder="Buscar narraciones en YouTube (Ej. 'Messi gol relato', 'Final NBA 2016')..."
+                               autocomplete="off" />
+                        <button class="btn-cta" id="btnBuscarYoutube" type="button">🔍 Buscar en YouTube</button>
+                    </div>
+
+                    <!-- SECCIÓN: Resultados de búsqueda en YouTube -->
+                    <div class="section" id="sec-youtube-results" style="display:none;">
+                        <div class="section-head">
+                            <h2>🌐 Resultados de YouTube</h2>
+                            <a href="#" id="btnCerrarYoutube" style="color:var(--muted);font-size:12px;text-transform:uppercase;text-decoration:none;">Cerrar</a>
+                        </div>
+                        <div class="songs-grid" id="youtubeGrid">
+                            <div class="empty-state" style="grid-column:1/-1;">
+                                <div class="e-icon">🔍</div>
+                                <p>Escribe algo y presiona "Buscar en YouTube".</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN: Mis narraciones guardadas -->
+                    <div class="section" id="sec-mis-narraciones">
+                        <div class="section-head">
+                            <h2>🎧 Mis narraciones guardadas</h2>
+                            <span style="font-size:12px;color:var(--muted);">
+                                @Model.Count() resultado@(Model.Count() == 1 ? "" : "s")
+                            </span>
+                        </div>
+
+                        @if (Model != null && Model.Any())
+                        {
+                            <div class="songs-grid" id="misNarracionesGrid">
+                                @foreach (var item in Model)
+                                {
+                                    var portada = string.IsNullOrWhiteSpace(item.ThumbnailUrl)
+                                        ? "https://via.placeholder.com/300x300?text=%F0%9F%8F%9F"
+                                        : item.ThumbnailUrl;
+
+                                    <div class="card-song nar-card"
+                                         data-idnar="@item.IdNarracion"
+                                         data-videoid="@item.VideoId"
+                                         data-titulo="@item.Titulo"
+                                         data-canal="@item.CanalYoutube"
+                                         data-portada="@portada"
+                                         data-deporte="@item.Deporte"
+                                         data-local="@item.EquipoLocal"
+                                         data-visitante="@item.EquipoVisitante"
+                                         data-evento="@item.Evento"
+                                         data-marcador="@item.Marcador"
+                                         data-favorito="@(item.EsFavorito ? "1" : "0")">
+                                        <div class="cover-wrap">
+                                            <img src="@portada" alt="cover" loading="lazy"
+                                                 onerror="this.src='https://via.placeholder.com/300x300?text=%F0%9F%8F%9F'" />
+                                            <div class="play-overlay">
+                                                <button class="play-btn-circle nar-play-btn" type="button">▶</button>
+                                            </div>
+                                        </div>
+                                        <div class="c-title" title="@item.Titulo">@item.Titulo</div>
+                                        <div class="c-meta" title="@item.CanalYoutube">@item.CanalYoutube</div>
+
+                                        @if (!string.IsNullOrWhiteSpace(item.Deporte) ||
+                                             !string.IsNullOrWhiteSpace(item.EquipoLocal) ||
+                                             !string.IsNullOrWhiteSpace(item.Evento))
+                                        {
+                                            <div class="c-tags">
+                                                @if (!string.IsNullOrWhiteSpace(item.Deporte))
+                                                {
+                                                    <span class="c-badge">@item.Deporte</span>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(item.EquipoLocal) &&
+                                                     !string.IsNullOrWhiteSpace(item.EquipoVisitante))
+                                                {
+                                                    <span class="c-badge blue">@item.EquipoLocal vs @item.EquipoVisitante</span>
+                                                }
+                                                @if (!string.IsNullOrWhiteSpace(item.Marcador))
+                                                {
+                                                    <span class="c-badge pink">@item.Marcador</span>
+                                                }
+                                            </div>
+                                        }
+
+                                        <div class="card-actions">
+                                            <button class="mini-action nar-fav-btn @(item.EsFavorito ? "fav-active" : "")"
+                                                    type="button">
+                                                @(item.EsFavorito ? "★ Favorito" : "☆ Favorito")
+                                            </button>
+                                            <button class="mini-action danger nar-delete-btn" type="button">🗑</button>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="empty-state">
+                                <div class="e-icon">🏟️</div>
+                                <p>
+                                    @if (!string.IsNullOrWhiteSpace(searchString))
+                                    {
+                                        <text>No hay narraciones que coincidan con "@searchString".</text>
+                                    }
+                                    else
+                                    {
+                                        <text>Aún no has guardado narraciones. ¡Busca en YouTube arriba!</text>
+                                    }
+                                </p>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="sp-main-pad"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reproductor flotante de YouTube -->
+    <div class="yt-floating" id="ytFloating">
+        <div class="yt-floating-head">
+            <div style="min-width:0;">
+                <strong>Reproduciendo</strong>
+                <div class="yt-floating-song" id="ytFloatingSong">Sin reproducción</div>
+            </div>
+            <button class="yt-floating-close" id="ytFloatingClose" title="Cerrar">✕</button>
+        </div>
+        <div class="yt-frame-box" id="ytFrameBox"></div>
+    </div>
+
+    <!-- MODAL: Metadatos deportivos al guardar -->
+    <div class="sp-modal-backdrop" id="narModalBackdrop">
+        <div class="sp-modal">
+            <div class="sp-modal-head">
+                <h3>🏟️ Guardar narración</h3>
+                <button type="button" class="sp-modal-close" onclick="cerrarModalNarracion()">✕</button>
+            </div>
+
+            <div class="sp-modal-body">
+                <p id="narModalTitulo" style="font-size:14px;font-weight:600;margin-bottom:16px;color:rgba(255,255,255,.8);"></p>
+
+                <label class="sp-label">Deporte</label>
+                <input type="text" id="narDeporte" class="sp-input" placeholder="Ej. Fútbol, Boxeo, NBA..." />
+
+                <div class="sp-form-row">
+                    <div>
+                        <label class="sp-label">Equipo local</label>
+                        <input type="text" id="narLocal" class="sp-input" placeholder="Ej. Real Madrid" />
+                    </div>
+                    <div>
+                        <label class="sp-label">Equipo visitante</label>
+                        <input type="text" id="narVisitante" class="sp-input" placeholder="Ej. Barcelona" />
+                    </div>
+                </div>
+
+                <div class="sp-form-row">
+                    <div>
+                        <label class="sp-label">Evento</label>
+                        <input type="text" id="narEvento" class="sp-input" placeholder="Ej. Final Champions" />
+                    </div>
+                    <div>
+                        <label class="sp-label">Marcador</label>
+                        <input type="text" id="narMarcador" class="sp-input" placeholder="Ej. 3-2" />
+                    </div>
+                </div>
+
+                <label class="sp-label">Fecha del evento (opcional)</label>
+                <input type="date" id="narFechaEvento" class="sp-input" />
+            </div>
+
+            <div class="sp-modal-footer">
+                <button type="button" class="sp-btn ghost" onclick="cerrarModalNarracion()">Cancelar</button>
+                <button type="button" class="sp-btn primary" onclick="confirmarGuardarNarracion()">Guardar narración</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Confirmar eliminación -->
+    <div class="sp-modal-backdrop" id="deleteModalBackdrop">
+        <div class="sp-modal sp-modal-sm">
+            <div class="sp-modal-head">
+                <h3>🗑 Eliminar narración</h3>
+                <button type="button" class="sp-modal-close" onclick="cerrarModalEliminar()">✕</button>
+            </div>
+
+            <div class="sp-modal-body">
+                <p style="font-size:14px;line-height:1.5;color:rgba(255,255,255,.75);margin:0;">
+                    ¿Seguro que quieres eliminar
+                    <strong id="deleteModalTitulo" style="color:#fff;"></strong>
+                    de tu colección?
+                </p>
+                <p style="font-size:12px;color:rgba(255,255,255,.45);margin-top:10px;">
+                    Esta acción no se puede deshacer.
+                </p>
+            </div>
+
+            <div class="sp-modal-footer">
+                <button type="button" class="sp-btn ghost" onclick="cerrarModalEliminar()">Cancelar</button>
+                <button type="button" class="sp-btn danger" id="deleteConfirmBtn">Sí, eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // Estado global
+        // =============================================
+        let youtubePlayer = null;
+        let youtubeApiReady = false;
+        let currentQueue = [];
+        let currentIndex = -1;
+        let pendingVideo = null;
+
+        // =============================================
+        // Toast
+        // =============================================
+        function showToast(msg) {
+            const t = document.createElement('div');
+            t.textContent = msg;
+            t.style.cssText = `
+                    position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);
+                    background:rgba(34,197,94,0.9);color:white;padding:10px 20px;
+                    border-radius:999px;font-size:13px;font-weight:600;z-index:99999;
+                    opacity:0;transition:all .3s;white-space:nowrap;`;
+            document.body.appendChild(t);
+            requestAnimationFrame(() => {
+                t.style.opacity = '1';
+                t.style.transform = 'translateX(-50%) translateY(0)';
+            });
+            setTimeout(() => {
+                t.style.opacity = '0';
+                setTimeout(() => t.remove(), 300);
+            }, 2500);
+        }
+
+        function escHtml(s) {
+            return (s || '')
+                .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // =============================================
+        // YouTube IFrame API
+        // =============================================
+        function onYouTubeIframeAPIReady() {
+            youtubeApiReady = true;
+            flushPendingVideo();
+        }
+
+        function flushPendingVideo() {
+            if (pendingVideo && youtubeApiReady) {
+                const pv = pendingVideo;
+                pendingVideo = null;
+                abrirPlayerYoutube(pv.videoId, pv.titulo);
+            }
+        }
+
+        function abrirPlayerYoutube(videoId, titulo) {
+            // Verificación robusta: a veces onYouTubeIframeAPIReady ya pasó
+            // antes de que nuestro script esté listo (por caché del navegador)
+            if (!youtubeApiReady && typeof YT !== 'undefined' && YT.Player) {
+                youtubeApiReady = true;
+            }
+
+            // Si aún no está lista la API, guardamos el video y esperamos
+            if (!youtubeApiReady) {
+                pendingVideo = { videoId, titulo };
+                showToast('Preparando el reproductor...');
+
+                if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
+                    if (!document.getElementById('yt-api-script')) {
+                        const tag = document.createElement('script');
+                        tag.id = 'yt-api-script';
+                        tag.src = 'https://www.youtube.com/iframe_api';
+                        document.head.appendChild(tag);
+                    }
+                }
+
+                // Poll de respaldo: cada 300ms verifica si la API ya está lista
+                if (!window.__ytPollStarted) {
+                    window.__ytPollStarted = true;
+                    const poll = setInterval(function () {
+                        if (typeof YT !== 'undefined' && YT.Player) {
+                            youtubeApiReady = true;
+                            clearInterval(poll);
+                            window.__ytPollStarted = false;
+                            flushPendingVideo();
+                        }
+                    }, 300);
+                }
+                return;
+            }
+
+            // =========================================
+            // API lista: crear o actualizar el reproductor
+            // =========================================
+            const wrap = document.getElementById('ytFloating');
+            const box = document.getElementById('ytFrameBox');
+            const songLabel = document.getElementById('ytFloatingSong');
+
+            wrap.style.display = 'block';
+            songLabel.textContent = titulo || 'Sin título';
+
+            if (!youtubePlayer) {
+                box.innerHTML = '<div id="youtubePlayerInner"></div>';
+                youtubePlayer = new YT.Player('youtubePlayerInner', {
+                    videoId: videoId,
+                    playerVars: { autoplay: 1, rel: 0, modestbranding: 1 },
+                    events: {
+                        onReady: function (e) { e.target.playVideo(); },
+                        onStateChange: function (e) {
+                            if (e.data === YT.PlayerState.ENDED && currentQueue.length > 0) {
+                                currentIndex = (currentIndex + 1) % currentQueue.length;
+                                const next = currentQueue[currentIndex];
+                                youtubePlayer.loadVideoById(next.videoId || next.id);
+                                songLabel.textContent = next.titulo || 'Sin título';
+                            }
+                        }
+                    }
+                });
+            } else {
+                youtubePlayer.loadVideoById(videoId);
+            }
+        }
+
+        document.getElementById('ytFloatingClose').addEventListener('click', function () {
+            document.getElementById('ytFloating').style.display = 'none';
+            if (youtubePlayer && typeof youtubePlayer.stopVideo === 'function') {
+                youtubePlayer.stopVideo();
+            }
+        });
+
+        // =============================================
+        // Buscar en YouTube
+        // =============================================
+        async function buscarYoutube(q) {
+            const grid = document.getElementById('youtubeGrid');
+            const sec = document.getElementById('sec-youtube-results');
+
+            if (!q || q.trim().length < 2) {
+                showToast('Escribe al menos 2 caracteres.');
+                return;
+            }
+
+            sec.style.display = 'block';
+            grid.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <div class="e-icon">⏳</div>
+                        <p>Buscando narraciones en YouTube...</p>
+                    </div>`;
+
+            try {
+                const res = await fetch('/NarracionesDeportivas/BuscarYoutubeAjax?q=' + encodeURIComponent(q));
+                const data = await res.json();
+
+                if (!data.ok) {
+                    grid.innerHTML = `
+                            <div class="empty-state" style="grid-column:1/-1;">
+                                <div class="e-icon">😕</div>
+                                <p>${escHtml(data.mensaje || 'No se pudo buscar en YouTube.')}</p>
+                            </div>`;
+                    return;
+                }
+
+                currentQueue = data.items || [];
+                currentIndex = -1;
+                renderYoutubeResults(currentQueue);
+                sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (e) {
+                console.error(e);
+                grid.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <div class="e-icon">📡</div>
+                            <p>Error al conectar con YouTube.</p>
+                        </div>`;
+            }
+        }
+
+        function renderYoutubeResults(items) {
+            const grid = document.getElementById('youtubeGrid');
+            grid.innerHTML = '';
+
+            if (!items || !items.length) {
+                grid.innerHTML = `
+                        <div class="empty-state" style="grid-column:1/-1;">
+                            <div class="e-icon">🔍</div>
+                            <p>No se encontraron resultados.</p>
+                        </div>`;
+                return;
+            }
+
+            items.forEach((item, idx) => {
+                const portada = item.thumbnailMediumUrl || item.thumbnailUrl
+                    || 'https://via.placeholder.com/300x300?text=%F0%9F%8F%9F';
+
+                const card = document.createElement('div');
+                card.className = 'card-song';
+                card.innerHTML = `
+                        <div class="cover-wrap">
+                            <img src="${escHtml(portada)}" alt="cover" loading="lazy"
+                                 onerror="this.src='https://via.placeholder.com/300x300?text=%F0%9F%8F%9F'" />
+                            <div class="play-overlay">
+                                <button class="play-btn-circle" type="button">▶</button>
+                            </div>
+                        </div>
+                        <div class="c-title" title="${escHtml(item.titulo)}">${escHtml(item.titulo)}</div>
+                        <div class="c-meta" title="${escHtml(item.canal)}">${escHtml(item.canal)}</div>
+                        <div class="card-actions">
+                            <button class="mini-action" type="button" data-action="guardar">💾 Guardar</button>
+                        </div>`;
+
+                card.querySelector('.play-btn-circle').addEventListener('click', () => {
+                    currentIndex = idx;
+                    abrirPlayerYoutube(item.videoId, item.titulo);
+                });
+
+                card.querySelector('[data-action="guardar"]').addEventListener('click', (e) => {
+                    guardarNarracionDirecto(item, e.currentTarget);
+                });
+
+                grid.appendChild(card);
+            });
+        }
+
+        // =============================================
+        // Guardar narración directo (sin modal)
+        // =============================================
+        async function guardarNarracionDirecto(item, btn) {
+            if (btn) {
+                btn.disabled = true;
+                btn.textContent = '⏳ Guardando...';
+            }
+
+            try {
+                const form = new URLSearchParams();
+                form.append('videoId', item.videoId || '');
+                form.append('titulo', item.titulo || '');
+                form.append('canal', item.canal || '');
+                form.append('descripcion', item.descripcion || '');
+                form.append('thumbnailUrl', item.thumbnailUrl || '');
+                form.append('thumbnailMediumUrl', item.thumbnailMediumUrl || '');
+                form.append('thumbnailHighUrl', item.thumbnailHighUrl || '');
+                form.append('urlYoutube', item.urlYoutube || '');
+                form.append('fechaPublicacion', item.fechaPublicacion || '');
+                // Los metadatos deportivos van vacíos; el usuario los puede llenar después
+                form.append('deporte', '');
+                form.append('equipoLocal', '');
+                form.append('equipoVisitante', '');
+                form.append('evento', '');
+                form.append('marcador', '');
+                form.append('fechaEvento', '');
+
+                const res = await fetch('/NarracionesDeportivas/GuardarAjax', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                    body: form.toString()
+                });
+
+                const data = await res.json();
+                showToast(data.mensaje || (data.ok ? 'Guardado.' : 'No se pudo guardar.'));
+
+                if (data.ok) {
+                    if (btn) {
+                        btn.textContent = '✔ Guardado';
+                        btn.style.background = 'rgba(34,197,94,.25)';
+                        btn.disabled = true;
+                    }
+                    setTimeout(() => location.reload(), 900);
+                } else {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.textContent = '💾 Guardar';
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+                showToast('Error al guardar.');
+                if (btn) {
+                    btn.disabled = false;
+                    btn.textContent = '💾 Guardar';
+                }
+            }
+        }
+
+        // =============================================
+        // Play / Fav / Delete desde "Mis narraciones"
+        // =============================================
+        document.querySelectorAll('.nar-play-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const card = this.closest('.nar-card');
+                abrirPlayerYoutube(card.dataset.videoid, card.dataset.titulo);
+            });
+        });
+
+        document.querySelectorAll('.nar-fav-btn').forEach(function (btn) {
+            btn.addEventListener('click', async function () {
+                const card = this.closest('.nar-card');
+                const id = card.dataset.idnar;
+
+                try {
+                    const form = new URLSearchParams();
+                    form.append('idNarracion', id);
+
+                    const res = await fetch('/NarracionesDeportivas/ToggleFavoritoAjax', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                        body: form.toString()
+                    });
+                    const data = await res.json();
+                    showToast(data.mensaje || 'Actualizado.');
+
+                    if (data.ok) {
+                        if (data.favorito) {
+                            btn.textContent = '★ Favorito';
+                            btn.classList.add('fav-active');
+                        } else {
+                            btn.textContent = '☆ Favorito';
+                            btn.classList.remove('fav-active');
+                        }
+                    }
+                } catch (e) {
+                    console.error(e);
+                    showToast('Error al actualizar favorito.');
+                }
+            });
+        });
+
+        // =============================================
+        // Modal de confirmación de eliminación
+        // =============================================
+        let cardPendienteEliminar = null;
+
+        function abrirModalEliminar(card, titulo) {
+            cardPendienteEliminar = card;
+            document.getElementById('deleteModalTitulo').textContent =
+                '“' + (titulo || 'esta narración') + '”';
+            document.getElementById('deleteModalBackdrop').classList.add('active');
+        }
+
+        function cerrarModalEliminar() {
+            document.getElementById('deleteModalBackdrop').classList.remove('active');
+            cardPendienteEliminar = null;
+            const btn = document.getElementById('deleteConfirmBtn');
+            btn.disabled = false;
+            btn.textContent = 'Sí, eliminar';
+        }
+
+        // Listener de cada botón 🗑
+        document.querySelectorAll('.nar-delete-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                const card = this.closest('.nar-card');
+                abrirModalEliminar(card, card.dataset.titulo);
+            });
+        });
+
+        // Listener del botón "Sí, eliminar" dentro del modal
+        document.getElementById('deleteConfirmBtn').addEventListener('click', async function () {
+            if (!cardPendienteEliminar) return;
+
+            const card = cardPendienteEliminar;
+            const id = card.dataset.idnar;
+            const btn = this;
+
+            btn.disabled = true;
+            btn.textContent = '⏳ Eliminando...';
+
+            try {
+                const form = new URLSearchParams();
+                form.append('idNarracion', id);
+
+                const res = await fetch('/NarracionesDeportivas/EliminarAjax', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+                    body: form.toString()
+                });
+                const data = await res.json();
+                showToast(data.mensaje || (data.ok ? 'Eliminado.' : 'No se pudo eliminar.'));
+
+                if (data.ok) {
+                    card.style.transition = 'opacity .3s, transform .3s';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(.9)';
+                    setTimeout(() => card.remove(), 300);
+
+                    // Cerrar modal tras la animación
+                    setTimeout(() => cerrarModalEliminar(), 300);
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Sí, eliminar';
+                }
+            } catch (e) {
+                console.error(e);
+                showToast('Error al eliminar.');
+                btn.disabled = false;
+                btn.textContent = 'Sí, eliminar';
+            }
+        });
+
+        // Cerrar modal si hacen clic fuera de la cajita
+        document.getElementById('deleteModalBackdrop').addEventListener('click', function (e) {
+            if (e.target === this) {
+                cerrarModalEliminar();
+            }
+        });
+
+        // Cerrar modal con tecla ESC
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' &&
+                document.getElementById('deleteModalBackdrop').classList.contains('active')) {
+                cerrarModalEliminar();
+            }
+        });
+
+        // =============================================
+        // Botones toolbar
+        // =============================================
+        document.getElementById('btnBuscarYoutube').addEventListener('click', function () {
+            buscarYoutube(document.getElementById('youtubeSearchInput').value);
+        });
+
+        document.getElementById('youtubeSearchInput').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                buscarYoutube(this.value);
+            }
+        });
+
+        document.getElementById('btnCerrarYoutube').addEventListener('click', function (e) {
+            e.preventDefault();
+            document.getElementById('sec-youtube-results').style.display = 'none';
+            document.getElementById('youtubeGrid').innerHTML = '';
+        });
+
+        // =============================================
+        // Animaciones
+        // =============================================
+        gsap.from('.hero-band', { opacity: 0, y: 20, duration: .7, ease: 'power3.out' });
+        gsap.from('#sec-mis-narraciones .card-song', {
+            opacity: 0, y: 16, stagger: .05,
+            duration: .5, ease: 'power2.out', delay: .25
+        });
+    </script>
+
+</body>
+</html>

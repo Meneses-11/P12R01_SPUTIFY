@@ -17,12 +17,13 @@ namespace Sputiffy.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Usuarios()
         {
+            this.AudiolibrosGuardados = new HashSet<AudiolibrosGuardados>();
             this.Favoritos = new HashSet<Favoritos>();
             this.HistorialReproduccion = new HashSet<HistorialReproduccion>();
             this.Playlists = new HashSet<Playlists>();
             this.PreferenciasUsuario = new HashSet<PreferenciasUsuario>();
             this.RecomendacionesUsuario = new HashSet<RecomendacionesUsuario>();
-            this.AudiolibrosGuardados = new HashSet<AudiolibrosGuardados>();
+            this.NarracionesDeportivas = new HashSet<NarracionesDeportivas>();
         }
     
         public int IdUsuario { get; set; }
@@ -39,6 +40,8 @@ namespace Sputiffy.Models
         public int IdRol { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AudiolibrosGuardados> AudiolibrosGuardados { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Favoritos> Favoritos { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<HistorialReproduccion> HistorialReproduccion { get; set; }
@@ -50,6 +53,6 @@ namespace Sputiffy.Models
         public virtual ICollection<RecomendacionesUsuario> RecomendacionesUsuario { get; set; }
         public virtual Roles Roles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AudiolibrosGuardados> AudiolibrosGuardados { get; set; }
+        public virtual ICollection<NarracionesDeportivas> NarracionesDeportivas { get; set; }
     }
 }

@@ -33,7 +33,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -73,7 +73,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -101,7 +101,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -131,7 +131,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -164,7 +164,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -209,7 +209,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -242,7 +242,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -275,7 +275,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla: ' + ERROR_MESSAGE());
 	END CATCH
 GO
 
@@ -308,7 +308,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -342,7 +342,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -378,7 +378,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -412,7 +412,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -445,7 +445,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -476,7 +476,7 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO
 
@@ -519,6 +519,64 @@ BEGIN TRANSACTION
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 			ROLLBACK TRANSACTION
-		THROW;
+		PRINT('Hubo un erro al intentar crear tabla');
+	END CATCH
+GO
+
+
+--===================================
+-- Tabla: NarracionesDeportivas (AMML)
+--===================================
+
+BEGIN TRANSACTION
+	BEGIN TRY
+		IF NOT EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'NarracionesDeportivas' AND TABLE_SCHEMA = 'dbo')
+		BEGIN
+            CREATE TABLE NarracionesDeportivas (
+                IdNarracion        INT IDENTITY(1,1) PRIMARY KEY,
+                -- Info de YouTube (API)
+                VideoId            VARCHAR(50)  NOT NULL,       -- ID del video de YouTube
+                Titulo             VARCHAR(300) NOT NULL,
+                Descripcion        VARCHAR(1000) NULL,
+                CanalYoutube       VARCHAR(200) NULL,           -- Autor/canal que narra
+                ThumbnailUrl       VARCHAR(500) NULL,
+                UrlYoutube         VARCHAR(500) NULL,
+                DuracionSegundos   INT          NULL,
+                FechaPublicacion   DATE         NULL,           -- cuándo se subió a YouTube
+
+                -- Info deportiva
+                Deporte            VARCHAR(80)  NULL,           -- Fútbol, Boxeo, etc.
+                EquipoLocal        VARCHAR(150) NULL,
+                EquipoVisitante    VARCHAR(150) NULL,
+                Evento             VARCHAR(200) NULL,           -- "Final Champions 2024"
+                FechaEvento        DATE         NULL,           -- fecha del partido
+                Marcador           VARCHAR(50)  NULL,           -- "3-2"
+
+                -- Relación con Usuario
+                IdUsuario          INT          NOT NULL,       -- quién la guardó
+                EsFavorito         BIT          NOT NULL DEFAULT 0,
+                Notas              VARCHAR(500) NULL,           -- comentario personal del usuario
+
+                -- Auditoría
+                FechaRegistro      DATETIME     NOT NULL DEFAULT GETDATE(),
+                Activo             BIT          NOT NULL DEFAULT 1,
+
+                CONSTRAINT FK_Narraciones_Usuarios
+                    FOREIGN KEY (IdUsuario) REFERENCES Usuarios(IdUsuario),
+                -- Evita que el mismo usuario guarde 2 veces el mismo video
+                CONSTRAINT UQ_Narraciones_Usuario_Video UNIQUE (IdUsuario, VideoId)
+            );
+			PRINT 'Tabla NarracionesDeportivas creada correctamente'
+		END
+		ELSE
+		BEGIN
+			PRINT 'Tabla NarracionesDeportivas ya existe'
+		END
+	COMMIT TRANSACTION
+	END TRY
+	BEGIN CATCH
+		IF @@TRANCOUNT > 0
+			ROLLBACK TRANSACTION
+		PRINT('Hubo un erro al intentar crear tabla');
 	END CATCH
 GO

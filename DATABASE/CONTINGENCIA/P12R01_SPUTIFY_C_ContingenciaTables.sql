@@ -16,38 +16,21 @@ FECHA: 15/09/2026
 
 SELECT name FROM sys.tables ORDER BY name;
 
-/* -----Tabla Albumes----- */
-BEGIN TRANSACTION;
-BEGIN TRY
-	
-	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Albumes' AND TABLE_SCHEMA = 'dbo')
-	BEGIN
-		DROP TABLE dbo.Albumes;
-		PRINT 'Tabla Albumes eliminada correctamente';
-	END
-
-COMMIT TRANSACTION;--Confirmar cambios
-END TRY
-BEGIN CATCH
-	
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-	THROW;
-
-END CATCH
-GO
 
 
-/* -----Tabla Artistas----- */
+/* -----Tabla NarracionesDeportivas----- */
 BEGIN TRANSACTION;
 BEGIN TRY
 
-	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Artistas' AND TABLE_SCHEMA = 'dbo')
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'NarracionesDeportivas' AND TABLE_SCHEMA = 'dbo')
 	BEGIN
-		DROP TABLE dbo.Artistas;
-		PRINT 'Tabla Artistas eliminada correctamente';
+		DROP TABLE dbo.NarracionesDeportivas;
+		PRINT 'Tabla NarracionesDeportivas eliminada correctamente';
 	END
-
+	ELSE
+	BEGIN
+		PRINT 'Tabla NarracionesDeportivas no existe';
+	END
 COMMIT TRANSACTION;--Confirmar cambios
 END TRY
 BEGIN CATCH
@@ -60,17 +43,20 @@ END CATCH
 GO
 
 
-/* -----Tabla Canciones----- */
+/* -----Tabla AudiolibrosGuardados----- */
 BEGIN TRANSACTION;
 BEGIN TRY
 
-	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Canciones' AND TABLE_SCHEMA = 'dbo')
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'AudiolibrosGuardados' AND TABLE_SCHEMA = 'dbo')
 	BEGIN
-		DROP TABLE dbo.Canciones;
-		PRINT 'Tabla Canciones eliminada correctamente';
+		DROP TABLE dbo.AudiolibrosGuardados;
+		PRINT 'Tabla AudiolibrosGuardados eliminada correctamente';
 	END
-	COMMIT TRANSACTION;--Confirmar cambios
-
+	ELSE
+	BEGIN
+		PRINT 'Tabla AudiolibrosGuardados no existe';
+	END
+COMMIT TRANSACTION;--Confirmar cambios
 END TRY
 BEGIN CATCH
 
@@ -104,70 +90,6 @@ END CATCH
 GO
 
 
-/* -----Tabla Favoritos----- */
-BEGIN TRANSACTION;
-BEGIN TRY
-	
-	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Favoritos' AND TABLE_SCHEMA = 'dbo')
-	BEGIN
-		DROP TABLE dbo.Favoritos;
-		PRINT 'Tabla Favoritos eliminada correctamente';
-	END
-
-COMMIT TRANSACTION;--Confirmar cambios
-END TRY
-BEGIN CATCH
-
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-	THROW;
-
-END CATCH
-GO
-
-		
-/* -----Tabla Generos----- */
-BEGIN TRANSACTION;
-BEGIN TRY
-	
-	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Generos' AND TABLE_SCHEMA = 'dbo')
-	BEGIN
-		DROP TABLE dbo.Generos;
-		PRINT 'Tabla Generos eliminada correctamente';
-	END
-
-COMMIT TRANSACTION;--Confirmar cambios
-END TRY
-BEGIN CATCH
-	
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-	THROW;
-END CATCH
-GO
-
-
-/* -----Tabla HistorialResproduccion----- */
-BEGIN TRANSACTION;
-BEGIN TRY
-
-	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'HistorialReproduccion' AND TABLE_SCHEMA = 'dbo')
-	BEGIN
-		DROP TABLE dbo.HistorialReproduccion;
-		PRINT 'Tabla HistorialReproduccion eliminada correctamente';
-	END
-
-COMMIT TRANSACTION;--Confirmar cambios
-END TRY
-BEGIN CATCH
-
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-	THROW;
-
-END CATCH
-GO
-
 
 /* -----Tabla PlaylistCanciones----- */
 BEGIN TRANSACTION;
@@ -177,6 +99,29 @@ BEGIN TRY
 	BEGIN
 		DROP TABLE dbo.PlaylistCanciones;
 		PRINT 'Tabla PlaylistCanciones eliminada correctamente';
+	END
+
+COMMIT TRANSACTION;--Confirmar cambios
+END TRY
+BEGIN CATCH
+	
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+	THROW;
+
+END CATCH
+GO
+
+
+/* -----Tabla PreferenciasUsuario----- */
+BEGIN TRANSACTION;
+BEGIN TRY
+	
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'PreferenciasUsuario' AND TABLE_SCHEMA = 'dbo')
+	BEGIN
+
+		DROP TABLE dbo.PreferenciasUsuario;
+		PRINT 'Tabla PreferenciasUsuario eliminada correctamente';
 	END
 
 COMMIT TRANSACTION;--Confirmar cambios
@@ -235,29 +180,6 @@ END CATCH
 GO
 
 
-/* -----Tabla PreferenciasUsuario----- */
-BEGIN TRANSACTION;
-BEGIN TRY
-	
-	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'PreferenciasUsuario' AND TABLE_SCHEMA = 'dbo')
-	BEGIN
-
-		DROP TABLE dbo.PreferenciasUsuario;
-		PRINT 'Tabla PreferenciasUsuario eliminada correctamente';
-	END
-
-COMMIT TRANSACTION;--Confirmar cambios
-END TRY
-BEGIN CATCH
-	
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-	THROW;
-
-END CATCH
-GO
-
-
 /* -----Tabla RecomendacionesUsuario----- */
 BEGIN TRANSACTION;
 BEGIN TRY
@@ -279,19 +201,16 @@ BEGIN CATCH
 END CATCH
 GO
 
-/* -----Tabla AudiolibrosGuardados----- */
+/* -----Tabla HistorialResproduccion----- */
 BEGIN TRANSACTION;
 BEGIN TRY
 
-	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'AudiolibrosGuardados' AND TABLE_SCHEMA = 'dbo')
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'HistorialReproduccion' AND TABLE_SCHEMA = 'dbo')
 	BEGIN
-		DROP TABLE dbo.AudiolibrosGuardados;
-		PRINT 'Tabla AudiolibrosGuardados eliminada correctamente';
+		DROP TABLE dbo.HistorialReproduccion;
+		PRINT 'Tabla HistorialReproduccion eliminada correctamente';
 	END
-	ELSE
-	BEGIN
-		PRINT 'Tabla AudiolibrosGuardados no existe';
-	END
+
 COMMIT TRANSACTION;--Confirmar cambios
 END TRY
 BEGIN CATCH
@@ -302,6 +221,119 @@ BEGIN CATCH
 
 END CATCH
 GO
+
+
+/* -----Tabla Favoritos----- */
+BEGIN TRANSACTION;
+BEGIN TRY
+	
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Favoritos' AND TABLE_SCHEMA = 'dbo')
+	BEGIN
+		DROP TABLE dbo.Favoritos;
+		PRINT 'Tabla Favoritos eliminada correctamente';
+	END
+
+COMMIT TRANSACTION;--Confirmar cambios
+END TRY
+BEGIN CATCH
+
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+	THROW;
+
+END CATCH
+GO
+
+
+/* -----Tabla Canciones----- */
+BEGIN TRANSACTION;
+BEGIN TRY
+
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Canciones' AND TABLE_SCHEMA = 'dbo')
+	BEGIN
+		DROP TABLE dbo.Canciones;
+		PRINT 'Tabla Canciones eliminada correctamente';
+	END
+	COMMIT TRANSACTION;--Confirmar cambios
+
+END TRY
+BEGIN CATCH
+
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+	THROW;
+
+END CATCH
+GO
+
+
+
+		
+/* -----Tabla Generos----- */
+BEGIN TRANSACTION;
+BEGIN TRY
+	
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Generos' AND TABLE_SCHEMA = 'dbo')
+	BEGIN
+		DROP TABLE dbo.Generos;
+		PRINT 'Tabla Generos eliminada correctamente';
+	END
+
+COMMIT TRANSACTION;--Confirmar cambios
+END TRY
+BEGIN CATCH
+	
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+	THROW;
+END CATCH
+GO
+
+
+/* -----Tabla Albumes----- */
+BEGIN TRANSACTION;
+BEGIN TRY
+	
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Albumes' AND TABLE_SCHEMA = 'dbo')
+	BEGIN
+		DROP TABLE dbo.Albumes;
+		PRINT 'Tabla Albumes eliminada correctamente';
+	END
+
+COMMIT TRANSACTION;--Confirmar cambios
+END TRY
+BEGIN CATCH
+	
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+	THROW;
+
+END CATCH
+GO
+
+
+/* -----Tabla Artistas----- */
+BEGIN TRANSACTION;
+BEGIN TRY
+
+	IF EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Artistas' AND TABLE_SCHEMA = 'dbo')
+	BEGIN
+		DROP TABLE dbo.Artistas;
+		PRINT 'Tabla Artistas eliminada correctamente';
+	END
+
+COMMIT TRANSACTION;--Confirmar cambios
+END TRY
+BEGIN CATCH
+
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+	THROW;
+
+END CATCH
+GO
+
+
 
 /* -----Tabla Usuarios----- */
 BEGIN TRANSACTION;
