@@ -257,3 +257,10 @@ yarn-error.log*
 *.coveragexml
 coverage/
 TestResults/
+
+
+# Web.config (configuración local)
+Web.config
+Web.*.config
+!Web.Release.config
+!Web.Debug.config
