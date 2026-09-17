@@ -322,19 +322,52 @@ BEGIN TRY
 	IF EXISTS (
 			SELECT 1
 			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'Artistas'
+			WHERE TABLE_NAME = 'Canciones'
 				AND TABLE_SCHEMA = 'dbo'
 			)
 	BEGIN
 		--ELIMINAR: Datos de Albumes
 		DELETE
-		FROM dbo.Artistas
+		FROM dbo.Canciones
 
-		PRINT 'Datos de la tabla Artistas eliminados correctamente.'
+		PRINT 'Datos de la tabla Canciones eliminados correctamente.'
 	END
 	ELSE
 	BEGIN
-		PRINT 'La tabla [dbo].[Artistas] no existe.'
+		PRINT 'La tabla [dbo].[Canciones] no existe.'
+	END
+
+	COMMIT TRANSACTION;
+END TRY
+
+BEGIN CATCH
+	IF @@TRANCOUNT > 0
+		ROLLBACK TRANSACTION;
+
+	THROW;
+END CATCH
+GO
+
+--------------------------------Albumes
+BEGIN TRANSACTION
+BEGIN TRY
+	--VALIDACIONES
+	IF EXISTS (
+			SELECT 1
+			FROM INFORMATION_SCHEMA.TABLES
+			WHERE TABLE_NAME = 'Albumes'
+				AND TABLE_SCHEMA = 'dbo'
+			)
+	BEGIN
+		--ELIMINAR: Datos de Albumes
+		DELETE
+		FROM dbo.Albumes
+
+		PRINT 'Datos de la tabla Albumes eliminados correctamente.'
+	END
+	ELSE
+	BEGIN
+		PRINT 'La tabla [dbo].[Albumes] no existe.'
 	END
 
 	COMMIT TRANSACTION;
@@ -467,39 +500,6 @@ BEGIN TRY
 	ELSE
 	BEGIN
 		PRINT 'La tabla [dbo].[Roles] no existe.'
-	END
-
-	COMMIT TRANSACTION;
-END TRY
-
-BEGIN CATCH
-	IF @@TRANCOUNT > 0
-		ROLLBACK TRANSACTION;
-
-	THROW;
-END CATCH
-GO
-
---------------------------------Albumes
-BEGIN TRANSACTION
-BEGIN TRY
-	--VALIDACIONES
-	IF EXISTS (
-			SELECT 1
-			FROM INFORMATION_SCHEMA.TABLES
-			WHERE TABLE_NAME = 'Albumes'
-				AND TABLE_SCHEMA = 'dbo'
-			)
-	BEGIN
-		--ELIMINAR: Datos de Albumes
-		DELETE
-		FROM dbo.Albumes
-
-		PRINT 'Datos de la tabla Albumes eliminados correctamente.'
-	END
-	ELSE
-	BEGIN
-		PRINT 'La tabla [dbo].[Albumes] no existe.'
 	END
 
 	COMMIT TRANSACTION;
